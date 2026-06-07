@@ -17,7 +17,10 @@ const readModuleResult = async (folder: string): Promise<unknown> => {
     )) as AssignmentModule;
 
     return assignmentModule.result ?? assignmentModule.default ?? null;
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`Unable to load assignment module: ${folder}`, error);
+    }
     return null;
   }
 };
