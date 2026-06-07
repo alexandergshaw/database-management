@@ -138,6 +138,46 @@ export const courseModules: CourseModule[] = [
     summary: "Capstone practice exam covering design, SQL, and operations.",
     type: "exam",
   },
+  {
+    week: 17,
+    slug: "week-17-extension-data-warehousing",
+    folder: "assignment10",
+    title: "Extension A: Data Warehousing",
+    summary: "Optional extension practice for dimensional modeling workflows.",
+    type: "assignment",
+  },
+  {
+    week: 18,
+    slug: "week-18-extension-data-quality",
+    folder: "assignment11",
+    title: "Extension B: Data Quality",
+    summary: "Optional extension practice for profiling and quality checks.",
+    type: "assignment",
+  },
+  {
+    week: 19,
+    slug: "week-19-extension-backup-recovery",
+    folder: "assignment12",
+    title: "Extension C: Backup and Recovery",
+    summary: "Optional extension practice for backup and restore planning.",
+    type: "assignment",
+  },
+  {
+    week: 20,
+    slug: "week-20-extension-observability",
+    folder: "assignment13",
+    title: "Extension D: Observability",
+    summary: "Optional extension practice for monitoring and alerting strategy.",
+    type: "assignment",
+  },
+  {
+    week: 21,
+    slug: "week-21-extension-governance",
+    folder: "assignment14",
+    title: "Extension E: Governance",
+    summary: "Optional extension practice for policy and metadata governance.",
+    type: "assignment",
+  },
 ];
 
 export const assignmentFolders = [

@@ -23,17 +23,8 @@ const readModuleResult = async (folder: string): Promise<unknown> => {
 };
 
 export const isValidAssignmentResult = (value: unknown): boolean => {
-  if (value === null || value === undefined) {
+  if (value == null) {
     return false;
-  }
-
-  if (typeof value === "object" && value !== null && "isComplete" in value) {
-    const completion = (value as { isComplete?: unknown }).isComplete;
-    return completion === true;
-  }
-
-  if (typeof value === "string") {
-    return value.trim().length > 0;
   }
 
   if (Array.isArray(value)) {
@@ -41,7 +32,16 @@ export const isValidAssignmentResult = (value: unknown): boolean => {
   }
 
   if (typeof value === "object") {
+    if ("isComplete" in value) {
+      const completion = (value as { isComplete?: unknown }).isComplete;
+      return completion === true;
+    }
+
     return Object.keys(value).length > 0;
+  }
+
+  if (typeof value === "string") {
+    return value.trim().length > 0;
   }
 
   return true;
