@@ -1,4 +1,4 @@
-# Extension C Backup Recovery
+# Extension C: Backup and Recovery
 
 ## Learning Objective
 Plan backup cadence and recovery validation logic.

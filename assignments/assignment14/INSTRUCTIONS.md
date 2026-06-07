@@ -1,4 +1,4 @@
-# Extension E Governance
+# Extension E: Governance
 
 ## Learning Objective
 Create metadata policy rules for enterprise governance.

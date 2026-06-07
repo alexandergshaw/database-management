@@ -1,4 +1,4 @@
-# Extension B Data Quality
+# Extension B: Data Quality
 
 ## Learning Objective
 Define profiling checks and quality assertions.

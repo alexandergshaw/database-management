@@ -1,4 +1,4 @@
-# Extension D Observability
+# Extension D: Observability
 
 ## Learning Objective
 Design monitoring signals for critical database pathways.

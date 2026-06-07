@@ -1,4 +1,4 @@
-# Extension A Data Warehousing
+# Extension A: Data Warehousing
 
 ## Learning Objective
 Model ETL-ready schemas and dimensional keys.
