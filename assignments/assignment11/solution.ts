@@ -6,6 +6,6 @@ export interface AssignmentResult {
 
 export const result: AssignmentResult = {
   isComplete: false,
-  topic: "Extension B Data Quality",
+  topic: "Extension B: Data Quality",
   artifact: {},
 };

@@ -6,6 +6,6 @@ export interface AssignmentResult {
 
 export const result: AssignmentResult = {
   isComplete: false,
-  topic: "Extension C Backup Recovery",
+  topic: "Extension C: Backup and Recovery",
   artifact: {},
 };
