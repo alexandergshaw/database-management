@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   // bundled into the serverless functions on deploy.
   outputFileTracingIncludes: {
     "/": ["./.test-results.json", "./supabase/migrations/**"],
-    "/week/[module]": ["./.test-results.json"],
+    "/week/[module]": ["./.test-results.json", "./assignments/**/INSTRUCTIONS.md"],
   },
 };
 

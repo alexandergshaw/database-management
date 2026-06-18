@@ -28,15 +28,38 @@ body {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(1200px 600px at 50% -15%, rgba(56, 189, 248, 0.12), transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0.6px, transparent 1.4px) 0 0 / 130px 130px,
-    radial-gradient(circle at 75% 65%, rgba(255, 255, 255, 0.35) 0.6px, transparent 1.4px) 0 0 / 90px 90px,
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0.5px, transparent 1.3px) 0 0 / 160px 160px,
+    radial-gradient(1100px 700px at 18% 12%, rgba(99, 102, 241, 0.14), transparent 60%),
+    radial-gradient(900px 600px at 85% 82%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(720px 520px at 60% 35%, rgba(168, 85, 247, 0.1), transparent 65%),
     var(--background);
+}
+
+/* Randomly generated starfield (positions/sizes are server-generated). */
+.solar-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.solar-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+.solar-star.tw {
+  animation: solar-twinkle var(--tw) ease-in-out infinite;
+  animation-delay: var(--td);
+}
+@keyframes solar-twinkle {
+  0%, 100% { opacity: var(--o); }
+  50% { opacity: calc(var(--o) * 0.2); }
 }
 
 .solar-system {
   position: relative;
+  z-index: 1;
   width: 64em;
   height: 64em;
   flex: none;
@@ -58,16 +81,40 @@ body {
   line-height: 1.1;
   font-size: 0.95em;
   font-weight: 600;
-  color: #7c2d12;
+  color: #6b1e05;
+  text-shadow: 0 0 0.3em rgba(255, 244, 200, 0.85);
   text-decoration: none;
-  background: radial-gradient(circle at 35% 30%, #fff6d5, #fbbf24 45%, #f97316 82%);
-  box-shadow: 0 0 2.2em rgba(251, 191, 36, 0.7), 0 0 6em rgba(249, 115, 22, 0.45);
-  z-index: 5;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background:
+    radial-gradient(circle at 50% 45%, #fffefb 0%, #fff3b0 15%, #ffd24d 33%, #ff9d2e 60%, #ff6a18 82%, #df480a 100%);
+  box-shadow:
+    0 0 1.6em #ffd24d,
+    0 0 3.5em #ff9d2e,
+    0 0 7em rgba(255, 120, 30, 0.55),
+    inset -0.4em -0.4em 1.2em rgba(180, 50, 0, 0.5);
+  z-index: 6;
+  animation: solar-sun-pulse 6s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.solar-sun::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 170, 60, 0.35), transparent 65%);
+  z-index: -1;
 }
 .solar-sun:hover {
   transform: scale(1.06);
-  box-shadow: 0 0 2.6em rgba(251, 191, 36, 0.85), 0 0 7em rgba(249, 115, 22, 0.55);
+}
+@keyframes solar-sun-pulse {
+  0%, 100% {
+    box-shadow: 0 0 1.6em #ffd24d, 0 0 3.5em #ff9d2e, 0 0 7em rgba(255, 120, 30, 0.5),
+      inset -0.4em -0.4em 1.2em rgba(180, 50, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 2.2em #ffe690, 0 0 4.8em #ffb14d, 0 0 9em rgba(255, 140, 40, 0.7),
+      inset -0.4em -0.4em 1.2em rgba(180, 50, 0, 0.5);
+  }
 }
 
 .solar-orbit {
@@ -112,19 +159,23 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  font-size: 0.8em;
+  font-size: 0.72em;
   font-weight: 700;
-  color: #0b1220;
-  border: 0.06em solid rgba(255, 255, 255, 0.3);
-  background: radial-gradient(
-    circle at 32% 28%,
-    hsl(var(--hue) 90% 78%),
-    hsl(var(--hue) 70% 48%) 68%,
-    hsl(var(--hue) 70% 32%)
-  );
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 0.05em 0.15em rgba(0, 0, 0, 0.7);
+  background:
+    radial-gradient(circle at 30% 24%, hsl(var(--hue) 100% 90% / 0.95), transparent 42%),
+    radial-gradient(circle at 70% 78%, hsl(var(--hue) 80% 14% / 0.55), transparent 50%),
+    radial-gradient(
+      circle at 50% 42%,
+      hsl(var(--hue) 72% 58%),
+      hsl(var(--hue) 76% 40%) 62%,
+      hsl(var(--hue) 82% 26%) 100%
+    );
   box-shadow:
-    inset -0.18em -0.18em 0.35em rgba(0, 0, 0, 0.45),
-    0 0 0.7em hsl(var(--hue) 85% 58% / 0.55);
+    inset -0.22em -0.24em 0.5em hsl(var(--hue) 85% 8% / 0.75),
+    inset 0.14em 0.16em 0.3em hsl(var(--hue) 100% 92% / 0.45),
+    0 0 0.55em hsl(var(--hue) 85% 55% / 0.4);
   transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
@@ -132,10 +183,12 @@ body {
 .solar-planet.has-ring .solar-planet-body::after {
   content: "";
   position: absolute;
-  inset: -0.4em;
+  inset: -0.5em;
   border-radius: 50%;
-  border: 0.12em solid hsl(var(--hue) 85% 72% / 0.65);
-  transform: rotate(-22deg) scaleY(0.38);
+  border: 0.16em solid hsl(var(--hue) 90% 75% / 0.55);
+  border-top-color: hsl(var(--hue) 92% 82% / 0.8);
+  border-bottom-color: hsl(var(--hue) 90% 60% / 0.32);
+  transform: rotate(-20deg) scaleY(0.34);
 }
 
 .solar-planet.is-locked .solar-planet-body {
@@ -180,12 +233,6 @@ body {
   opacity: 1;
 }
 
-/* Hover anywhere in the system to pause every orbit, so planets are clickable. */
-.solar-system:hover .solar-orbit,
-.solar-system:hover .solar-planet {
-  animation-play-state: paused;
-}
-
 @keyframes solar-orbit {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -197,7 +244,106 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .solar-orbit,
-  .solar-planet {
+  .solar-planet,
+  .solar-sun,
+  .solar-star.tw {
     animation: none;
   }
+}
+
+/* Rendered assignment instructions (app/week/[module]/page.tsx). */
+.md {
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+.md h1 {
+  color: #ffffff;
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+.md h2 {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.6rem;
+}
+.md h3 {
+  color: #e2e8f0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.4rem;
+}
+.md p {
+  margin: 0.75rem 0;
+}
+.md a {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+.md strong {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+.md ul,
+.md ol {
+  margin: 0.75rem 0;
+  padding-left: 1.4rem;
+}
+.md ul {
+  list-style: disc;
+}
+.md ol {
+  list-style: decimal;
+}
+.md li {
+  margin: 0.3rem 0;
+}
+.md code {
+  background: rgba(148, 163, 184, 0.18);
+  padding: 0.1em 0.4em;
+  border-radius: 0.3em;
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
+  font-size: 0.875em;
+  color: #e2e8f0;
+}
+.md pre {
+  background: #0b1120;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.6rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.md pre code {
+  background: none;
+  padding: 0;
+}
+.md blockquote {
+  border-left: 3px solid rgba(56, 189, 248, 0.5);
+  margin: 1rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: #94a3b8;
+}
+.md hr {
+  border: 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  margin: 1.5rem 0;
+}
+.md table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.md th,
+.md td {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+}
+.md th {
+  background: rgba(148, 163, 184, 0.12);
+  color: #e2e8f0;
+  font-weight: 600;
 }

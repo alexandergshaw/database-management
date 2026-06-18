@@ -8,13 +8,51 @@ import { getModuleTestStatus } from "@/lib/test-status";
 
 export const dynamic = "force-dynamic";
 
+function makeStars(quantity: number) {
+  return Array.from({ length: quantity }, () => {
+    const size = Math.random() * 1.8 + 0.5;
+    const opacity = Math.random() * 0.6 + 0.25;
+    return {
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      size,
+      opacity,
+      twinkle: Math.random() < 0.4,
+      duration: (Math.random() * 4 + 2.5).toFixed(1),
+      delay: (Math.random() * 6).toFixed(1),
+    };
+  });
+}
+
 export default function Home() {
   const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
   const count = modules.length;
   const unlocked = modules.filter((m) => m.isUnlocked).length;
+  const stars = makeStars(180);
 
   return (
     <main className="solar-stage">
+      <div className="solar-stars" aria-hidden="true">
+        {stars.map((star, i) => (
+          <span
+            key={i}
+            className={`solar-star${star.twinkle ? " tw" : ""}`}
+            style={
+              {
+                left: `${star.left}%`,
+                top: `${star.top}%`,
+                width: `${star.size}px`,
+                height: `${star.size}px`,
+                opacity: star.opacity,
+                "--o": `${star.opacity}`,
+                "--tw": `${star.duration}s`,
+                "--td": `${star.delay}s`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </div>
+
       <div className="pointer-events-none absolute left-1/2 top-6 z-10 w-full max-w-2xl -translate-x-1/2 px-4 text-center">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Storefront DB · Course Map
@@ -47,7 +85,7 @@ export default function Home() {
             "--delay": `${delay.toFixed(2)}s`,
             "--start": `${startAngle.toFixed(2)}deg`,
             "--hue": `${hue}`,
-            "--planet": "2.1em",
+            "--planet": "2.3em",
           } as CSSProperties;
 
           const planetClasses = [
@@ -82,8 +120,7 @@ export default function Home() {
       </div>
 
       <p className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2 px-4 text-center text-xs text-slate-500">
-        Hover to pause the orbits · click a planet to open its week · the sun is
-        your storefront
+        Click a planet to open its week · the sun is your storefront
       </p>
     </main>
   );
