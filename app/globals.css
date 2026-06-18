@@ -15,3 +15,189 @@ body {
   color: var(--foreground);
   font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
+
+/* ---------------------------------------------------------------------------
+   Orbital course map (app/page.tsx)
+   One planet per week; a planet's color/glow reflects its test-driven unlock.
+--------------------------------------------------------------------------- */
+.solar-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 600px at 50% -15%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0.6px, transparent 1.4px) 0 0 / 130px 130px,
+    radial-gradient(circle at 75% 65%, rgba(255, 255, 255, 0.35) 0.6px, transparent 1.4px) 0 0 / 90px 90px,
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0.5px, transparent 1.3px) 0 0 / 160px 160px,
+    var(--background);
+}
+
+.solar-system {
+  position: relative;
+  width: 64em;
+  height: 64em;
+  flex: none;
+  /* Scale the whole system to the viewport: length / unitless number is valid. */
+  font-size: calc(min(92vw, 82vh, 880px) / 64);
+}
+
+.solar-sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7em;
+  height: 7em;
+  margin: -3.5em 0 0 -3.5em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  line-height: 1.1;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #7c2d12;
+  text-decoration: none;
+  background: radial-gradient(circle at 35% 30%, #fff6d5, #fbbf24 45%, #f97316 82%);
+  box-shadow: 0 0 2.2em rgba(251, 191, 36, 0.7), 0 0 6em rgba(249, 115, 22, 0.45);
+  z-index: 5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.solar-sun:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 2.6em rgba(251, 191, 36, 0.85), 0 0 7em rgba(249, 115, 22, 0.55);
+}
+
+.solar-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--d);
+  height: var(--d);
+  margin-top: calc(var(--d) / -2);
+  margin-left: calc(var(--d) / -2);
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  transform: rotate(var(--start));
+  animation: solar-orbit var(--dur) linear infinite;
+  animation-delay: var(--delay);
+}
+
+.solar-anchor {
+  position: absolute;
+  top: calc(var(--planet) / -2);
+  left: calc(50% - var(--planet) / 2);
+  width: var(--planet);
+  height: var(--planet);
+}
+
+.solar-planet {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  transform: rotate(calc(-1 * var(--start)));
+  animation: solar-orbit-rev var(--dur) linear infinite;
+  animation-delay: var(--delay);
+}
+
+.solar-planet-body {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #0b1220;
+  border: 0.06em solid rgba(255, 255, 255, 0.3);
+  background: radial-gradient(
+    circle at 32% 28%,
+    hsl(var(--hue) 90% 78%),
+    hsl(var(--hue) 70% 48%) 68%,
+    hsl(var(--hue) 70% 32%)
+  );
+  box-shadow:
+    inset -0.18em -0.18em 0.35em rgba(0, 0, 0, 0.45),
+    0 0 0.7em hsl(var(--hue) 85% 58% / 0.55);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+/* Reviews/exams get a Saturn-like ring to set them apart from build weeks. */
+.solar-planet.has-ring .solar-planet-body::after {
+  content: "";
+  position: absolute;
+  inset: -0.4em;
+  border-radius: 50%;
+  border: 0.12em solid hsl(var(--hue) 85% 72% / 0.65);
+  transform: rotate(-22deg) scaleY(0.38);
+}
+
+.solar-planet.is-locked .solar-planet-body {
+  filter: grayscale(0.85) brightness(0.5);
+  color: #cbd5e1;
+  box-shadow: inset -0.18em -0.18em 0.35em rgba(0, 0, 0, 0.5);
+}
+
+.solar-planet:hover .solar-planet-body,
+.solar-planet:focus-visible .solar-planet-body {
+  transform: scale(1.22);
+  filter: none;
+  box-shadow:
+    0 0 0.9em hsl(var(--hue) 90% 62% / 0.85),
+    inset -0.18em -0.18em 0.35em rgba(0, 0, 0, 0.4);
+}
+
+.solar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.5em);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 15em;
+  padding: 0.5em 0.7em;
+  border-radius: 0.55em;
+  background: rgba(2, 6, 23, 0.97);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.55);
+  color: #e2e8f0;
+  font-size: 0.78em;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+}
+.solar-planet:hover .solar-tooltip,
+.solar-planet:focus-visible .solar-tooltip {
+  opacity: 1;
+}
+
+/* Hover anywhere in the system to pause every orbit, so planets are clickable. */
+.solar-system:hover .solar-orbit,
+.solar-system:hover .solar-planet {
+  animation-play-state: paused;
+}
+
+@keyframes solar-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes solar-orbit-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-orbit,
+  .solar-planet {
+    animation: none;
+  }
+}

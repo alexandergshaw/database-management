@@ -1,73 +1,90 @@
-import { CategoryChart } from "@/components/category-chart";
-import { ModulePanel } from "@/components/module-panel";
-import { OrderHistory } from "@/components/order-history";
-import { ProgressTracker } from "@/components/progress-tracker";
-import { SecurityPanel } from "@/components/security-panel";
-import { StatsBar } from "@/components/stats-bar";
-import { Storefront } from "@/components/storefront";
-import { SuppliersPanel } from "@/components/suppliers-panel";
+import type { CSSProperties } from "react";
+
+import Link from "next/link";
+
 import { courseModules } from "@/lib/course-modules";
 import { resolveModuleProgress } from "@/lib/progress";
-import { getStoreData } from "@/lib/store-data";
 import { getModuleTestStatus } from "@/lib/test-status";
 
-// Always reflect the current database state (live Supabase, or local migrations).
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
-  const data = await getStoreData();
+export default function Home() {
   const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
-
-  const storeName = data.settings?.storeName ?? "Your Storefront";
-  const tagline = data.settings?.tagline ?? "Complete Week 0 to name your store.";
-
-  const showSecurity = data.security.rlsOnCustomers || data.security.hasPublicCatalog;
-  const showChart = data.categoryRevenue.some((row) => row.revenue > 0);
+  const count = modules.length;
+  const unlocked = modules.filter((m) => m.isUnlocked).length;
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-8 lg:flex-row lg:items-start">
-      <ProgressTracker modules={modules} />
-      <section className="grid flex-1 gap-6">
-        <header className="rounded-xl border border-slate-700 bg-slate-900/80 p-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-            {data.source === "supabase"
-              ? "Live from Supabase"
-              : "Local preview (migrations replayed)"}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold text-white">{storeName}</h1>
-          <p className="mt-2 text-slate-300">{tagline}</p>
-        </header>
+    <main className="solar-stage">
+      <div className="pointer-events-none absolute left-1/2 top-6 z-10 w-full max-w-2xl -translate-x-1/2 px-4 text-center">
+        <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+          Storefront DB · Course Map
+        </h1>
+        <p className="mt-1 text-sm text-slate-400">
+          {count} planets, one per week — {unlocked} unlocked. Each planet lights
+          up when its unit tests pass.
+        </p>
+      </div>
 
-        {data.stats && <StatsBar stats={data.stats} />}
+      <div className="solar-system">
+        <Link href="/dashboard" className="solar-sun" aria-label="Open the storefront dashboard">
+          <span>
+            Storefront
+            <br />
+            Dashboard
+          </span>
+        </Link>
 
-        <Storefront products={data.products} />
+        {modules.map((module, index) => {
+          const diameter = 9 + index * 3.25;
+          const duration = 14 + index * 5.5;
+          const delay = -(duration * (index / count));
+          const startAngle = index * (360 / count);
+          const hue = Math.round(index * (360 / count));
 
-        {data.suppliers.length > 0 && <SuppliersPanel suppliers={data.suppliers} />}
+          const orbitStyle = {
+            "--d": `${diameter}em`,
+            "--dur": `${duration}s`,
+            "--delay": `${delay.toFixed(2)}s`,
+            "--start": `${startAngle.toFixed(2)}deg`,
+            "--hue": `${hue}`,
+            "--planet": "2.1em",
+          } as CSSProperties;
 
-        {showChart && <CategoryChart data={data.categoryRevenue} />}
+          const planetClasses = [
+            "solar-planet",
+            module.isUnlocked ? "is-unlocked" : "is-locked",
+            module.type === "assignment" ? "" : "has-ring",
+          ]
+            .filter(Boolean)
+            .join(" ");
 
-        {data.orderHistory.length > 0 && <OrderHistory orders={data.orderHistory} />}
+          return (
+            <div key={module.slug} className="solar-orbit" style={orbitStyle}>
+              <div className="solar-anchor">
+                <Link
+                  href={`/week/${module.slug}`}
+                  className={planetClasses}
+                  aria-label={`Week ${module.week}: ${module.title} (${module.statusLabel})`}
+                >
+                  <span className="solar-planet-body">{module.week}</span>
+                  <span className="solar-tooltip">
+                    <strong>Week {module.week}</strong> · {module.title}
+                    <br />
+                    <span className="text-slate-400">
+                      {module.type} · {module.statusLabel}
+                    </span>
+                  </span>
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-        {showSecurity && (
-          <SecurityPanel
-            rlsOnCustomers={data.security.rlsOnCustomers}
-            hasPublicCatalog={data.security.hasPublicCatalog}
-          />
-        )}
-
-        <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-white">Build roadmap</h2>
-          <p className="text-sm text-slate-400">
-            Each week you write one SQL migration. When it lands, the feature it
-            powers goes live above.
-          </p>
-          <div className="grid gap-4">
-            {modules.map((module) => (
-              <ModulePanel key={module.slug} module={module} />
-            ))}
-          </div>
-        </section>
-      </section>
+      <p className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2 px-4 text-center text-xs text-slate-500">
+        Hover to pause the orbits · click a planet to open its week · the sun is
+        your storefront
+      </p>
     </main>
   );
 }
