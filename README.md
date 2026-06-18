@@ -82,6 +82,24 @@ npm run test     # runs every week's tests against in-process Postgres
 npm run build
 ```
 
+## Recovering from a failed assignment
+
+The database is fully derived from the migration files, so recovering is about
+the files — never manual SQL surgery.
+
+1. **Don't merge a broken PR.** Each week is its own branch/PR; CI (see
+   `.github/workflows/test.yml`) runs that week's tests and Supabase spins up a
+   preview-branch database. If it fails, close the PR and start a fresh branch
+   from `main` — production only changes on merge, so it stays at the last
+   passing state. Enable branch protection on `main` requiring the `tests` check
+   so a failing PR can't be merged.
+2. **Rebuild a dirtied database.** If a bad migration already reached a database,
+   fix the file and run `npm run db:reset` (local) or
+   `npm run db:reset -- --linked` (your Supabase project). It drops everything
+   and replays your migrations cleanly.
+3. **Start one week over.** `npm run reset:week -- week4` (or `-- review1`)
+   restores that week's file(s) to the version on `main`, discarding your edits.
+
 ## Note for instructors
 The migrations and `.sql` answer files in this repo are **reference solutions**,
 so the template is green and the homepage fully renders. To distribute to

@@ -21,3 +21,7 @@ Edit **`supabase/migrations/0003_week3_categories.sql`**:
 - `assignments/week3/test.ts` passes (both tables exist, at least one product
   has multiple categories, the CHECK rejects an out-of-range value).
 - Product cards show **category chips**.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

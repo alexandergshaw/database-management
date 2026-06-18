@@ -20,3 +20,7 @@ Edit **`supabase/migrations/0014_week14_security.sql`**:
 - `assignments/week14/test.ts` passes (RLS on, a policy exists, public_catalog
   exposes only safe columns).
 - A **Security posture** panel appears on the homepage.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

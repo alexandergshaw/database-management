@@ -33,3 +33,7 @@ own store name and tagline.
 - `assignments/week0/test.ts` passes.
 - The homepage header shows **your** store name and tagline (not the starter
   values).
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

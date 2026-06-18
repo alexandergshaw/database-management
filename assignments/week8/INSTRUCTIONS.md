@@ -19,3 +19,7 @@ Edit **`supabase/migrations/0008_week8_orders.sql`**:
 - `assignments/week8/test.ts` passes (tables exist, paid orders inserted, the
   cancelled order deleted, stock updated to match sales).
 - A **Recent orders / stats** view of activity appears on the homepage.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

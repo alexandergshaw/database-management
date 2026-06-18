@@ -32,3 +32,7 @@ three** products:
 - `assignments/week1/test.ts` passes (table + columns exist, ≥ 3 rows, prices
   non-negative, the `CHECK` constraint rejects a negative price).
 - Product cards appear in the **Storefront** section of the homepage.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

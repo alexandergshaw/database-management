@@ -12,3 +12,7 @@ own file.
 ## How it's graded
 `assignments/test2/test.ts` runs each query against the database (built through
 Week 10) and checks the answers.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

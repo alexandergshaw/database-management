@@ -21,3 +21,7 @@ Edit **`supabase/migrations/0002_week2_suppliers.sql`**:
 - `assignments/week2/test.ts` passes (suppliers exist, the FK exists, every
   product has a supplier).
 - Each product card on the homepage shows **by {supplier}**.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.

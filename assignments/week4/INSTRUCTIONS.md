@@ -19,3 +19,7 @@ through its supplier.
 - `assignments/week4/test.ts` passes (the column is gone from products, every
   supplier with products has a country, no data was lost).
 - The **Suppliers** panel on the homepage shows each supplier's country.
+
+---
+
+**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
