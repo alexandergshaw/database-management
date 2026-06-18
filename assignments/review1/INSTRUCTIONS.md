@@ -1,11 +1,17 @@
-# Week 4 Review 1
+# Week 6 — Review 1
 
-## Practice Exercises
-Practice Exercises: Relational model and ERD readiness checks.
+Consolidates Weeks 1–5 (schema design, relationships, normalization). These are
+**query** exercises — you read the schema you built, you don't change it.
 
-## GUI-Only Workflow
-1. Open `/assignments/review1/solution.ts` in GitHub Codespaces.
-2. Fill in your practice responses in the exported `artifact` object.
-3. Set `result.isComplete` to `true` when your practice is ready.
-4. Run `/assignments/review1/test.ts` from the Testing panel.
-5. Commit and push using the Source Control panel, then open a pull request.
+## Your SQL task
+Edit **`assignments/review1/query.sql`**: list each product with its supplier
+name and the supplier's country, ordered by product name. Name the columns
+`product`, `supplier`, `country`.
+
+## How it's graded
+`assignments/review1/test.ts` runs your query against the database (built
+through Week 5) and checks the result.
+
+## More practice (not graded)
+- Which suppliers ship from outside the USA?
+- How many products are in each category?

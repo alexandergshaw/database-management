@@ -1,0 +1,8 @@
+# Supabase project configuration.
+# Students link their own project with the Supabase CLI / GitHub integration;
+# migrations in supabase/migrations are applied automatically on push.
+project_id = "enterprise-storefront-portal"
+
+[db]
+port = 54322
+major_version = 16

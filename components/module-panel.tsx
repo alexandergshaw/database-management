@@ -14,12 +14,15 @@ export function ModulePanel({ module }: ModulePanelProps) {
       <p className="mt-2 text-sm text-slate-300">{module.summary}</p>
       {module.isUnlocked ? (
         <p className="mt-4 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">
-          Unlocked: your export from /assignments/{module.folder}/solution.ts is valid.
+          Unlocked —{" "}
+          <code className="font-mono">assignments/{module.folder}/test.ts</code>{" "}
+          passes.
         </p>
       ) : (
         <p className="mt-4 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-          Locked: set <code className="font-mono">result.isComplete = true</code> in
-          /assignments/{module.folder}/solution.ts.
+          Locked — make{" "}
+          <code className="font-mono">assignments/{module.folder}/test.ts</code>{" "}
+          pass to unlock.
         </p>
       )}
     </article>

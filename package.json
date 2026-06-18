@@ -4,21 +4,26 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/collect-test-status.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:status": "node scripts/collect-test-status.mjs",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.3",
+    "@supabase/supabase-js": "^2.52.1",
     "next": "16.2.7",
+    "pg": "^8.21.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "@supabase/supabase-js": "^2.52.1"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

@@ -1,14 +1,27 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { result } from "./solution";
+import type { PGlite } from "@electric-sql/pglite";
 
-describe("review1 starter", () => {
-  it("exports a structured result object", () => {
-    expect(result).toHaveProperty("isComplete");
-    expect(typeof result.isComplete).toBe("boolean");
-    expect(result).toHaveProperty("topic");
-    expect(typeof result.topic).toBe("string");
-    expect(result).toHaveProperty("artifact");
-    expect(typeof result.artifact).toBe("object");
+import { buildDatabase, readAssignmentFile } from "@/lib/migrations-harness";
+
+let db: PGlite;
+
+beforeAll(async () => {
+  db = await buildDatabase("0005");
+});
+
+afterAll(async () => {
+  await db?.close();
+});
+
+describe("Review 1 — products with supplier and country", () => {
+  it("returns one row per product with supplier and country", async () => {
+    const sql = readAssignmentFile("review1", "query.sql");
+    const res = await db.query<{ product: string; supplier: string; country: string }>(sql);
+
+    expect(res.rows).toHaveLength(5);
+    const daypack = res.rows.find((r) => r.product === "Trail Daypack 22L");
+    expect(daypack?.supplier).toBe("Summit Supply Co.");
+    expect(daypack?.country).toBe("USA");
   });
 });

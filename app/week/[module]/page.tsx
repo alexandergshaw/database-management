@@ -4,6 +4,9 @@ import { ModulePanel } from "@/components/module-panel";
 import { ProgressTracker } from "@/components/progress-tracker";
 import { courseModules } from "@/lib/course-modules";
 import { resolveModuleProgress } from "@/lib/progress";
+import { getModuleTestStatus } from "@/lib/test-status";
+
+export const dynamic = "force-dynamic";
 
 export default async function WeekModulePage({
   params,
@@ -11,7 +14,7 @@ export default async function WeekModulePage({
   params: Promise<{ module: string }>;
 }) {
   const { module: moduleSlug } = await params;
-  const modules = await resolveModuleProgress(courseModules);
+  const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
   const selectedModule = modules.find((entry) => entry.slug === moduleSlug);
 
   if (!selectedModule) {
