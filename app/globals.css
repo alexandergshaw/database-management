@@ -119,6 +119,8 @@ body {
 
 .solar-orbit {
   position: absolute;
+  /* The large orbit boxes must not capture clicks meant for inner planets. */
+  pointer-events: none;
   top: 50%;
   left: 50%;
   width: var(--d);
@@ -134,6 +136,7 @@ body {
 
 .solar-anchor {
   position: absolute;
+  pointer-events: none;
   top: calc(var(--planet) / -2);
   left: calc(50% - var(--planet) / 2);
   width: var(--planet);
@@ -142,6 +145,8 @@ body {
 
 .solar-planet {
   position: relative;
+  /* Re-enable clicks on just the planet (its orbit box is pointer-events:none). */
+  pointer-events: auto;
   display: grid;
   place-items: center;
   width: 100%;
@@ -346,4 +351,62 @@ body {
   background: rgba(148, 163, 184, 0.12);
   color: #e2e8f0;
   font-weight: 600;
+}
+
+/* Minimalist top bar (components/top-bar.tsx) listing every week. */
+.solar-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+  padding: 6px 10px;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  overflow-x: auto;
+}
+.solar-topbar-item {
+  flex: 1 1 0;
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.solar-topbar-item:hover {
+  background: rgba(148, 163, 184, 0.16);
+  color: #f1f5f9;
+}
+.solar-topbar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.solar-topbar-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* A planet glows when its top-bar section is hovered. */
+.solar-planet.is-highlighted {
+  z-index: 50;
+}
+.solar-planet.is-highlighted .solar-planet-body {
+  transform: scale(1.6);
+  filter: none;
+  box-shadow:
+    0 0 1em hsl(var(--hue) 95% 65% / 0.95),
+    0 0 0 0.12em rgba(255, 255, 255, 0.55),
+    inset -0.22em -0.24em 0.5em hsl(var(--hue) 85% 8% / 0.7);
 }

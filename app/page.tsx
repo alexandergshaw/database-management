@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 
 import Link from "next/link";
 
+import { TopBar } from "@/components/top-bar";
 import { courseModules } from "@/lib/course-modules";
 import { resolveModuleProgress } from "@/lib/progress";
 import { getModuleTestStatus } from "@/lib/test-status";
@@ -24,14 +25,75 @@ function makeStars(quantity: number) {
   });
 }
 
+// Deterministic PRNG so each planet keeps a stable, distinct surface.
+function mulberry32(seed: number) {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Build a layered radial-gradient "surface" — continents, craters, polar caps —
+// over the base sphere shading, giving each planet its own topography.
+function planetSurface(hue: number, seed: number): string {
+  const rng = mulberry32(seed + 1);
+  const layers: string[] = [
+    `radial-gradient(circle at 30% 24%, hsl(${hue} 100% 92% / 0.85), transparent 40%)`,
+    `radial-gradient(circle at 72% 80%, hsl(${hue} 80% 10% / 0.6), transparent 55%)`,
+  ];
+
+  const featureCount = 4 + Math.floor(rng() * 4);
+  for (let i = 0; i < featureCount; i++) {
+    const x = Math.round(rng() * 100);
+    const y = Math.round(rng() * 100);
+    const inner = Math.round(8 + rng() * 24);
+    const outer = inner + 5 + Math.round(rng() * 9);
+    const dark = rng() < 0.45;
+    const h = (hue + Math.round((rng() - 0.5) * 34) + 360) % 360;
+    const light = dark ? 20 + Math.round(rng() * 12) : 62 + Math.round(rng() * 18);
+    const alpha = (0.35 + rng() * 0.35).toFixed(2);
+    const color = `hsl(${h} ${dark ? 55 : 62}% ${light}% / ${alpha})`;
+    layers.push(
+      `radial-gradient(circle at ${x}% ${y}%, ${color} 0%, ${color} ${inner}%, transparent ${outer}%)`
+    );
+  }
+
+  if (rng() < 0.5) {
+    layers.push(
+      `radial-gradient(ellipse 58% 26% at 50% 7%, hsl(${hue} 60% 90% / 0.5), transparent 70%)`
+    );
+  }
+
+  layers.push(
+    `radial-gradient(circle at 50% 45%, hsl(${hue} 72% 56%), hsl(${hue} 76% 40%) 62%, hsl(${hue} 82% 26%) 100%)`
+  );
+  return layers.join(", ");
+}
+
 export default function Home() {
   const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
   const count = modules.length;
   const unlocked = modules.filter((m) => m.isUnlocked).length;
   const stars = makeStars(180);
 
+  const hueOf = (index: number) => Math.round(index * (360 / count));
+
+  const topBarItems = modules.map((module, index) => ({
+    week: module.week,
+    slug: module.slug,
+    title: module.title,
+    type: module.type,
+    hue: hueOf(index),
+    unlocked: module.isUnlocked,
+  }));
+
   return (
     <main className="solar-stage">
+      <TopBar items={topBarItems} />
+
       <div className="solar-stars" aria-hidden="true">
         {stars.map((star, i) => (
           <span
@@ -53,7 +115,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute left-1/2 top-6 z-10 w-full max-w-2xl -translate-x-1/2 px-4 text-center">
+      <div className="pointer-events-none absolute left-1/2 top-16 z-10 w-full max-w-2xl -translate-x-1/2 px-4 text-center">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Storefront DB · Course Map
         </h1>
@@ -77,7 +139,7 @@ export default function Home() {
           const duration = 14 + index * 5.5;
           const delay = -(duration * (index / count));
           const startAngle = index * (360 / count);
-          const hue = Math.round(index * (360 / count));
+          const hue = hueOf(index);
 
           const orbitStyle = {
             "--d": `${diameter}em`,
@@ -100,11 +162,17 @@ export default function Home() {
             <div key={module.slug} className="solar-orbit" style={orbitStyle}>
               <div className="solar-anchor">
                 <Link
+                  id={`planet-${module.slug}`}
                   href={`/week/${module.slug}`}
                   className={planetClasses}
                   aria-label={`Week ${module.week}: ${module.title} (${module.statusLabel})`}
                 >
-                  <span className="solar-planet-body">{module.week}</span>
+                  <span
+                    className="solar-planet-body"
+                    style={{ backgroundImage: planetSurface(hue, index) }}
+                  >
+                    {module.week}
+                  </span>
                   <span className="solar-tooltip">
                     <strong>Week {module.week}</strong> · {module.title}
                     <br />
@@ -120,7 +188,8 @@ export default function Home() {
       </div>
 
       <p className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2 px-4 text-center text-xs text-slate-500">
-        Click a planet to open its week · the sun is your storefront
+        Use the top bar or click a planet to open its week · the sun is your
+        storefront
       </p>
     </main>
   );
