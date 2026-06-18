@@ -22,11 +22,14 @@ body {
 --------------------------------------------------------------------------- */
 .solar-stage {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  padding: 3.5rem 1rem 3rem;
   background:
     radial-gradient(1100px 700px at 18% 12%, rgba(99, 102, 241, 0.14), transparent 60%),
     radial-gradient(900px 600px at 85% 82%, rgba(56, 189, 248, 0.12), transparent 60%),
@@ -64,7 +67,7 @@ body {
   height: 64em;
   flex: none;
   /* Scale the whole system to the viewport: length / unitless number is valid. */
-  font-size: calc(min(92vw, 82vh, 880px) / 64);
+  font-size: calc(min(92vw, 70vh, 820px) / 64);
 }
 
 .solar-sun {
@@ -128,7 +131,7 @@ body {
   margin-top: calc(var(--d) / -2);
   margin-left: calc(var(--d) / -2);
   border-radius: 50%;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 1px solid rgba(148, 163, 184, 0.18);
   transform: rotate(var(--start));
   animation: solar-orbit var(--dur) linear infinite;
   animation-delay: var(--delay);
@@ -188,12 +191,12 @@ body {
 .solar-planet.has-ring .solar-planet-body::after {
   content: "";
   position: absolute;
-  inset: -0.5em;
+  inset: calc(-1 * var(--ring-spread, 0.5em));
   border-radius: 50%;
-  border: 0.16em solid hsl(var(--hue) 90% 75% / 0.55);
-  border-top-color: hsl(var(--hue) 92% 82% / 0.8);
-  border-bottom-color: hsl(var(--hue) 90% 60% / 0.32);
-  transform: rotate(-20deg) scaleY(0.34);
+  border: var(--ring-w, 0.16em) var(--ring-style, solid) hsl(var(--hue) 90% 75% / 0.6);
+  border-top-color: hsl(var(--hue) 92% 84% / 0.85);
+  border-bottom-color: hsl(var(--hue) 90% 60% / 0.35);
+  transform: rotate(var(--ring-tilt, -20deg)) scaleY(var(--ring-flat, 0.34));
 }
 
 .solar-planet.is-locked .solar-planet-body {

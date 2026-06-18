@@ -90,6 +90,21 @@ export default function Home() {
     unlocked: module.isUnlocked,
   }));
 
+  // Ringed planets (reviews/tests) each get a slightly different ring.
+  const ringStyles = ["solid", "dashed", "dotted", "solid", "dashed"];
+  const ringWidths = ["0.34em", "0.26em", "0.4em", "0.22em", "0.46em"];
+  const ringSpreads = ["0.5em", "0.56em", "0.43em", "0.6em", "0.47em"];
+  const ringTilts = ["-20deg", "-14deg", "-26deg", "-18deg", "-24deg"];
+  const ringFlats = ["0.34", "0.3", "0.38", "0.32", "0.36"];
+  const ringVariant: Record<string, number> = {};
+  let ringSeq = 0;
+  for (const m of modules) {
+    if (m.type !== "assignment") {
+      ringVariant[m.slug] = ringSeq % ringStyles.length;
+      ringSeq += 1;
+    }
+  }
+
   return (
     <main className="solar-stage">
       <TopBar items={topBarItems} />
@@ -115,7 +130,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute left-1/2 top-16 z-10 w-full max-w-2xl -translate-x-1/2 px-4 text-center">
+      <div className="relative z-10 mb-10 w-full max-w-2xl px-4 text-center">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Storefront DB · Course Map
         </h1>
@@ -135,7 +150,7 @@ export default function Home() {
         </Link>
 
         {modules.map((module, index) => {
-          const diameter = 9 + index * 3.25;
+          const diameter = 12 + index * 3.0;
           const duration = 14 + index * 5.5;
           const delay = -(duration * (index / count));
           const startAngle = index * (360 / count);
@@ -150,13 +165,29 @@ export default function Home() {
             "--planet": "2.3em",
           } as CSSProperties;
 
+          const ringed = module.type !== "assignment";
+          const variant = ringVariant[module.slug] ?? 0;
+
           const planetClasses = [
             "solar-planet",
             module.isUnlocked ? "is-unlocked" : "is-locked",
-            module.type === "assignment" ? "" : "has-ring",
+            ringed ? "has-ring" : "",
           ]
             .filter(Boolean)
             .join(" ");
+
+          const bodyStyle = {
+            backgroundImage: planetSurface(hue, index),
+            ...(ringed
+              ? {
+                  "--ring-w": ringWidths[variant],
+                  "--ring-style": ringStyles[variant],
+                  "--ring-spread": ringSpreads[variant],
+                  "--ring-tilt": ringTilts[variant],
+                  "--ring-flat": ringFlats[variant],
+                }
+              : {}),
+          } as CSSProperties;
 
           return (
             <div key={module.slug} className="solar-orbit" style={orbitStyle}>
@@ -167,10 +198,7 @@ export default function Home() {
                   className={planetClasses}
                   aria-label={`Week ${module.week}: ${module.title} (${module.statusLabel})`}
                 >
-                  <span
-                    className="solar-planet-body"
-                    style={{ backgroundImage: planetSurface(hue, index) }}
-                  >
+                  <span className="solar-planet-body" style={bodyStyle}>
                     {module.week}
                   </span>
                   <span className="solar-tooltip">
