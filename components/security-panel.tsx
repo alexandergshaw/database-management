@@ -1,6 +1,6 @@
 interface SecurityPanelProps {
-  rlsOnCustomers: boolean;
-  hasPublicCatalog: boolean;
+  rls: boolean;
+  publicCatalog: boolean;
 }
 
 function Badge({ ok, label }: { ok: boolean; label: string }) {
@@ -18,13 +18,13 @@ function Badge({ ok, label }: { ok: boolean; label: string }) {
   );
 }
 
-export function SecurityPanel({ rlsOnCustomers, hasPublicCatalog }: SecurityPanelProps) {
+export function SecurityPanel({ rls, publicCatalog }: SecurityPanelProps) {
   return (
     <section className="rounded-xl border border-slate-700 bg-slate-900/70 p-5">
       <h2 className="text-lg font-semibold text-white">Security posture</h2>
       <ul className="mt-3 space-y-2">
-        <Badge ok={rlsOnCustomers} label="Row-level security enabled on customers" />
-        <Badge ok={hasPublicCatalog} label="public_catalog view exposes only safe columns" />
+        <Badge ok={rls} label="Row-level security protects the private PII table" />
+        <Badge ok={publicCatalog} label="public_catalog view exposes only safe columns" />
       </ul>
     </section>
   );

@@ -3,9 +3,8 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 
 import { TopBar } from "@/components/top-bar";
-import { courseModules } from "@/lib/course-modules";
+import { getDb } from "@/lib/db";
 import { resolveModuleProgress } from "@/lib/progress";
-import { getModuleTestStatus } from "@/lib/test-status";
 
 export const dynamic = "force-dynamic";
 
@@ -73,8 +72,14 @@ function planetSurface(hue: number, seed: number): string {
   return layers.join(", ");
 }
 
-export default function Home() {
-  const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
+export default async function Home() {
+  const db = await getDb();
+  let modules;
+  try {
+    modules = await resolveModuleProgress(db);
+  } finally {
+    await db.dispose?.();
+  }
   const count = modules.length;
   const unlocked = modules.filter((m) => m.isUnlocked).length;
   const stars = makeStars(180);

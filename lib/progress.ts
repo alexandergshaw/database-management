@@ -1,26 +1,31 @@
-import type { CourseModule } from "@/lib/course-modules";
-import type { ModuleTestStatus } from "@/lib/test-status";
+import type { Db } from "@/lib/db";
+import { weeks, type ModuleType } from "@/lib/weeks";
 
-export interface ModuleProgress extends CourseModule {
+export interface ModuleProgress {
+  week: number;
+  slug: string;
+  folder: string;
+  title: string;
+  summary: string;
+  type: ModuleType;
   isUnlocked: boolean;
   statusLabel: string;
 }
 
 /**
- * A module unlocks when the unit tests on the file the student edits pass.
- * Status comes straight from the Vitest results — there is no DB probe or
- * self-reported flag to game.
+ * Runs every week's probe against the live database. A module unlocks only when
+ * the objects its assignment creates actually exist — there is no file, flag, or
+ * test artifact to game, just the real schema the student built.
  */
-export const resolveModuleProgress = (
-  modules: CourseModule[],
-  testStatus: ModuleTestStatus
-): ModuleProgress[] =>
-  modules.map((module) => {
-    const isUnlocked = testStatus[module.folder] === true;
-
-    return {
-      ...module,
-      isUnlocked,
-      statusLabel: isUnlocked ? "Unlocked" : "Locked",
-    } satisfies ModuleProgress;
-  });
+export async function resolveModuleProgress(db: Db): Promise<ModuleProgress[]> {
+  return Promise.all(
+    weeks.map(async ({ probe, ...meta }) => {
+      const isUnlocked = await probe(db).catch(() => false);
+      return {
+        ...meta,
+        isUnlocked,
+        statusLabel: isUnlocked ? "Unlocked" : "Locked",
+      } satisfies ModuleProgress;
+    })
+  );
+}

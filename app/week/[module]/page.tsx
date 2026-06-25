@@ -1,11 +1,12 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { marked } from "marked";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { courseModules } from "@/lib/course-modules";
-import { readAssignmentFile } from "@/lib/migrations-harness";
+import { getDb } from "@/lib/db";
 import { resolveModuleProgress } from "@/lib/progress";
-import { getModuleTestStatus } from "@/lib/test-status";
 
 export const dynamic = "force-dynamic";
 
@@ -15,16 +16,26 @@ export default async function WeekModulePage({
   params: Promise<{ module: string }>;
 }) {
   const { module: moduleSlug } = await params;
-  const modules = resolveModuleProgress(courseModules, getModuleTestStatus());
-  const selectedModule = modules.find((entry) => entry.slug === moduleSlug);
 
+  const db = await getDb();
+  let modules;
+  try {
+    modules = await resolveModuleProgress(db);
+  } finally {
+    await db.dispose?.();
+  }
+
+  const selectedModule = modules.find((entry) => entry.slug === moduleSlug);
   if (!selectedModule) {
     notFound();
   }
 
   let html: string;
   try {
-    const markdown = readAssignmentFile(selectedModule.folder, "INSTRUCTIONS.md");
+    const markdown = readFileSync(
+      path.join(process.cwd(), "assignments", selectedModule.folder, "INSTRUCTIONS.md"),
+      "utf8"
+    );
     html = await marked.parse(markdown, { gfm: true });
   } catch {
     html = "<p>Instructions for this week haven't been added yet.</p>";
@@ -51,10 +62,7 @@ export default async function WeekModulePage({
         </span>
       </div>
 
-      <article
-        className="md mt-6"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <article className="md mt-6" dangerouslySetInnerHTML={{ __html: html }} />
 
       <div className="mt-10 border-t border-slate-800 pt-4">
         <Link

@@ -14,15 +14,13 @@ export function ModulePanel({ module }: ModulePanelProps) {
       <p className="mt-2 text-sm text-slate-300">{module.summary}</p>
       {module.isUnlocked ? (
         <p className="mt-4 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">
-          Unlocked —{" "}
-          <code className="font-mono">assignments/{module.folder}/test.ts</code>{" "}
-          passes.
+          Unlocked — the objects this week creates exist in your database.
         </p>
       ) : (
         <p className="mt-4 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-          Locked — make{" "}
-          <code className="font-mono">assignments/{module.folder}/test.ts</code>{" "}
-          pass to unlock.
+          Locked — run{" "}
+          <code className="font-mono">assignments/{module.folder}/solution.sql</code>{" "}
+          in your Supabase SQL editor to unlock.
         </p>
       )}
     </article>
