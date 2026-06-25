@@ -14,12 +14,12 @@ you must **join** the tables back together.
 ## Worked example (a different topic)
 ```sql
 -- Example only — NOT the answer.
--- one readable row per order, with the customer's name:
-create or replace view order_lines as
-select o.id, c.full_name as customer, o.total
-from orders o
-join customers c on c.id = o.customer_id
-order by o.created_at desc;
+-- one readable row per pet, with its owner's name:
+create or replace view pet_list as
+select p.id, o.full_name as owner, p.name
+from pets p
+join owners o on o.id = p.owner_id
+order by p.name;
 ```
 
 ## Your tasks (in `assignments/week10/starter.sql`)

@@ -12,11 +12,11 @@ Practice weeks 10–12 (joins, transactions, security, analytics) as four views.
 ```sql
 -- Example only — NOT the answer.
 -- summarize from an existing view:
-create or replace view top_customers as
-select customer, count(*) as orders
-from order_lines           -- a view made earlier
-group by customer
-order by orders desc;
+create or replace view busiest_owners as
+select owner, count(*) as visits
+from pet_visits            -- a view made earlier
+group by owner
+order by visits desc;
 ```
 
 ## Your tasks (in `assignments/review03/starter.sql`)

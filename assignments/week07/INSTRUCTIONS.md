@@ -15,13 +15,13 @@ homepage reads.
 ```sql
 -- Example only — NOT the answer.
 -- filtering + sorting:
-select name, price from products where price < 20 order by price;
+select name, price from fruits where price < 1.00 order by price;
 
 -- a one-row summary using sub-selects:
-create or replace view shop_stats as
+create or replace view fruit_stats as
 select
-  (select count(*) from products)::int as product_count,
-  (select round(avg(price), 2) from products) as avg_price;
+  (select count(*) from fruits)::int as fruit_count,
+  (select round(avg(price), 2) from fruits) as avg_price;
 ```
 
 ## Your tasks (in `assignments/week07/starter.sql`)

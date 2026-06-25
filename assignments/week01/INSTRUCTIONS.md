@@ -17,20 +17,20 @@ This week you create the two tables at the heart of the catalog — **planets** 
 ## Worked example (a different topic — yours is about planets)
 ```sql
 -- Example only — NOT the answer:
-create table members (
+create table owners (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,                 -- required, and no duplicates
   full_name text not null
 );
 
-create table member_cards (
+create table pets (
   id uuid primary key default gen_random_uuid(),
-  member_id uuid not null references members(id) on delete cascade,  -- foreign key
-  card_number text not null
+  owner_id uuid not null references owners(id) on delete cascade,  -- foreign key
+  name text not null
 );
 ```
-Notice how `member_cards.member_id` **references** `members(id)`. You'll use the
-same idea to connect astronomers to their sites.
+Notice how `pets.owner_id` **references** `owners(id)`. You'll use the same idea
+to connect astronomers to their sites.
 
 ## Your tasks (in `assignments/week01/starter.sql`)
 1. Create the `planets` table (unique name, and CHECKs so radius/distance stay

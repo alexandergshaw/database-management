@@ -10,13 +10,13 @@ When you LEFT JOIN one table to *several* others and then count, an ordinary
 to count each thing once:
 ```sql
 -- Example only — NOT the answer.
-select a.name,
-       count(distinct b.id) as books,
-       count(distinct r.id) as reviews
-from authors a
-left join books b   on b.author_id = a.id
-left join reviews r on r.author_id = a.id
-group by a.name;
+select o.full_name,
+       count(distinct p.id) as pets,
+       count(distinct c.id) as cars
+from owners o
+left join pets p on p.owner_id = o.id
+left join cars c on c.owner_id = o.id
+group by o.full_name;
 ```
 
 ## Your tasks (in `assignments/final/starter.sql`)

@@ -24,8 +24,8 @@ To insert a row that references another table by name (not by its hidden id),
 look the id up as you insert:
 ```sql
 -- Example only — NOT the answer:
-insert into reviews (book_id, stars)
-select id, 5 from books where title = 'Dune';
+insert into pets (owner_id, name)
+select id, 'Rex' from owners where full_name = 'Sam Lee';
 ```
 
 ## Your tasks (in `assignments/week06/starter.sql`)

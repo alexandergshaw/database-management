@@ -15,18 +15,18 @@ Now you'll model **relationships** between tables — the heart of database desi
 ## Worked example (a different topic — yours is moons and missions)
 ```sql
 -- Example only — NOT the answer.
--- one-to-many: one author writes many books
-create table books (
+-- one-to-many: one owner has many pets
+create table pets (
   id uuid primary key default gen_random_uuid(),
-  author_id uuid not null references authors(id) on delete cascade,
-  title text not null
+  owner_id uuid not null references owners(id) on delete cascade,
+  name text not null
 );
 
--- many-to-many: students take many courses, courses have many students
-create table enrollments (
-  student_id uuid not null references students(id) on delete cascade,
-  course_id  uuid not null references courses(id) on delete cascade,
-  primary key (student_id, course_id)   -- the pair is the key
+-- many-to-many: pets play with many toys, toys are shared by many pets
+create table pet_toys (
+  pet_id uuid not null references pets(id) on delete cascade,
+  toy_id uuid not null references toys(id) on delete cascade,
+  primary key (pet_id, toy_id)   -- the pair is the key
 );
 ```
 

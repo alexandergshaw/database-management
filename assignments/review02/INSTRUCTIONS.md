@@ -12,12 +12,12 @@ three views.
 ```sql
 -- Example only — NOT the answer.
 -- join two tables, then count per group:
-create or replace view orders_per_city as
-select c.city, count(o.id) as orders
-from customers c
-join orders o on o.customer_id = c.id
-group by c.city
-order by orders desc;
+create or replace view pets_per_city as
+select o.city, count(p.id) as pets
+from owners o
+join pets p on p.owner_id = o.id
+group by o.city
+order by pets desc;
 ```
 
 ## Your tasks (in `assignments/review02/starter.sql`)

@@ -17,13 +17,13 @@ This week's views also use:
 ## Worked example (a different topic — yours is about planets)
 ```sql
 -- Example only — NOT the answer.
--- "how many books each author wrote, including authors with none":
-create or replace view author_book_counts as
-select a.name as author, count(b.id) as books
-from authors a
-left join books b on b.author_id = a.id
-group by a.name
-order by a.name;
+-- "how many pets each owner has, including owners with none":
+create or replace view owner_pet_counts as
+select o.full_name as owner, count(p.id) as pets
+from owners o
+left join pets p on p.owner_id = o.id
+group by o.full_name
+order by o.full_name;
 ```
 
 ## Your tasks (in `assignments/review01/starter.sql`)

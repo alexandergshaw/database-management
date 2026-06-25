@@ -10,6 +10,8 @@ You'll wrap the steps in a database **function** so they always run as one unit.
   spend the last night (this is **concurrency** control).
 - `raise exception '...'` aborts and undoes everything done so far.
 
+**Video:** [Writing functions in PostgreSQL (step by step)](https://www.youtube.com/watch?v=GNTap3iVg3c)
+
 ### Worked example (a different topic — yours books telescope nights)
 ```sql
 -- Example only — NOT the answer. The shape of an "all-or-nothing" function:
@@ -35,6 +37,8 @@ $$;
 - A **view** can publish only the safe columns of a table, and `grant select`
   decides who may read it.
 
+**Video:** [Row-Level Security with Supabase (step by step)](https://www.youtube.com/watch?v=Ow_Uzedfohk)
+
 ## Your tasks (in `assignments/week11/starter.sql`)
 1. Create `telescopes` and `telescope_bookings`.
 2. Write the atomic `book_nights(code, nights)` function (and call it once).
@@ -42,7 +46,6 @@ $$;
 4. Publish a `public_catalog` view of safe planet columns and grant it to `anon`.
 
 ## Watch & learn
-- **Video:** [Writing functions in PostgreSQL (step by step)](https://www.youtube.com/watch?v=GNTap3iVg3c) · [Row-Level Security with Supabase (step by step)](https://www.youtube.com/watch?v=Ow_Uzedfohk)
 - **Tutorial:** [PostgreSQL — PL/pgSQL](https://www.postgresql.org/docs/current/plpgsql.html) · [PostgreSQL — transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html) · [Supabase — Row-Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
 
 ## Done when

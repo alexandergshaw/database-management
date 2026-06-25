@@ -9,12 +9,12 @@ The graded version of Review 3 (weeks 10–12), as four views.
 ## Worked example (a different topic)
 ```sql
 -- Example only — NOT the answer.
-create or replace view spend_per_customer as
-select c.name, coalesce(sum(o.total), 0) as spent
-from customers c
-left join orders o on o.customer_id = c.id
-group by c.name
-order by spent desc;
+create or replace view fruit_per_basket as
+select b.name, coalesce(sum(f.quantity), 0) as fruit
+from baskets b
+left join fruits f on f.basket_id = b.id
+group by b.name
+order by fruit desc;
 ```
 
 ## Your tasks (in `assignments/test03/starter.sql`)

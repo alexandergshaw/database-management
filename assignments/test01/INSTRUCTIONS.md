@@ -11,12 +11,12 @@ The graded version of Review 1. Same skills (weeks 1–2), assessed as three vie
 ## Worked example (a different topic)
 ```sql
 -- Example only — NOT the answer.
--- "how many products are in each category":
-create or replace view products_per_category as
-select category, count(*) as products
-from products
-group by category
-order by category;
+-- "how many fruits are each color":
+create or replace view fruits_per_color as
+select color, count(*) as fruits
+from fruits
+group by color
+order by color;
 ```
 
 ## Your tasks (in `assignments/test01/starter.sql`)

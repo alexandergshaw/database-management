@@ -17,11 +17,11 @@ messy tables are already created for you; your job is to build the clean ones.
 ## Worked example (3NF, different topic)
 ```sql
 -- Example only — NOT the answer.
--- "orders" repeats each customer's city on every order (city depends on customer).
--- Fix: pull customers (with their city) into their own table.
-create table customers_clean (id serial primary key, name text unique, city text);
-insert into customers_clean (name, city)
-select distinct customer, customer_city from orders;
+-- a "library" table repeats each author's country on every book (country depends
+-- on the author). Fix: pull authors (with their country) into their own table.
+create table authors_clean (id serial primary key, name text unique, country text);
+insert into authors_clean (name, country)
+select distinct author, author_country from library;
 ```
 
 ## Your tasks (in `assignments/week05/starter.sql`)

@@ -14,12 +14,12 @@ fast to read.
 ## Worked example (a different topic)
 ```sql
 -- Example only — NOT the answer.
-create or replace view sales_by_region as
-select region, count(*) as orders, round(avg(total), 2) as avg_order
-from orders group by region order by orders desc;
+create or replace view fruit_by_color as
+select color, count(*) as fruits, round(avg(price), 2) as avg_price
+from fruits group by color order by fruits desc;
 
-create materialized view sales_by_region_snapshot as select * from sales_by_region;
-create index idx_sales_region on sales_by_region_snapshot (region);
+create materialized view fruit_by_color_snapshot as select * from fruit_by_color;
+create index idx_fruit_color on fruit_by_color_snapshot (color);
 ```
 
 ## Your tasks (in `assignments/week12/starter.sql`)

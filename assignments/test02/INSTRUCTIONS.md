@@ -7,11 +7,11 @@ To find rows in one table with **no** match in another, use `NOT EXISTS` with a
 small sub-query:
 ```sql
 -- Example only — NOT the answer.
--- "products that have never been reviewed":
-create or replace view never_reviewed as
+-- "pets that have never been to the vet":
+create or replace view never_visited as
 select p.name
-from products p
-where not exists (select 1 from reviews r where r.product_id = p.id)
+from pets p
+where not exists (select 1 from vet_visits v where v.pet_id = p.id)
 order by p.name;
 ```
 
