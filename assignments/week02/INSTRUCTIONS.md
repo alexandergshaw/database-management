@@ -36,6 +36,10 @@ create table enrollments (
    `mission_targets` junction table, then link missions to the planets they
    visited (make at least one mission visit two or more planets).
 
+## Watch & learn
+- **Video:** [Many-to-many & junction tables (YouTube)](https://www.youtube.com/results?search_query=database+many+to+many+junction+table+tutorial)
+- **Tutorial:** [Lucidchart — ER diagrams & relationships](https://www.lucidchart.com/pages/er-diagrams) · [W3Schools — foreign keys](https://www.w3schools.com/sql/sql_foreignkey.asp)
+
 ## Done when
 - Cards show moon counts and mission chips; a Missions panel appears.
 - The Week 2 planet is **Unlocked**.

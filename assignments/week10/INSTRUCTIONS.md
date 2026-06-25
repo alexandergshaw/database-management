@@ -28,6 +28,10 @@ order by o.created_at desc;
 2. A `planet_observation_counts` view: every planet and how many times it's been
    observed (0 included — use a LEFT JOIN).
 
+## Watch & learn
+- **Video:** [SQL JOINs explained (YouTube)](https://www.youtube.com/results?search_query=sql+joins+explained+inner+left+join)
+- **Tutorial:** [W3Schools — JOIN](https://www.w3schools.com/sql/sql_join.asp) · [LEFT JOIN](https://www.w3schools.com/sql/sql_join_left.asp)
+
 ## Done when
 - An observation log table appears on the homepage.
 - The Week 10 planet is **Unlocked**.

@@ -23,6 +23,10 @@ order by category;
 Create three views (the starter names each and lists its columns): planets per
 type, the average planet radius, and missions per agency.
 
+## Watch & learn
+- **Video:** [Aggregate functions & GROUP BY (YouTube)](https://www.youtube.com/results?search_query=sql+aggregate+functions+group+by+tutorial)
+- **Tutorial:** [W3Schools — COUNT/AVG/SUM](https://www.w3schools.com/sql/sql_count_avg_sum.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
+
 ## Done when
 - The Week 4 planet is **Unlocked** (all three views exist).
 

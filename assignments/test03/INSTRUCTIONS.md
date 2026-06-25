@@ -22,5 +22,9 @@ Four views: observations per astronomer (joins), nights booked per telescope
 (transactions), planet counts per type from the public view (security), and the
 largest planet per type (analytics).
 
+## Watch & learn
+- **Video:** [LEFT JOIN + SUM + COALESCE (YouTube)](https://www.youtube.com/results?search_query=sql+left+join+sum+coalesce+tutorial)
+- **Tutorial:** [W3Schools — LEFT JOIN](https://www.w3schools.com/sql/sql_join_left.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
+
 ## Done when
 - The Week 14 planet is **Unlocked** (all four views exist).

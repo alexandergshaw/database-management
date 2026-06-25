@@ -34,6 +34,10 @@ select id, 5 from books where title = 'Dune';
 3. **UPDATE** the "logged" ones to "confirmed", then **DELETE** a "cancelled" one.
 4. **SELECT** the rows that remain.
 
+## Watch & learn
+- **Video:** [INSERT / UPDATE / DELETE / SELECT (YouTube)](https://www.youtube.com/results?search_query=sql+insert+update+delete+select+tutorial)
+- **Tutorial:** [W3Schools — INSERT](https://www.w3schools.com/sql/sql_insert.asp) · [UPDATE](https://www.w3schools.com/sql/sql_update.asp) · [DELETE](https://www.w3schools.com/sql/sql_delete.asp) · [SELECT](https://www.w3schools.com/sql/sql_select.asp)
+
 ## Done when
 - An observation log appears once Week 10's join view is built.
 - The Week 6 planet is **Unlocked**.

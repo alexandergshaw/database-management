@@ -39,6 +39,10 @@ insert into app_settings (app_name) values ('My Cool App');
 Your job uses the same pattern for a `catalog_settings` table holding your
 observatory's name and tagline.
 
+## Watch & learn
+- **Video:** [SQL Tutorial – Full Course for Beginners (freeCodeCamp, ~4h)](https://www.youtube.com/watch?v=HXV3zeQKqGY) — bookmark this; it covers most of the semester.
+- **Tutorial:** [Supabase — using the SQL editor](https://supabase.com/docs/guides/database/overview) · [W3Schools — SQL intro](https://www.w3schools.com/sql/)
+
 ## Done when
 - The homepage header shows your catalog's name.
 - The Week 0 planet is **Unlocked**.

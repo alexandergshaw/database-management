@@ -30,6 +30,10 @@ order by a.name;
 Create three views — the starter names each one and lists the columns it should
 return. They cover one-to-many (moons), many-to-many (missions), and keys (sites).
 
+## Watch & learn
+- **Video:** [SQL views, JOINs & GROUP BY (YouTube)](https://www.youtube.com/results?search_query=sql+views+join+group+by+tutorial)
+- **Tutorial:** [W3Schools — views](https://www.w3schools.com/sql/sql_view.asp) · [JOIN](https://www.w3schools.com/sql/sql_join.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
+
 ## Done when
 - The Week 3 planet is **Unlocked** (all three views exist).
 

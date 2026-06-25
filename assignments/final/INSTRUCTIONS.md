@@ -27,6 +27,10 @@ group by a.name;
 4. `final_telescope_usage` — each telescope's availability vs nights booked.
 5. `final_public_catalog_summary` — a per-type summary from the safe public view.
 
+## Watch & learn
+- **Video:** [SQL Tutorial – Full Course for Beginners (freeCodeCamp)](https://www.youtube.com/watch?v=HXV3zeQKqGY) — a full review of everything in this course.
+- **Tutorial:** [W3Schools — SQL reference](https://www.w3schools.com/sql/) · [PostgreSQL — the SQL language](https://www.postgresql.org/docs/current/sql.html)
+
 ## Done when
 - The Final Exam planet is **Unlocked** (all five views exist).
 

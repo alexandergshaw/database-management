@@ -33,6 +33,10 @@ select distinct customer, customer_city from orders;
 The starter gives you the messy tables and explains exactly what clean tables to
 build.
 
+## Watch & learn
+- **Video:** [Database normalization 1NF / 2NF / 3NF (YouTube)](https://www.youtube.com/results?search_query=database+normalization+1nf+2nf+3nf+tutorial)
+- **Tutorial:** [GeeksforGeeks — normal forms](https://www.geeksforgeeks.org/normal-forms-in-dbms/) · [Wikipedia — database normalization](https://en.wikipedia.org/wiki/Database_normalization)
+
 ## Done when
 - The Normalization panel shows the import normalized into stars.
 - The Week 5 planet is **Unlocked**.
