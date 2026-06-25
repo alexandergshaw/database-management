@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { getDb, type Db } from "./db";
-import { getStoreData } from "./store-data";
+import { getCatalogData } from "./store-data";
 import { weeks } from "./weeks";
 
 // Instructor sanity check: seed an in-process database from every reference
-// solution.sql and confirm each week's probe unlocks and the storefront reads
-// correctly. Replaces the per-week test files of the migration-based design.
+// solution.sql and confirm each week's probe unlocks and the catalog reads
+// correctly.
 let db: Db;
 
 beforeAll(async () => {
@@ -25,23 +25,23 @@ describe("reference solutions satisfy every probe", () => {
   }
 });
 
-describe("store data reflects the seeded storefront", () => {
-  it("reads settings, products, suppliers, and categories", async () => {
-    const data = await getStoreData(db, "local");
-    expect(data.settings?.storeName).toBeTruthy();
-    expect(data.products).toHaveLength(5);
-    expect(data.products.every((p) => p.supplierName !== null)).toBe(true);
-    expect(data.products.some((p) => p.categories.length > 0)).toBe(true);
-    expect(data.suppliers.length).toBeGreaterThanOrEqual(3);
+describe("catalog data reflects the seeded database", () => {
+  it("reads settings, planets, moons, and missions", async () => {
+    const data = await getCatalogData(db, "local");
+    expect(data.settings?.name).toBeTruthy();
+    expect(data.planets).toHaveLength(8);
+    expect(data.planets.some((p) => p.moonCount > 0)).toBe(true);
+    expect(data.planets.some((p) => p.missions.length > 0)).toBe(true);
+    expect(data.missions.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("computes stats, revenue, and analytics", async () => {
-    const data = await getStoreData(db, "local");
-    // 79.99 + 24.50*2 + 18*3 = 182.99
-    expect(data.stats?.revenue).toBeCloseTo(182.99, 2);
-    expect(data.orderHistory.length).toBeGreaterThan(0);
-    expect(data.categoryRevenue.length).toBeGreaterThan(0);
-    expect(data.hasCheckout).toBe(true);
-    expect(data.security.publicCatalog).toBe(true);
+  it("computes stats, observations, analytics, and security", async () => {
+    const data = await getCatalogData(db, "local");
+    expect(data.stats?.planetCount).toBe(8);
+    expect(data.observationCount).toBe(3);
+    expect(data.observationLog.length).toBeGreaterThan(0);
+    expect(data.typeBreakdown.length).toBeGreaterThan(0);
+    expect(data.hasBooking).toBe(true);
+    expect(data.security.publicView).toBe(true);
   });
 });

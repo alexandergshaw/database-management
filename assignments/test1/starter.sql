@@ -1,20 +1,18 @@
 -- Test 1 — assessed views across weeks 1-5.
 
--- Problem 1 (week 3) — test1_products_per_category: category, products (count),
--- including empty categories (LEFT JOIN).
+-- Problem 1 (week 1) — test1_planets_per_type: type, planets (count by type).
 -- TODO:
 
 
--- Problem 2 (week 1) — test1_inventory_value: inventory_value = sum of
--- price * stock_count across all products.
+-- Problem 2 (week 1) — test1_avg_radius: avg_radius_km = average radius_km,
+-- rounded to 1 decimal.
 -- TODO:
 
 
--- Problem 3 (week 2) — test1_suppliers_by_country: country, suppliers (count),
--- grouped by country.
+-- Problem 3 (week 3) — test1_missions_by_agency: agency, missions (count).
 -- TODO:
 
 
--- Problem 4 (week 4) — test1_brand_product_counts: brand, products (count from
--- the normalized nf_catalog), including brands with none (LEFT JOIN).
+-- Problem 4 (week 4) — test1_star_body_counts: star, bodies (count from
+-- nf_bodies), including stars with none (LEFT JOIN).
 -- TODO:

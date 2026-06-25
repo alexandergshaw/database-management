@@ -1,36 +1,40 @@
--- Week 3 — Categories, a many-to-many relationship resolved with a junction
--- table, plus a business rule enforced by a CHECK constraint.
+-- Week 3 — Missions (many-to-many with planets) + a business rule.
+-- A mission can visit many planets and a planet is visited by many missions, so
+-- the relationship lives in a junction table.
 
-drop table if exists product_categories cascade;
-drop table if exists categories cascade;
+drop table if exists mission_targets cascade;
+drop table if exists missions cascade;
 
-create table categories (
+create table missions (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique check (length(trim(name)) > 0),
+  name text not null unique,
+  agency text not null,
+  launch_year integer not null check (launch_year > 1950),
   created_at timestamptz not null default now()
 );
 
-create table product_categories (
-  product_id uuid not null references products(id) on delete cascade,
-  category_id uuid not null references categories(id) on delete cascade,
-  primary key (product_id, category_id)
+create table mission_targets (
+  mission_id uuid not null references missions(id) on delete cascade,
+  planet_id uuid not null references planets(id) on delete cascade,
+  primary key (mission_id, planet_id)
 );
 
-insert into categories (name) values
-  ('Hiking'), ('Hydration'), ('Apparel'), ('Lighting'), ('Rain');
+insert into missions (name, agency, launch_year) values
+  ('Voyager 2', 'NASA', 1977),
+  ('Cassini', 'NASA', 1997),
+  ('Mariner 10', 'NASA', 1973),
+  ('Juno', 'NASA', 2011),
+  ('Mars 2020', 'NASA', 2020);
 
-insert into product_categories (product_id, category_id)
-select p.id, c.id
-from products p
-join (values
-  ('Trail Daypack 22L', 'Hiking'),
-  ('Insulated Water Bottle', 'Hydration'),
-  ('Insulated Water Bottle', 'Hiking'),
-  ('Merino Wool Socks', 'Apparel'),
-  ('Merino Wool Socks', 'Hiking'),
-  ('Trail Headlamp 300lm', 'Lighting'),
-  ('Trail Headlamp 300lm', 'Hiking'),
-  ('Packable Rain Jacket', 'Rain'),
-  ('Packable Rain Jacket', 'Apparel')
-) as link(product_name, category_name) on link.product_name = p.name
-join categories c on c.name = link.category_name;
+insert into mission_targets (mission_id, planet_id)
+select mi.id, p.id
+from (values
+  ('Voyager 2', 'Jupiter'), ('Voyager 2', 'Saturn'),
+  ('Voyager 2', 'Uranus'), ('Voyager 2', 'Neptune'),
+  ('Cassini', 'Saturn'),
+  ('Mariner 10', 'Mercury'), ('Mariner 10', 'Venus'),
+  ('Juno', 'Jupiter'),
+  ('Mars 2020', 'Mars')
+) as link(mission_name, planet_name)
+join missions mi on mi.name = link.mission_name
+join planets p on p.name = link.planet_name;

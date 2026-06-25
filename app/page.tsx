@@ -137,18 +137,18 @@ export default async function Home() {
 
       <div className="relative z-10 mb-10 w-full max-w-2xl px-4 text-center">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
-          Storefront DB · Course Map
+          Planet Catalog · Course Map
         </h1>
         <p className="mt-1 text-sm text-slate-400">
           {count} planets, one per week — {unlocked} unlocked. Each planet lights
-          up when its unit tests pass.
+          up when its SQL is in place.
         </p>
       </div>
 
       <div className="solar-system">
-        <Link href="/dashboard" className="solar-sun" aria-label="Open the storefront dashboard">
+        <Link href="/dashboard" className="solar-sun" aria-label="Open the catalog dashboard">
           <span>
-            Storefront
+            Catalog
             <br />
             Dashboard
           </span>
@@ -222,7 +222,7 @@ export default async function Home() {
 
       <p className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2 px-4 text-center text-xs text-slate-500">
         Use the top bar or click a planet to open its week · the sun is your
-        storefront
+        catalog dashboard
       </p>
     </main>
   );

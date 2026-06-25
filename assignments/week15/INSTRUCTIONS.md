@@ -3,20 +3,18 @@
 Make analytical queries possible and fast.
 
 ## Concepts
-- An **analytics view** aggregates across the whole schema.
+- An **analytics view** aggregates across the catalog.
 - A **materialized view** stores the result, and an **index** on it speeds reads
   — both new objects you own.
 
-## Your SQL task
-Open and complete `assignments/week15/starter.sql`. It creates a `category_revenue` view
-(revenue per category), a `mv_category_revenue` materialized view, and an index
-on it.
+## Problems (in `assignments/week15/starter.sql`)
+1. Create a `type_summary` view (planets and average radius per type).
+2. Create a `mv_type_summary` materialized view and index it.
 
 ## Done when
-- A Revenue by category chart appears on the homepage.
+- A "Planets by type" chart appears on the homepage.
 - The Week 15 planet is **Unlocked**.
 
 ---
 
 **Retry anytime:** re-run the script (`create or replace` / drop-if-exists).
-Remove with `drop materialized view if exists mv_category_revenue; drop view if exists category_revenue;`.

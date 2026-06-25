@@ -1,57 +1,37 @@
--- Week 8 — Orders: practice all four DML verbs on tables you own here.
--- (We don't touch products; stock-on-hand is computed by a later view.)
+-- Week 8 — Observations: practice all four DML verbs on a table you own here.
 
-drop table if exists order_items cascade;
-drop table if exists orders cascade;
+drop table if exists observations cascade;
 
-create table orders (
+create table observations (
   id uuid primary key default gen_random_uuid(),
-  customer_id uuid not null references customers(id) on delete cascade,
-  status text not null default 'paid',
-  created_at timestamptz not null default now()
+  astronomer_id uuid not null references astronomers(id) on delete cascade,
+  planet_id uuid not null references planets(id),
+  magnitude numeric(5, 2) not null,
+  status text not null default 'logged',
+  observed_at timestamptz not null default now()
 );
 
-create table order_items (
-  order_id uuid not null references orders(id) on delete cascade,
-  product_id uuid not null references products(id),
-  quantity integer not null check (quantity > 0),
-  unit_price numeric(10, 2) not null check (unit_price >= 0),
-  primary key (order_id, product_id)
-);
+-- INSERT: Ana logs Mars.
+with a as (select id from astronomers where email = 'ana.ramirez@example.com')
+insert into observations (astronomer_id, planet_id, magnitude)
+select a.id, p.id, 1.5 from a, planets p where p.name = 'Mars';
 
--- INSERT: Ana buys a daypack.
-with o as (
-  insert into orders (customer_id)
-  select id from customers where email = 'ana.ramirez@example.com'
-  returning id
-)
-insert into order_items (order_id, product_id, quantity, unit_price)
-select o.id, p.id, 1, p.price from o, products p where p.name = 'Trail Daypack 22L';
+-- INSERT: Ben logs Jupiter and Saturn.
+with a as (select id from astronomers where email = 'ben.cole@example.com')
+insert into observations (astronomer_id, planet_id, magnitude)
+select a.id, p.id, v.mag
+from a
+join (values ('Jupiter', -2.0), ('Saturn', 0.5)) as v(name, mag) on true
+join planets p on p.name = v.name;
 
--- INSERT: Ben buys a bottle and three pairs of socks.
-with o as (
-  insert into orders (customer_id)
-  select id from customers where email = 'ben.cole@example.com'
-  returning id
-)
-insert into order_items (order_id, product_id, quantity, unit_price)
-select o.id, p.id, line.qty, p.price
-from o
-join (values ('Insulated Water Bottle', 2), ('Merino Wool Socks', 3)) as line(name, qty) on true
-join products p on p.name = line.name;
+-- INSERT a cancelled observation we will DELETE.
+with a as (select id from astronomers where email = 'chiara.rossi@example.com')
+insert into observations (astronomer_id, planet_id, magnitude, status)
+select a.id, p.id, 3.0, 'cancelled' from a, planets p where p.name = 'Neptune';
 
--- INSERT a cancelled order we will DELETE.
-with o as (
-  insert into orders (customer_id, status)
-  select id, 'cancelled' from customers where email = 'chiara.rossi@example.com'
-  returning id
-)
-insert into order_items (order_id, product_id, quantity, unit_price)
-select o.id, p.id, 1, p.price from o, products p where p.name = 'Packable Rain Jacket';
+-- UPDATE logged observations to confirmed, then DELETE the cancelled one.
+update observations set status = 'confirmed' where status = 'logged';
+delete from observations where status = 'cancelled';
 
--- UPDATE the paid orders, then DELETE the cancelled one.
-update orders set status = 'fulfilled' where status = 'paid';
-delete from orders where status = 'cancelled';
-
--- SELECT: read back the orders that remain.
-select id, status, created_at from orders order by created_at;
+-- SELECT: read back the observations that remain.
+select id, magnitude, status, observed_at from observations order by observed_at;

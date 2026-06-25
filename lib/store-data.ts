@@ -1,60 +1,63 @@
 import type { Db, Row } from "@/lib/db";
 
-export interface StoreSettings {
-  storeName: string;
+export interface CatalogSettings {
+  name: string;
   tagline: string;
 }
 
-export interface Product {
+export interface Planet {
   id: string;
   name: string;
-  description: string;
-  price: number;
-  stockCount: number;
-  supplierName: string | null;
-  categories: string[];
+  type: string;
+  radiusKm: number;
+  distanceAu: number;
+  meanTempC: number;
+  moonCount: number;
+  missions: string[];
 }
 
-export interface Supplier {
+export interface Mission {
   id: string;
   name: string;
-  country: string | null;
+  agency: string;
+  targetCount: number;
 }
 
-export interface StoreStats {
-  productCount: number;
-  orderCount: number;
-  customerCount: number;
-  revenue: number;
-  avgPrice: number;
+export interface CatalogStats {
+  planetCount: number;
+  moonCount: number;
+  missionCount: number;
+  observationCount: number;
+  avgRadiusKm: number;
 }
 
-export interface OrderHistoryRow {
+export interface ObservationRow {
   id: string;
-  customer: string;
-  itemCount: number;
-  total: number;
-  createdAt: string;
+  astronomer: string;
+  planet: string;
+  magnitude: number;
+  observedAt: string;
 }
 
-export interface CategoryRevenue {
-  category: string;
-  revenue: number;
+export interface TypeRow {
+  type: string;
+  planets: number;
+  avgRadiusKm: number;
 }
 
-export interface StoreData {
+export interface CatalogData {
   source: "supabase" | "local";
-  settings: StoreSettings | null;
-  products: Product[];
-  suppliers: Supplier[];
-  normalization: { importRows: number; brands: number } | null;
-  customerCount: number;
-  orderCount: number;
-  stats: StoreStats | null;
-  orderHistory: OrderHistoryRow[];
-  categoryRevenue: CategoryRevenue[];
-  hasCheckout: boolean;
-  security: { rls: boolean; publicCatalog: boolean };
+  settings: CatalogSettings | null;
+  planets: Planet[];
+  missions: Mission[];
+  normalization: { importRows: number; stars: number } | null;
+  astronomerCount: number;
+  observationCount: number;
+  stats: CatalogStats | null;
+  observationLog: ObservationRow[];
+  typeBreakdown: TypeRow[];
+  hasBooking: boolean;
+  security: { rls: boolean; publicView: boolean };
 }
 
 const num = (v: unknown) => Number(v ?? 0);
@@ -69,106 +72,104 @@ async function sq(db: Db, sql: string): Promise<Row[]> {
 
 const one = async (db: Db, sql: string): Promise<Row | null> => (await sq(db, sql))[0] ?? null;
 
-export async function getStoreData(db: Db, source: StoreData["source"]): Promise<StoreData> {
-  const settingsRow = await one(db, "select store_name, tagline from store_settings limit 1");
+export async function getCatalogData(db: Db, source: CatalogData["source"]): Promise<CatalogData> {
+  const settingsRow = await one(db, "select catalog_name, tagline from catalog_settings limit 1");
 
-  const productRows = await sq(
+  const planetRows = await sq(
     db,
-    "select id, name, description, price, stock_count from products order by name"
+    "select id, name, type, radius_km, distance_au, mean_temp_c from planets order by distance_au"
   );
-  const supplierLinks = await sq(
+  const moonCounts = await sq(db, "select planet_id, count(*)::int as n from moons group by planet_id");
+  const missionLinks = await sq(
     db,
-    "select ps.product_id, s.name from product_suppliers ps join suppliers s on s.id = ps.supplier_id"
+    "select mt.planet_id, m.name from mission_targets mt join missions m on m.id = mt.mission_id"
   );
-  const categoryLinks = await sq(
+  const missionRows = await sq(
     db,
-    "select pc.product_id, c.name from product_categories pc join categories c on c.id = pc.category_id order by c.name"
+    `select m.id, m.name, m.agency, count(mt.planet_id)::int as targets
+     from missions m left join mission_targets mt on mt.mission_id = m.id
+     group by m.id, m.name, m.agency order by m.name`
   );
-  const supplierRows = await sq(db, "select id, name, country from suppliers order by name");
-  const importRow = await one(db, "select count(*)::int as n from catalog_import");
-  const brandRow = await one(db, "select count(*)::int as n from nf_brands");
-  const customerRow = await one(db, "select count(*)::int as n from customers");
-  const orderRow = await one(db, "select count(*)::int as n from orders");
+  const importRow = await one(db, "select count(*)::int as n from body_import");
+  const starRow = await one(db, "select count(*)::int as n from nf_stars");
+  const astronomerRow = await one(db, "select count(*)::int as n from astronomers");
+  const observationRow = await one(db, "select count(*)::int as n from observations");
   const statsRow = await one(
     db,
-    "select product_count, order_count, customer_count, revenue, avg_price from store_stats"
+    "select planet_count, moon_count, mission_count, observation_count, avg_radius_km from catalog_stats"
   );
-  const historyRows = await sq(
+  const logRows = await sq(
     db,
-    "select id, customer, item_count, total, created_at from order_history limit 10"
+    "select id, astronomer, planet, magnitude, observed_at from observation_log limit 10"
   );
-  const catRevRows = await sq(db, "select category, revenue from category_revenue");
-  const checkoutRow = await one(
+  const typeRows = await sq(db, "select type, planets, avg_radius_km from type_summary");
+  const bookingRow = await one(
     db,
-    "select to_regprocedure('place_order(text,integer)') is not null as ok"
+    "select to_regprocedure('book_nights(text,integer)') is not null as ok"
   );
-  const rlsRow = await one(db, "select relrowsecurity as rls from pg_class where relname = 'customer_pii'");
-  const publicCatalogRow = await one(
-    db,
-    "select to_regclass('public.public_catalog') is not null as ok"
-  );
+  const rlsRow = await one(db, "select relrowsecurity as rls from pg_class where relname = 'proposal_secrets'");
+  const publicViewRow = await one(db, "select to_regclass('public.public_catalog') is not null as ok");
 
-  const supplierByProduct = new Map<string, string>();
-  for (const link of supplierLinks) {
-    const key = String(link.product_id);
-    if (!supplierByProduct.has(key)) supplierByProduct.set(key, String(link.name));
-  }
-  const categoriesByProduct = new Map<string, string[]>();
-  for (const link of categoryLinks) {
-    const key = String(link.product_id);
-    const list = categoriesByProduct.get(key) ?? [];
+  const moonByPlanet = new Map(moonCounts.map((r) => [String(r.planet_id), num(r.n)]));
+  const missionsByPlanet = new Map<string, string[]>();
+  for (const link of missionLinks) {
+    const key = String(link.planet_id);
+    const list = missionsByPlanet.get(key) ?? [];
     list.push(String(link.name));
-    categoriesByProduct.set(key, list);
+    missionsByPlanet.set(key, list);
   }
 
-  const products: Product[] = productRows.map((r) => ({
+  const planets: Planet[] = planetRows.map((r) => ({
     id: String(r.id),
     name: String(r.name),
-    description: String(r.description),
-    price: num(r.price),
-    stockCount: num(r.stock_count),
-    supplierName: supplierByProduct.get(String(r.id)) ?? null,
-    categories: categoriesByProduct.get(String(r.id)) ?? [],
+    type: String(r.type),
+    radiusKm: num(r.radius_km),
+    distanceAu: num(r.distance_au),
+    meanTempC: num(r.mean_temp_c),
+    moonCount: moonByPlanet.get(String(r.id)) ?? 0,
+    missions: missionsByPlanet.get(String(r.id)) ?? [],
   }));
 
   return {
     source,
     settings: settingsRow
-      ? { storeName: String(settingsRow.store_name), tagline: String(settingsRow.tagline) }
+      ? { name: String(settingsRow.catalog_name), tagline: String(settingsRow.tagline) }
       : null,
-    products,
-    suppliers: supplierRows.map((r) => ({
+    planets,
+    missions: missionRows.map((r) => ({
       id: String(r.id),
       name: String(r.name),
-      country: r.country == null ? null : String(r.country),
+      agency: String(r.agency),
+      targetCount: num(r.targets),
     })),
-    normalization: brandRow ? { importRows: num(importRow?.n), brands: num(brandRow.n) } : null,
-    customerCount: num(customerRow?.n),
-    orderCount: num(orderRow?.n),
+    normalization: starRow ? { importRows: num(importRow?.n), stars: num(starRow.n) } : null,
+    astronomerCount: num(astronomerRow?.n),
+    observationCount: num(observationRow?.n),
     stats: statsRow
       ? {
-          productCount: num(statsRow.product_count),
-          orderCount: num(statsRow.order_count),
-          customerCount: num(statsRow.customer_count),
-          revenue: num(statsRow.revenue),
-          avgPrice: num(statsRow.avg_price),
+          planetCount: num(statsRow.planet_count),
+          moonCount: num(statsRow.moon_count),
+          missionCount: num(statsRow.mission_count),
+          observationCount: num(statsRow.observation_count),
+          avgRadiusKm: num(statsRow.avg_radius_km),
         }
       : null,
-    orderHistory: historyRows.map((r) => ({
+    observationLog: logRows.map((r) => ({
       id: String(r.id),
-      customer: String(r.customer),
-      itemCount: num(r.item_count),
-      total: num(r.total),
-      createdAt: String(r.created_at),
+      astronomer: String(r.astronomer),
+      planet: String(r.planet),
+      magnitude: num(r.magnitude),
+      observedAt: String(r.observed_at),
     })),
-    categoryRevenue: catRevRows.map((r) => ({
-      category: String(r.category),
-      revenue: num(r.revenue),
+    typeBreakdown: typeRows.map((r) => ({
+      type: String(r.type),
+      planets: num(r.planets),
+      avgRadiusKm: num(r.avg_radius_km),
     })),
-    hasCheckout: Boolean(checkoutRow?.ok),
+    hasBooking: Boolean(bookingRow?.ok),
     security: {
       rls: Boolean(rlsRow?.rls),
-      publicCatalog: Boolean(publicCatalogRow?.ok),
+      publicView: Boolean(publicViewRow?.ok),
     },
   };
 }

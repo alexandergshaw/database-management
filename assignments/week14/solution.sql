@@ -1,25 +1,24 @@
--- Week 14 — Security: an RLS-protected table of private data, and a public view
--- that exposes only safe product columns.
+-- Week 14 — Security: protect private data, publish only what's safe.
 
-drop table if exists customer_pii cascade;
+drop table if exists proposal_secrets cascade;
 
-create table customer_pii (
+create table proposal_secrets (
   id uuid primary key default gen_random_uuid(),
-  email text not null,
-  tax_id text not null
+  pi_email text not null,
+  budget_usd numeric(12, 2) not null
 );
-insert into customer_pii (email, tax_id) values
-  ('ana.ramirez@example.com', '000-00-0001');
+insert into proposal_secrets (pi_email, budget_usd) values
+  ('ana.ramirez@example.com', 250000.00);
 
-alter table customer_pii enable row level security;
+alter table proposal_secrets enable row level security;
 
-create policy customer_pii_service_read
-  on customer_pii for select
+create policy proposal_secrets_service_read
+  on proposal_secrets for select
   to service_role
   using (true);
 
 create or replace view public_catalog as
-select id, name, description, price
-from products;
+select name, type, radius_km, distance_au
+from planets;
 
 grant select on public_catalog to anon;

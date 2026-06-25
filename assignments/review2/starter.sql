@@ -1,15 +1,15 @@
 -- Review 2 — consolidates weeks 8-10. Create three views.
 
--- Problem 1 (joins + aggregation) — review2_top_sellers: product, units_sold
--- (total quantity), highest first. Join products -> order_items.
+-- Problem 1 (joins + aggregation) — review2_most_observed: planet, observations
+-- (count), most first. Join planets -> observations.
 -- TODO:
 
 
--- Problem 2 (filtering + sorting) — review2_affordable_products: name, price for
--- products under $50, ordered by price.
+-- Problem 2 (filtering + sorting) — review2_close_planets: name, distance_au for
+-- planets within 10 AU, ordered by distance_au.
 -- TODO:
 
 
--- Problem 3 (aggregation by group) — review2_revenue_by_status: status, revenue
--- (sum of quantity * unit_price) grouped by order status.
+-- Problem 3 (aggregation by group) — review2_obs_by_status: status, observations
+-- (count) grouped by status.
 -- TODO:

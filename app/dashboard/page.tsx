@@ -1,16 +1,16 @@
 import Link from "next/link";
 
-import { CategoryChart } from "@/components/category-chart";
+import { Catalog } from "@/components/catalog";
+import { MissionsPanel } from "@/components/missions-panel";
 import { ModulePanel } from "@/components/module-panel";
-import { OrderHistory } from "@/components/order-history";
+import { ObservationLog } from "@/components/observation-log";
 import { ProgressTracker } from "@/components/progress-tracker";
 import { SecurityPanel } from "@/components/security-panel";
 import { StatsBar } from "@/components/stats-bar";
-import { Storefront } from "@/components/storefront";
-import { SuppliersPanel } from "@/components/suppliers-panel";
+import { TypeChart } from "@/components/type-chart";
 import { getDb } from "@/lib/db";
 import { resolveModuleProgress } from "@/lib/progress";
-import { getStoreData } from "@/lib/store-data";
+import { getCatalogData } from "@/lib/store-data";
 
 export const dynamic = "force-dynamic";
 
@@ -21,15 +21,15 @@ export default async function Dashboard() {
   let data;
   let modules;
   try {
-    [data, modules] = await Promise.all([getStoreData(db, source), resolveModuleProgress(db)]);
+    [data, modules] = await Promise.all([getCatalogData(db, source), resolveModuleProgress(db)]);
   } finally {
     await db.dispose?.();
   }
 
-  const storeName = data.settings?.storeName ?? "Your Storefront";
-  const tagline = data.settings?.tagline ?? "Run Week 0's SQL to name your store.";
-  const showSecurity = data.security.rls || data.security.publicCatalog;
-  const showChart = data.categoryRevenue.some((row) => row.revenue > 0);
+  const catalogName = data.settings?.name ?? "Your Catalog";
+  const tagline = data.settings?.tagline ?? "Run Week 0's SQL to name your catalog.";
+  const showSecurity = data.security.rls || data.security.publicView;
+  const showChart = data.typeBreakdown.length > 0;
 
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-8 lg:flex-row lg:items-start">
@@ -42,33 +42,33 @@ export default async function Dashboard() {
           <p className="mt-3 text-xs uppercase tracking-[0.2em] text-slate-400">
             {source === "supabase" ? "Live from Supabase" : "Local preview (reference SQL)"}
           </p>
-          <h1 className="mt-2 text-3xl font-semibold text-white">{storeName}</h1>
+          <h1 className="mt-2 text-3xl font-semibold text-white">{catalogName}</h1>
           <p className="mt-2 text-slate-300">{tagline}</p>
         </header>
 
         {data.stats && <StatsBar stats={data.stats} />}
 
-        <Storefront products={data.products} />
+        <Catalog planets={data.planets} />
 
-        {data.suppliers.length > 0 && <SuppliersPanel suppliers={data.suppliers} />}
+        {data.missions.length > 0 && <MissionsPanel missions={data.missions} />}
 
         {data.normalization && (
           <section className="rounded-xl border border-slate-700 bg-slate-900/70 p-5">
             <h2 className="text-lg font-semibold text-white">Normalization</h2>
             <p className="mt-2 text-sm text-slate-300">
               {data.normalization.importRows} denormalized import rows normalized
-              into {data.normalization.brands} brands (3NF) — no repeated country
+              into {data.normalization.stars} stars (3NF) — no repeated star-class
               data.
             </p>
           </section>
         )}
 
-        {showChart && <CategoryChart data={data.categoryRevenue} />}
+        {showChart && <TypeChart data={data.typeBreakdown} />}
 
-        {data.orderHistory.length > 0 && <OrderHistory orders={data.orderHistory} />}
+        {data.observationLog.length > 0 && <ObservationLog observations={data.observationLog} />}
 
         {showSecurity && (
-          <SecurityPanel rls={data.security.rls} publicCatalog={data.security.publicCatalog} />
+          <SecurityPanel rls={data.security.rls} publicView={data.security.publicView} />
         )}
 
         <section className="space-y-4">

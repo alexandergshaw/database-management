@@ -1,36 +1,28 @@
--- Week 8 — Orders: practice SELECT / INSERT / UPDATE / DELETE on your own tables.
+-- Week 8 — Observations: practice SELECT / INSERT / UPDATE / DELETE.
 
-drop table if exists order_items cascade;
-drop table if exists orders cascade;
+drop table if exists observations cascade;
 
--- Problem 1 — create the orders table:
+-- Problem 1 — create the observations table:
 --   id uuid pk default gen_random_uuid(),
---   customer_id uuid not null references customers(id) on delete cascade,
---   status text not null default 'paid',
---   created_at timestamptz not null default now()
+--   astronomer_id uuid not null references astronomers(id) on delete cascade,
+--   planet_id uuid not null references planets(id),
+--   magnitude numeric(5,2) not null,
+--   status text not null default 'logged',
+--   observed_at timestamptz not null default now()
 -- TODO:
 
 
--- Problem 2 — create the order_items table:
---   order_id uuid references orders(id) on delete cascade,
---   product_id uuid references products(id),
---   quantity integer not null check (quantity > 0),
---   unit_price numeric(10,2) not null check (unit_price >= 0),
---   primary key (order_id, product_id)
+-- Problem 2 — INSERT at least three observations linking an astronomer to a
+-- planet. Tip: with a as (select id from astronomers where email = '...')
+--              insert into observations select a.id, p.id, ... from a, planets p ...
 -- TODO:
 
 
--- Problem 3 — INSERT at least two orders, each with one or more order_items.
---   Tip: with o as (insert into orders (...) ... returning id)
---        insert into order_items select o.id, ... from o, products ...
+-- Problem 3 — UPDATE 'logged' observations to 'confirmed', then DELETE any whose
+-- status is 'cancelled'.
 -- TODO:
 
 
--- Problem 4 — UPDATE one order's status to 'fulfilled', then DELETE any order
--- whose status is 'cancelled'.
--- TODO:
-
-
--- Problem 5 — SELECT every remaining order (id, status, created_at), oldest
--- first, to read back your work.
+-- Problem 4 — SELECT the remaining observations (id, magnitude, status), oldest
+-- first.
 -- TODO:

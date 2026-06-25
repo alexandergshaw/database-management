@@ -1,19 +1,24 @@
--- Week 1 — Products. A storefront needs something to sell.
+-- Week 1 — Planets. The core entity of the catalog.
 
-drop table if exists products cascade;
+drop table if exists planets cascade;
 
-create table products (
+create table planets (
   id uuid primary key default gen_random_uuid(),
-  name text not null,
-  description text not null,
-  price numeric(10, 2) not null check (price >= 0),
-  stock_count integer not null default 0 check (stock_count >= 0),
+  name text not null unique,
+  type text not null,
+  radius_km numeric(10, 1) not null check (radius_km > 0),
+  distance_au numeric(8, 3) not null check (distance_au > 0),
+  mass_e24 numeric(10, 3) not null check (mass_e24 > 0),
+  mean_temp_c integer not null,
   created_at timestamptz not null default now()
 );
 
-insert into products (name, description, price, stock_count) values
-  ('Trail Daypack 22L', 'Lightweight pack for day hikes and commutes.', 79.99, 24),
-  ('Insulated Water Bottle', 'Keeps drinks cold for 24 hours.', 24.50, 120),
-  ('Merino Wool Socks', 'Breathable, odor-resistant hiking socks.', 18.00, 200),
-  ('Trail Headlamp 300lm', 'Rechargeable headlamp for low-light trails.', 39.95, 60),
-  ('Packable Rain Jacket', 'Waterproof shell that folds into its own pocket.', 89.00, 45);
+insert into planets (name, type, radius_km, distance_au, mass_e24, mean_temp_c) values
+  ('Mercury', 'terrestrial', 2439.7, 0.387, 0.330, 167),
+  ('Venus', 'terrestrial', 6051.8, 0.723, 4.870, 464),
+  ('Earth', 'terrestrial', 6371.0, 1.000, 5.970, 15),
+  ('Mars', 'terrestrial', 3389.5, 1.524, 0.642, -65),
+  ('Jupiter', 'gas giant', 69911.0, 5.203, 1898.000, -110),
+  ('Saturn', 'gas giant', 58232.0, 9.537, 568.000, -140),
+  ('Uranus', 'ice giant', 25362.0, 19.191, 86.800, -195),
+  ('Neptune', 'ice giant', 24622.0, 30.069, 102.000, -200);

@@ -1,22 +1,20 @@
 # Week 2 — Data Modeling: Entities, Attributes, Relationships
 
-Who makes your products? Add a second entity and relate it to products.
+What orbits your planets? Add a second entity — moons — and relate it to planets.
 
 ## Concepts
-- A new **entity** (suppliers) gets its own table.
-- We relate products and suppliers with a **link (junction) table** instead of
-  changing the products table — so this week only ever creates *new* tables.
+- A new **entity** (moons) gets its own table.
+- A **one-to-many** relationship: one planet has many moons, modeled with a
+  **foreign key** on moons. We never change the planets table.
 
-## Your SQL task
-Open and complete `assignments/week2/starter.sql`. It creates `suppliers` and a
-`product_suppliers` link table (product_id + supplier_id), then seeds suppliers
-and links each product to one.
+## Problems (in `assignments/week2/starter.sql`)
+1. Create the `moons` table with a foreign key to `planets`.
+2. Insert several moons, each tied to a planet (Mercury and Venus have none).
 
 ## Done when
-- Each product card shows its supplier.
+- Each planet card shows its moon count.
 - The Week 2 planet is **Unlocked**.
 
 ---
 
-**Retry anytime:** re-run the script — it drops its own objects first. Clear one
-object by hand with `drop table if exists <name> cascade;`.
+**Retry anytime:** re-run the script — it drops its own objects first.

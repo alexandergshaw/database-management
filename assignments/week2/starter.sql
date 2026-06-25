@@ -1,26 +1,18 @@
--- Week 2 — Suppliers, related to products with a link (junction) table.
--- We only create NEW tables; we never change the products table.
+-- Week 2 — Moons, related to planets one-to-many with a foreign key.
+-- We only create a NEW table; we never change the planets table.
 
-drop table if exists product_suppliers cascade;
-drop table if exists suppliers cascade;
+drop table if exists moons cascade;
 
--- Problem 1 — create the suppliers table:
---   id uuid pk default gen_random_uuid(), name text not null unique,
---   country text not null, created_at timestamptz not null default now()
+-- Problem 1 — create the moons table:
+--   id uuid pk default gen_random_uuid(),
+--   planet_id uuid not null references planets(id) on delete cascade,
+--   name text not null,
+--   radius_km numeric(10,1) not null check (radius_km > 0),
+--   created_at timestamptz not null default now()
 -- TODO:
 
 
--- Problem 2 — create the product_suppliers link table:
---   product_id  uuid references products(id) on delete cascade
---   supplier_id uuid references suppliers(id) on delete cascade
---   primary key (product_id, supplier_id)
--- TODO:
-
-
--- Problem 3 — insert at least 3 suppliers (name, country).
--- TODO:
-
-
--- Problem 4 — link each product to a supplier in product_suppliers.
---   Tip: insert ... select p.id, s.id from products p join suppliers s on ...
+-- Problem 2 — insert several moons, each tied to a planet.
+--   Tip: insert ... select p.id, ... from planets p join (values ...) on name.
+--   (Mercury and Venus have none — that's fine.)
 -- TODO:

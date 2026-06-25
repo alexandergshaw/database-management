@@ -1,35 +1,30 @@
--- Week 2 — Suppliers, related to products with a link (junction) table.
--- We never alter the products table; the relationship lives in its own table.
+-- Week 2 — Moons. A new entity with a one-to-many relationship to planets
+-- (one planet has many moons), modeled with a foreign key. We never alter the
+-- planets table.
 
-drop table if exists product_suppliers cascade;
-drop table if exists suppliers cascade;
+drop table if exists moons cascade;
 
-create table suppliers (
+create table moons (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique,
-  country text not null,
+  planet_id uuid not null references planets(id) on delete cascade,
+  name text not null,
+  radius_km numeric(10, 1) not null check (radius_km > 0),
   created_at timestamptz not null default now()
 );
 
-create table product_suppliers (
-  product_id uuid not null references products(id) on delete cascade,
-  supplier_id uuid not null references suppliers(id) on delete cascade,
-  primary key (product_id, supplier_id)
-);
-
-insert into suppliers (name, country) values
-  ('Summit Supply Co.', 'USA'),
-  ('Riverbend Goods', 'Canada'),
-  ('Trailhead Traders', 'New Zealand');
-
-insert into product_suppliers (product_id, supplier_id)
-select p.id, s.id
-from products p
+insert into moons (planet_id, name, radius_km)
+select p.id, m.name, m.radius_km
+from planets p
 join (values
-  ('Trail Daypack 22L', 'Summit Supply Co.'),
-  ('Trail Headlamp 300lm', 'Summit Supply Co.'),
-  ('Insulated Water Bottle', 'Riverbend Goods'),
-  ('Packable Rain Jacket', 'Riverbend Goods'),
-  ('Merino Wool Socks', 'Trailhead Traders')
-) as link(product_name, supplier_name) on link.product_name = p.name
-join suppliers s on s.name = link.supplier_name;
+  ('Earth', 'Moon', 1737.4),
+  ('Mars', 'Phobos', 11.3),
+  ('Mars', 'Deimos', 6.2),
+  ('Jupiter', 'Io', 1821.6),
+  ('Jupiter', 'Europa', 1560.8),
+  ('Jupiter', 'Ganymede', 2634.1),
+  ('Jupiter', 'Callisto', 2410.3),
+  ('Saturn', 'Titan', 2574.7),
+  ('Saturn', 'Enceladus', 252.1),
+  ('Uranus', 'Titania', 788.4),
+  ('Neptune', 'Triton', 1353.4)
+) as m(planet_name, name, radius_km) on m.planet_name = p.name;

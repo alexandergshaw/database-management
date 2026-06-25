@@ -1,23 +1,23 @@
 # Week 13 — Transactions & Concurrency
 
-Make "place an order" atomic — all steps happen, or none do — on a self-contained
-checkout sandbox you create this week.
+Booking telescope time must be atomic — the booking and the decrement happen
+together, or not at all — on a sandbox you create this week.
 
 ## Concepts
 - A `plpgsql` function body runs as one transaction.
-- `SELECT ... FOR UPDATE` locks the row so two checkouts can't oversell the last
-  unit; `RAISE EXCEPTION` rolls everything back.
+- `SELECT ... FOR UPDATE` locks the row so two bookings can't oversubscribe a
+  telescope; `RAISE EXCEPTION` rolls everything back.
 
-## Your SQL task
-Open and complete `assignments/week13/starter.sql`. It creates `tx_inventory`, `tx_orders`,
-`tx_order_items`, and a `place_order(sku, qty)` function that locks stock, guards
-against overselling, writes the order + line item, and decrements stock —
-atomically.
+## Problems (in `assignments/week13/starter.sql`)
+1. Create `telescopes` (with available nights) and seed a couple.
+2. Create `telescope_bookings`.
+3. Write `book_nights(code, nights)`: lock the telescope, guard availability,
+   insert the booking, decrement nights — atomically.
+4. Call the function once to prove it works.
 
 ## Done when
-- The Week 13 planet is **Unlocked** (the `place_order` function exists).
+- The Week 13 planet is **Unlocked** (the `book_nights` function exists).
 
 ---
 
-**Retry anytime:** re-run the script — it drops its own objects first. Clear by
-hand with `drop table if exists tx_order_items, tx_orders, tx_inventory cascade;`.
+**Retry anytime:** re-run the script — it drops its own objects first.

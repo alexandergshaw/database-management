@@ -1,59 +1,51 @@
--- Week 13 — Transactions & concurrency, on a self-contained checkout sandbox.
--- place_order is atomic: order + line item + stock decrement all happen or none
--- do, and FOR UPDATE locks the row so two checkouts can't oversell the last unit.
+-- Week 13 — Transactions & concurrency, on a telescope-booking sandbox.
+-- book_nights is atomic: the booking and the decrement happen together or not at
+-- all, and FOR UPDATE locks the row so two bookings can't oversubscribe a scope.
 
-drop table if exists tx_order_items cascade;
-drop table if exists tx_orders cascade;
-drop table if exists tx_inventory cascade;
+drop table if exists telescope_bookings cascade;
+drop table if exists telescopes cascade;
 
-create table tx_inventory (
-  sku text primary key,
+create table telescopes (
+  code text primary key,
   name text not null,
-  price numeric(10, 2) not null,
-  stock integer not null check (stock >= 0)
+  available_nights integer not null check (available_nights >= 0)
 );
-insert into tx_inventory (sku, name, price, stock) values
-  ('DAYPACK', 'Trail Daypack 22L', 79.99, 5),
-  ('BOTTLE', 'Insulated Water Bottle', 24.50, 10);
+insert into telescopes (code, name, available_nights) values
+  ('HUBBLE', 'Hubble Space Telescope', 5),
+  ('VLT', 'Very Large Telescope', 10);
 
-create table tx_orders (
+create table telescope_bookings (
   id uuid primary key default gen_random_uuid(),
+  code text not null references telescopes(code),
+  nights integer not null check (nights > 0),
   created_at timestamptz not null default now()
 );
 
-create table tx_order_items (
-  order_id uuid not null references tx_orders(id) on delete cascade,
-  sku text not null references tx_inventory(sku),
-  quantity integer not null check (quantity > 0),
-  primary key (order_id, sku)
-);
-
-create or replace function place_order(p_sku text, p_qty integer)
+create or replace function book_nights(p_code text, p_nights integer)
 returns uuid
 language plpgsql
 as $$
 declare
-  v_order uuid;
-  v_stock integer;
+  v_booking uuid;
+  v_available integer;
 begin
-  if p_qty <= 0 then
-    raise exception 'quantity must be positive';
+  if p_nights <= 0 then
+    raise exception 'nights must be positive';
   end if;
 
-  select stock into v_stock from tx_inventory where sku = p_sku for update;
-  if v_stock is null then
-    raise exception 'unknown sku %', p_sku;
+  select available_nights into v_available from telescopes where code = p_code for update;
+  if v_available is null then
+    raise exception 'unknown telescope %', p_code;
   end if;
-  if v_stock < p_qty then
-    raise exception 'insufficient stock: % requested, % available', p_qty, v_stock;
+  if v_available < p_nights then
+    raise exception 'not enough nights: % requested, % available', p_nights, v_available;
   end if;
 
-  insert into tx_orders default values returning id into v_order;
-  insert into tx_order_items (order_id, sku, quantity) values (v_order, p_sku, p_qty);
-  update tx_inventory set stock = stock - p_qty where sku = p_sku;
-  return v_order;
+  insert into telescope_bookings (code, nights) values (p_code, p_nights) returning id into v_booking;
+  update telescopes set available_nights = available_nights - p_nights where code = p_code;
+  return v_booking;
 end;
 $$;
 
 -- Demonstrate it.
-select place_order('DAYPACK', 1);
+select book_nights('HUBBLE', 2);

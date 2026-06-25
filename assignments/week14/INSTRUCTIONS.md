@@ -1,16 +1,17 @@
 # Week 14 — Security, Access Control, Data Protection
 
-Protect private data, and expose only what's safe.
+Protect private data (grant proposals), and expose only what's safe (a public
+planet catalog).
 
 ## Concepts
 - **Row-Level Security**: with RLS on and no policy for the public `anon` role,
   rows are hidden from the public API.
 - A **view** can publish a safe subset of columns; `GRANT` controls who reads it.
 
-## Your SQL task
-Open and complete `assignments/week14/starter.sql`. It creates a private `customer_pii` table,
-enables RLS with a `service_role`-only read policy, and publishes a
-`public_catalog` view (safe product columns) granted to `anon`.
+## Problems (in `assignments/week14/starter.sql`)
+1. Create a private `proposal_secrets` table and add a row.
+2. Enable RLS with a `service_role`-only read policy.
+3. Create a `public_catalog` view (safe planet columns) and grant it to `anon`.
 
 ## Done when
 - A Security posture panel appears on the homepage.
@@ -18,5 +19,4 @@ enables RLS with a `service_role`-only read policy, and publishes a
 
 ---
 
-**Retry anytime:** re-run the script — it drops its own objects first. Clear by
-hand with `drop table if exists customer_pii cascade; drop view if exists public_catalog;`.
+**Retry anytime:** re-run the script — it drops its own objects first.

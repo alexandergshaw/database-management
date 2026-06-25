@@ -5,15 +5,12 @@ export type ModuleType = "assignment" | "review" | "exam";
 export interface Week {
   week: number;
   slug: string;
-  /** Folder under /assignments holding INSTRUCTIONS.md + solution.sql. */
+  /** Folder under /assignments holding INSTRUCTIONS.md + starter.sql + solution.sql. */
   folder: string;
   title: string;
   summary: string;
   type: ModuleType;
-  /**
-   * Has the student completed this week? Probed against the live database — a
-   * module unlocks only when the objects the assignment asks for actually exist.
-   */
+  /** Probed against the live database; a module unlocks only when its objects exist. */
   probe: (db: Db) => Promise<boolean>;
 }
 
@@ -23,150 +20,150 @@ export const weeks: Week[] = [
     slug: "week-0-setup-deploy",
     folder: "week0",
     title: "Setup & Deploy",
-    summary: "Connect Supabase + Vercel and run your first SQL: name your store.",
+    summary: "Connect Supabase + Vercel and run your first SQL: name your catalog.",
     type: "assignment",
-    probe: (db) => hasRows(db, "store_settings"),
+    probe: (db) => hasRows(db, "catalog_settings"),
   },
   {
     week: 1,
     slug: "week-1-relational-foundations",
     folder: "week1",
     title: "Relational Foundations",
-    summary: "Create your first table, products, and seed it. Product cards appear.",
+    summary: "Create your first table, planets, and seed it. Planet cards appear.",
     type: "assignment",
-    probe: (db) => hasRows(db, "products"),
+    probe: (db) => hasRows(db, "planets"),
   },
   {
     week: 2,
     slug: "week-2-data-modeling",
     folder: "week2",
     title: "Data Modeling",
-    summary: "Add suppliers and a product↔supplier link table. Cards show suppliers.",
+    summary: "Add moons related to planets (one-to-many). Cards show moon counts.",
     type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.product_suppliers")) && (await hasRows(db, "suppliers")),
+      (await objectExists(db, "public.moons")) && (await hasRows(db, "moons")),
   },
   {
     week: 3,
     slug: "week-3-erds-business-rules",
     folder: "week3",
     title: "ERDs & Business Rules",
-    summary: "Model categories many-to-many with a junction table and CHECK rules.",
+    summary: "Model missions many-to-many with planets, plus a CHECK rule.",
     type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.product_categories")) && (await hasRows(db, "categories")),
+      (await objectExists(db, "public.mission_targets")) && (await hasRows(db, "missions")),
   },
   {
     week: 4,
     slug: "week-4-normalization",
     folder: "week4",
     title: "Normalization",
-    summary: "Split a denormalized import table into 3NF tables you create.",
+    summary: "Split denormalized import tables into 1NF, 2NF, and 3NF.",
     type: "assignment",
     probe: async (db) =>
-      (await hasRows(db, "nf_brands")) &&
-      (await objectExists(db, "public.nf_catalog")) &&
-      (await objectExists(db, "public.product_tags")) &&
-      (await objectExists(db, "public.supply_items")),
+      (await hasRows(db, "nf_stars")) &&
+      (await objectExists(db, "public.nf_bodies")) &&
+      (await objectExists(db, "public.planet_gases")) &&
+      (await objectExists(db, "public.instruments")),
   },
   {
     week: 5,
     slug: "week-5-keys-constraints",
     folder: "week5",
     title: "Keys & Constraints",
-    summary: "Add customers + addresses with keys, uniqueness, and referential integrity.",
+    summary: "Add astronomers + sites with keys, uniqueness, and integrity.",
     type: "assignment",
-    probe: (db) => hasRows(db, "customers"),
+    probe: (db) => hasRows(db, "astronomers"),
   },
   {
     week: 6,
     slug: "week-6-review-1",
     folder: "review1",
     title: "Review 1",
-    summary: "Build a view joining products to their suppliers.",
+    summary: "Views consolidating weeks 1-5.",
     type: "review",
     probe: async (db) =>
-      (await objectExists(db, "public.review1_supplier_catalog")) &&
-      (await objectExists(db, "public.review1_category_counts")) &&
-      (await objectExists(db, "public.review1_brand_normalized")) &&
-      (await objectExists(db, "public.review1_customer_directory")),
+      (await objectExists(db, "public.review1_planet_moons")) &&
+      (await objectExists(db, "public.review1_planet_missions")) &&
+      (await objectExists(db, "public.review1_body_normalized")) &&
+      (await objectExists(db, "public.review1_astronomer_directory")),
   },
   {
     week: 7,
     slug: "week-7-test-1",
     folder: "test1",
     title: "Test 1",
-    summary: "Assessed views: products per category and inventory value.",
+    summary: "Assessed views across weeks 1-5.",
     type: "exam",
     probe: async (db) =>
-      (await objectExists(db, "public.test1_products_per_category")) &&
-      (await objectExists(db, "public.test1_inventory_value")) &&
-      (await objectExists(db, "public.test1_suppliers_by_country")) &&
-      (await objectExists(db, "public.test1_brand_product_counts")),
+      (await objectExists(db, "public.test1_planets_per_type")) &&
+      (await objectExists(db, "public.test1_avg_radius")) &&
+      (await objectExists(db, "public.test1_missions_by_agency")) &&
+      (await objectExists(db, "public.test1_star_body_counts")),
   },
   {
     week: 8,
     slug: "week-8-sql-crud",
     folder: "week8",
     title: "SQL CRUD",
-    summary: "Create orders + order_items and practice INSERT/UPDATE/DELETE on them.",
+    summary: "Create observations and practice INSERT/UPDATE/DELETE/SELECT.",
     type: "assignment",
-    probe: (db) => hasRows(db, "orders"),
+    probe: (db) => hasRows(db, "observations"),
   },
   {
     week: 9,
     slug: "week-9-filtering-aggregation",
     folder: "week9",
     title: "Filtering & Aggregation",
-    summary: "Create the store_stats view. A stats bar appears.",
+    summary: "Build the catalog_stats + inner_planets views. A stats bar appears.",
     type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.store_stats")) &&
-      (await objectExists(db, "public.affordable_products")),
+      (await objectExists(db, "public.catalog_stats")) &&
+      (await objectExists(db, "public.inner_planets")),
   },
   {
     week: 10,
     slug: "week-10-joins",
     folder: "week10",
     title: "Joins",
-    summary: "Create the order_history view joining orders, customers, and products.",
+    summary: "Join observations, astronomers, and planets into a log view.",
     type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.order_history")) &&
-      (await objectExists(db, "public.customer_order_counts")),
+      (await objectExists(db, "public.observation_log")) &&
+      (await objectExists(db, "public.planet_observation_counts")),
   },
   {
     week: 11,
     slug: "week-11-review-2",
     folder: "review2",
     title: "Review 2",
-    summary: "Build a top-sellers view.",
+    summary: "Views for weeks 8-10.",
     type: "review",
     probe: async (db) =>
-      (await objectExists(db, "public.review2_top_sellers")) &&
-      (await objectExists(db, "public.review2_affordable_products")) &&
-      (await objectExists(db, "public.review2_revenue_by_status")),
+      (await objectExists(db, "public.review2_most_observed")) &&
+      (await objectExists(db, "public.review2_close_planets")) &&
+      (await objectExists(db, "public.review2_obs_by_status")),
   },
   {
     week: 12,
     slug: "week-12-test-2",
     folder: "test2",
     title: "Test 2",
-    summary: "Assessed views: spend by customer and products never ordered.",
+    summary: "Assessed querying, filtering, and joins.",
     type: "exam",
     probe: async (db) =>
-      (await objectExists(db, "public.test2_spend_by_customer")) &&
-      (await objectExists(db, "public.test2_never_ordered")) &&
-      (await objectExists(db, "public.test2_orders_by_total")),
+      (await objectExists(db, "public.test2_obs_by_astronomer")) &&
+      (await objectExists(db, "public.test2_never_observed")) &&
+      (await objectExists(db, "public.test2_obs_by_magnitude")),
   },
   {
     week: 13,
     slug: "week-13-transactions",
     folder: "week13",
     title: "Transactions",
-    summary: "Write an atomic place_order function over your own checkout tables.",
+    summary: "Write an atomic telescope-booking function over your own tables.",
     type: "assignment",
-    probe: (db) => functionExists(db, "place_order(text,integer)"),
+    probe: (db) => functionExists(db, "book_nights(text,integer)"),
   },
   {
     week: 14,
@@ -182,21 +179,21 @@ export const weeks: Week[] = [
     slug: "week-15-analytics-performance",
     folder: "week15",
     title: "Analytics & Performance",
-    summary: "Create the category_revenue analytics view. A revenue chart appears.",
+    summary: "Create the type_summary analytics view. A chart appears.",
     type: "assignment",
-    probe: (db) => objectExists(db, "public.category_revenue"),
+    probe: (db) => objectExists(db, "public.type_summary"),
   },
   {
     week: 16,
     slug: "week-16-final",
     folder: "final",
     title: "Final Review & Presentation",
-    summary: "Capstone views: category revenue and low-stock products.",
+    summary: "Capstone views: type summary, moon leaders, bookings, public listing.",
     type: "exam",
     probe: async (db) =>
-      (await objectExists(db, "public.final_category_revenue")) &&
-      (await objectExists(db, "public.final_low_stock")) &&
-      (await objectExists(db, "public.final_checkout_log")) &&
+      (await objectExists(db, "public.final_type_summary")) &&
+      (await objectExists(db, "public.final_moon_leaders")) &&
+      (await objectExists(db, "public.final_booking_log")) &&
       (await objectExists(db, "public.final_public_listing")),
   },
 ];

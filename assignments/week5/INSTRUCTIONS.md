@@ -1,23 +1,23 @@
 # Week 5 — Keys, Constraints, Referential Integrity
 
-Add the people who buy things, with the keys and constraints that keep data
-trustworthy.
+Add the people who do the cataloguing — astronomers — with the keys and
+constraints that keep data trustworthy.
 
 ## Concepts
-- **Primary key** identifies each customer; **UNIQUE** stops duplicate emails;
+- **Primary key** identifies each astronomer; **UNIQUE** stops duplicate emails;
   **NOT NULL** requires fields.
-- A **foreign key** from addresses to customers enforces referential integrity
+- A **foreign key** from sites to astronomers enforces referential integrity
   between two new tables.
 
-## Your SQL task
-Open and complete `assignments/week5/starter.sql`. It creates `customers` (unique email) and
-`customer_addresses` (FK to customers), and seeds a few rows.
+## Problems (in `assignments/week5/starter.sql`)
+1. Create the `astronomers` table (unique email).
+2. Create `astronomer_sites` with a foreign key to astronomers.
+3. Insert a few astronomers.
+4. Insert a site for one of them.
 
 ## Done when
-- The Week 5 planet is **Unlocked** (the customer count feeds the stats bar once
-  Week 9 is done).
+- The Week 5 planet is **Unlocked** (astronomers feed the stats bar from Week 9).
 
 ---
 
-**Retry anytime:** re-run the script — it drops its own objects first. Clear one
-object by hand with `drop table if exists <name> cascade;`.
+**Retry anytime:** re-run the script — it drops its own objects first.

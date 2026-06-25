@@ -1,25 +1,23 @@
 -- Week 10 — Joins & multi-table queries.
 
--- Inner joins across four tables: one readable row per order.
-create or replace view order_history as
+-- Inner joins: one readable row per observation.
+create or replace view observation_log as
 select
   o.id,
+  o.observed_at,
   o.status,
-  o.created_at,
-  c.full_name as customer,
-  c.email as customer_email,
-  sum(oi.quantity)::int as item_count,
-  sum(oi.quantity * oi.unit_price)::numeric(12, 2) as total
-from orders o
-join customers c on c.id = o.customer_id
-join order_items oi on oi.order_id = o.id
-group by o.id, o.status, o.created_at, c.full_name, c.email
-order by o.created_at desc;
+  a.full_name as astronomer,
+  p.name as planet,
+  o.magnitude
+from observations o
+join astronomers a on a.id = o.astronomer_id
+join planets p on p.id = o.planet_id
+order by o.observed_at desc;
 
--- A LEFT JOIN keeps customers who have never ordered (count 0).
-create or replace view customer_order_counts as
-select c.full_name as customer, count(o.id)::int as orders
-from customers c
-left join orders o on o.customer_id = c.id
-group by c.full_name
-order by orders desc, customer;
+-- A LEFT JOIN keeps planets that have never been observed (count 0).
+create or replace view planet_observation_counts as
+select p.name as planet, count(o.id)::int as observations
+from planets p
+left join observations o on o.planet_id = p.id
+group by p.name
+order by observations desc, planet;

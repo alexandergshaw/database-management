@@ -1,20 +1,20 @@
 -- Review 1 — consolidates weeks 1-5. Create four views.
 
--- Problem 1 (weeks 1-2, relationships) — review1_supplier_catalog: product,
--- supplier, country. Join products -> product_suppliers -> suppliers.
+-- Problem 1 (week 2, relationships) — review1_planet_moons: planet, moons
+-- (count). LEFT JOIN planets -> moons so 0-moon planets still appear.
 -- TODO:
 
 
--- Problem 2 (week 3, many-to-many) — review1_category_counts: product, categories
--- (how many categories it's in). LEFT JOIN products -> product_categories.
+-- Problem 2 (week 3, many-to-many) — review1_planet_missions: planet, missions
+-- (count). LEFT JOIN planets -> mission_targets.
 -- TODO:
 
 
--- Problem 3 (week 4, normalization) — review1_brand_normalized: product, brand,
--- country. Join nf_catalog -> nf_brands.
+-- Problem 3 (week 4, normalization) — review1_body_normalized: body, star,
+-- star_class. Join nf_bodies -> nf_stars.
 -- TODO:
 
 
--- Problem 4 (week 5, keys/integrity) — review1_customer_directory: full_name,
--- email, addresses (count). LEFT JOIN customers -> customer_addresses.
+-- Problem 4 (week 5, keys/integrity) — review1_astronomer_directory: full_name,
+-- email, sites (count). LEFT JOIN astronomers -> astronomer_sites.
 -- TODO:

@@ -1,26 +1,26 @@
--- Week 3 — Categories (many-to-many) + a business rule.
+-- Week 3 — Missions (many-to-many with planets) + a business rule.
 
-drop table if exists product_categories cascade;
-drop table if exists categories cascade;
+drop table if exists mission_targets cascade;
+drop table if exists missions cascade;
 
--- Problem 1 — create the categories table. Add a CHECK so a name is never blank:
---   id uuid pk default gen_random_uuid(),
---   name text not null unique check (length(trim(name)) > 0),
+-- Problem 1 — create the missions table with a CHECK that launch_year > 1950:
+--   id uuid pk default gen_random_uuid(), name text not null unique,
+--   agency text not null, launch_year integer not null check (launch_year > 1950),
 --   created_at timestamptz not null default now()
 -- TODO:
 
 
--- Problem 2 — create the product_categories junction table:
---   product_id  uuid references products(id) on delete cascade
---   category_id uuid references categories(id) on delete cascade
---   primary key (product_id, category_id)
+-- Problem 2 — create the mission_targets junction table:
+--   mission_id uuid references missions(id) on delete cascade,
+--   planet_id  uuid references planets(id) on delete cascade,
+--   primary key (mission_id, planet_id)
 -- TODO:
 
 
--- Problem 3 — insert at least 4 categories.
+-- Problem 3 — insert a few missions (name, agency, launch_year).
 -- TODO:
 
 
--- Problem 4 — link products to categories. At least one product should be in
--- TWO categories (that's what makes it many-to-many).
+-- Problem 4 — link missions to the planets they visited. At least one mission
+-- should visit TWO or more planets (that's the many-to-many).
 -- TODO:
