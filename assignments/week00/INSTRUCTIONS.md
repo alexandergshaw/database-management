@@ -10,7 +10,7 @@ planet on the course map lights up and a homepage feature appears.
    Settings → Database → Connection string) so your homepage reads your database.
 
 ## Your SQL task
-Open and complete `assignments/week0/starter.sql` in the Supabase SQL editor: a
+Open and complete `assignments/week00/starter.sql` in the Supabase SQL editor: a
 `catalog_settings` table plus one row with your observatory's name and tagline.
 
 ## Done when

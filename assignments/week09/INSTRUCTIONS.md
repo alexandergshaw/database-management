@@ -2,7 +2,7 @@
 
 Turn rows into insight: aggregate, filter, and sort — packaged as views.
 
-## Problems (in `assignments/week9/starter.sql`)
+## Problems (in `assignments/week09/starter.sql`)
 1. **Aggregations & functions** — a `catalog_stats` view using `count`, `avg`,
    and `round`.
 2. **Filtering & sorting** — an `inner_planets` view using `WHERE`

@@ -7,7 +7,7 @@ A mission can visit many planets, and a planet is visited by many missions — a
 - Many-to-many → a junction table whose primary key is the pair of foreign keys.
 - A **business rule** enforced by a `CHECK` constraint (launch year > 1950).
 
-## Problems (in `assignments/week3/starter.sql`)
+## Problems (in `assignments/week03/starter.sql`)
 1. Create the `missions` table with a `CHECK` on launch year.
 2. Create the `mission_targets` junction table.
 3. Insert a few missions.

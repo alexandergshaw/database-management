@@ -7,7 +7,7 @@ What orbits your planets? Add a second entity — moons — and relate it to pla
 - A **one-to-many** relationship: one planet has many moons, modeled with a
   **foreign key** on moons. We never change the planets table.
 
-## Problems (in `assignments/week2/starter.sql`)
+## Problems (in `assignments/week02/starter.sql`)
 1. Create the `moons` table with a foreign key to `planets`.
 2. Insert several moons, each tied to a planet (Mercury and Venus have none).
 

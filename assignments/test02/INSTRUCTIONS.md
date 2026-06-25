@@ -2,7 +2,7 @@
 
 Assessed views covering everything from Review 2 (weeks 8–10).
 
-## Problems (in `assignments/test2/starter.sql`)
+## Problems (in `assignments/test02/starter.sql`)
 1. **Joins + aggregation** — `test2_obs_by_astronomer` (observations per
    astronomer).
 2. **Filtering / anti-join** — `test2_never_observed` (planets never observed).

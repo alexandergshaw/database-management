@@ -18,7 +18,7 @@ export const weeks: Week[] = [
   {
     week: 0,
     slug: "week-0-setup-deploy",
-    folder: "week0",
+    folder: "week00",
     title: "Setup & Deploy",
     summary: "Connect Supabase + Vercel and run your first SQL: name your catalog.",
     type: "assignment",
@@ -27,7 +27,7 @@ export const weeks: Week[] = [
   {
     week: 1,
     slug: "week-1-relational-foundations",
-    folder: "week1",
+    folder: "week01",
     title: "Relational Foundations",
     summary: "Create your first table, planets, and seed it. Planet cards appear.",
     type: "assignment",
@@ -36,7 +36,7 @@ export const weeks: Week[] = [
   {
     week: 2,
     slug: "week-2-data-modeling",
-    folder: "week2",
+    folder: "week02",
     title: "Data Modeling",
     summary: "Add moons related to planets (one-to-many). Cards show moon counts.",
     type: "assignment",
@@ -46,7 +46,7 @@ export const weeks: Week[] = [
   {
     week: 3,
     slug: "week-3-erds-business-rules",
-    folder: "week3",
+    folder: "week03",
     title: "ERDs & Business Rules",
     summary: "Model missions many-to-many with planets, plus a CHECK rule.",
     type: "assignment",
@@ -56,7 +56,7 @@ export const weeks: Week[] = [
   {
     week: 4,
     slug: "week-4-normalization",
-    folder: "week4",
+    folder: "week04",
     title: "Normalization",
     summary: "Split denormalized import tables into 1NF, 2NF, and 3NF.",
     type: "assignment",
@@ -69,7 +69,7 @@ export const weeks: Week[] = [
   {
     week: 5,
     slug: "week-5-keys-constraints",
-    folder: "week5",
+    folder: "week05",
     title: "Keys & Constraints",
     summary: "Add astronomers + sites with keys, uniqueness, and integrity.",
     type: "assignment",
@@ -78,7 +78,7 @@ export const weeks: Week[] = [
   {
     week: 6,
     slug: "week-6-review-1",
-    folder: "review1",
+    folder: "review01",
     title: "Review 1",
     summary: "Views consolidating weeks 1-5.",
     type: "review",
@@ -91,7 +91,7 @@ export const weeks: Week[] = [
   {
     week: 7,
     slug: "week-7-test-1",
-    folder: "test1",
+    folder: "test01",
     title: "Test 1",
     summary: "Assessed views across weeks 1-5.",
     type: "exam",
@@ -104,7 +104,7 @@ export const weeks: Week[] = [
   {
     week: 8,
     slug: "week-8-sql-crud",
-    folder: "week8",
+    folder: "week08",
     title: "SQL CRUD",
     summary: "Create observations and practice INSERT/UPDATE/DELETE/SELECT.",
     type: "assignment",
@@ -113,7 +113,7 @@ export const weeks: Week[] = [
   {
     week: 9,
     slug: "week-9-filtering-aggregation",
-    folder: "week9",
+    folder: "week09",
     title: "Filtering & Aggregation",
     summary: "Build the catalog_stats + inner_planets views. A stats bar appears.",
     type: "assignment",
@@ -135,7 +135,7 @@ export const weeks: Week[] = [
   {
     week: 11,
     slug: "week-11-review-2",
-    folder: "review2",
+    folder: "review02",
     title: "Review 2",
     summary: "Views for weeks 8-10.",
     type: "review",
@@ -147,7 +147,7 @@ export const weeks: Week[] = [
   {
     week: 12,
     slug: "week-12-test-2",
-    folder: "test2",
+    folder: "test02",
     title: "Test 2",
     summary: "Assessed querying, filtering, and joins.",
     type: "exam",

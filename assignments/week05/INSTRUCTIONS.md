@@ -9,7 +9,7 @@ constraints that keep data trustworthy.
 - A **foreign key** from sites to astronomers enforces referential integrity
   between two new tables.
 
-## Problems (in `assignments/week5/starter.sql`)
+## Problems (in `assignments/week05/starter.sql`)
 1. Create the `astronomers` table (unique email).
 2. Create `astronomer_sites` with a foreign key to astronomers.
 3. Insert a few astronomers.

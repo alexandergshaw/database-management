@@ -7,7 +7,7 @@ A catalog needs worlds to list. Create your first table — the planets.
 - A **column** has a **data type**; a **primary key** identifies each row; a
   **constraint** (`not null`, `check`) enforces a rule.
 
-## Problems (in `assignments/week1/starter.sql`)
+## Problems (in `assignments/week01/starter.sql`)
 1. Create the `planets` table (name, type, radius_km, distance_au, mass_e24,
    mean_temp_c) with `CHECK` constraints.
 2. Insert at least 6 planets.

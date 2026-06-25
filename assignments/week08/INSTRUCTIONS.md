@@ -3,7 +3,7 @@
 Log telescope observations by creating an `observations` table and exercising all
 four DML verbs on it. (You only touch your own new table.)
 
-## Problems (in `assignments/week8/starter.sql`)
+## Problems (in `assignments/week08/starter.sql`)
 1. Create the `observations` table (FKs to astronomers and planets).
 2. **INSERT** at least three observations.
 3. **UPDATE** logged observations to confirmed, then **DELETE** a cancelled one.
