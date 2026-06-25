@@ -47,7 +47,7 @@ homepage reads the database (pg) ──► new feature appears, planet unlocks
 
 ## Weekly schedule
 Three blocks of three assignments, each followed by a Review then a Test (the
-same cadence as the data-structures template).
+same cadence as the data-structures template), then a cumulative Final Exam.
 
 | Week | Folder | Topic | Creates | Homepage |
 |---|---|---|---|---|
@@ -66,6 +66,7 @@ same cadence as the data-structures template).
 | 12 | `week12` | Analytics & performance | `type_summary` + materialized view | Planets-by-type chart |
 | 13 | `review03` | **Review 3** | views over weeks 10-12 | — |
 | 14 | `test03` | **Test 3** | assessed views | — |
+| 15 | `final` | **Final Exam** (cumulative) | views spanning the whole course | — |
 
 ## Student setup (Week 0)
 1. Create a Supabase project.

@@ -189,4 +189,18 @@ export const weeks: Week[] = [
       (await objectExists(db, "public.test3_public_by_type")) &&
       (await objectExists(db, "public.test3_max_radius_by_type")),
   },
+  {
+    week: 15,
+    slug: "week-15-final",
+    folder: "final",
+    title: "Final Exam",
+    summary: "Cumulative views drawing on every block of the course.",
+    type: "exam",
+    probe: async (db) =>
+      (await objectExists(db, "public.final_planet_overview")) &&
+      (await objectExists(db, "public.final_normalized_stars")) &&
+      (await objectExists(db, "public.final_observations_by_type")) &&
+      (await objectExists(db, "public.final_telescope_usage")) &&
+      (await objectExists(db, "public.final_public_catalog_summary")),
+  },
 ];
