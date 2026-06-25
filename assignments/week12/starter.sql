@@ -1,4 +1,4 @@
--- Week 15 — Analytics & performance.
+-- Week 12 — Analytics & performance.
 
 -- Problem 1 — create a view named type_summary with columns type, planets
 -- (count), avg_radius_km (average radius, rounded), most planets first.

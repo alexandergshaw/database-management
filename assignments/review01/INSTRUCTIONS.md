@@ -1,16 +1,15 @@
-# Week 6 — Review 1
+# Week 3 — Review 1
 
-Consolidates weeks 1–5. Each problem is one view covering a different topic.
+Consolidates weeks 1–2 (relational foundations, keys, data modeling, ERDs).
 
 ## Problems (in `assignments/review01/starter.sql`)
-1. **Relationships** — `review1_planet_moons`: moon count per planet.
+1. **One-to-many** — `review1_planet_moons`: moon count per planet.
 2. **Many-to-many** — `review1_planet_missions`: mission count per planet.
-3. **Normalization** — `review1_body_normalized`: the 3NF star tables joined.
-4. **Keys & integrity** — `review1_astronomer_directory`: astronomers + site
+3. **Keys & integrity** — `review1_astronomer_directory`: astronomers + site
    counts.
 
 ## Done when
-- The Week 6 planet is **Unlocked** (all four views exist).
+- The Week 3 planet is **Unlocked** (all three views exist).
 
 ---
 

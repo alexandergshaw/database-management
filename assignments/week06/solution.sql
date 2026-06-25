@@ -1,4 +1,4 @@
--- Week 8 — Observations: practice all four DML verbs on a table you own here.
+-- Week 6 — Observations: practice all four DML verbs on a table you own here.
 
 drop table if exists observations cascade;
 

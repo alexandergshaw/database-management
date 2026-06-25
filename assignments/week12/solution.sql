@@ -1,4 +1,4 @@
--- Week 15 — Analytics & performance.
+-- Week 12 — Analytics & performance.
 
 -- Analytics view: planets and average radius per type.
 create or replace view type_summary as

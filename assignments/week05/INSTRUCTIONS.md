@@ -1,22 +1,23 @@
-# Week 5 — Keys, Constraints, Referential Integrity
+# Week 5 — Normalization (1NF, 2NF, 3NF)
 
-Add the people who do the cataloguing — astronomers — with the keys and
-constraints that keep data trustworthy.
+Normalize three messy import tables — one per normal form — all created this
+week, so you can drop and retry freely.
 
 ## Concepts
-- **Primary key** identifies each astronomer; **UNIQUE** stops duplicate emails;
-  **NOT NULL** requires fields.
-- A **foreign key** from sites to astronomers enforces referential integrity
-  between two new tables.
+- **1NF** — every column holds a single atomic value (no comma-separated lists).
+- **2NF** — no non-key column depends on only *part* of a composite key.
+- **3NF** — no non-key column depends on another non-key column (transitive).
 
 ## Problems (in `assignments/week05/starter.sql`)
-1. Create the `astronomers` table (unique email).
-2. Create `astronomer_sites` with a foreign key to astronomers.
-3. Insert a few astronomers.
-4. Insert a site for one of them.
+1. **1NF** — split a comma-separated `gases` column into one row per gas.
+2. **2NF** — pull an instrument name that depends only on its code out of a
+   `(probe_no, instrument_code)` table.
+3. **3NF** — move a star's class (which repeats per star) into its own
+   `nf_stars` table referenced by `nf_bodies`.
 
 ## Done when
-- The Week 5 planet is **Unlocked** (astronomers feed the stats bar from Week 9).
+- The Normalization panel shows the import normalized into stars.
+- The Week 5 planet is **Unlocked**.
 
 ---
 

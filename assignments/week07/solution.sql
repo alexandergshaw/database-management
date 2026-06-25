@@ -1,4 +1,4 @@
--- Week 9 — Filtering, sorting, functions, and aggregations as views.
+-- Week 7 — Filtering, sorting, functions, and aggregations as views.
 
 -- Aggregations + functions (count/avg/round).
 create or replace view catalog_stats as

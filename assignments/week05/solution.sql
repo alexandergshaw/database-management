@@ -1,28 +1,42 @@
--- Week 5 — Astronomers and their sites: keys, constraints, referential integrity.
+-- Week 5 — Normalization: one fix per normal form, all on tables created here.
 
-drop table if exists astronomer_sites cascade;
-drop table if exists astronomers cascade;
+-- ---- 1NF: atomic values (no comma-separated lists) ----
+drop table if exists planet_gases cascade;
+drop table if exists atmosphere_import cascade;
+create table atmosphere_import (planet text not null, gases text not null);
+insert into atmosphere_import (planet, gases) values
+  ('Earth', 'nitrogen,oxygen,argon'),
+  ('Mars', 'carbon dioxide,nitrogen');
+create table planet_gases (planet text not null, gas text not null, primary key (planet, gas));
+insert into planet_gases (planet, gas)
+select planet, trim(g) from atmosphere_import, unnest(string_to_array(gases, ',')) as g;
 
-create table astronomers (
-  id uuid primary key default gen_random_uuid(),
-  email text not null unique,
-  full_name text not null,
-  created_at timestamptz not null default now()
+-- ---- 2NF: no partial dependency on part of a composite key ----
+drop table if exists probe_instruments cascade;
+drop table if exists instruments cascade;
+create table instruments (code text primary key, instrument_name text not null);
+insert into instruments (code, instrument_name) values ('CAM', 'Camera'), ('MAG', 'Magnetometer');
+create table probe_instruments (
+  probe_no integer not null,
+  instrument_code text not null references instruments(code),
+  readings integer not null,
+  primary key (probe_no, instrument_code)
 );
+insert into probe_instruments (probe_no, instrument_code, readings) values
+  (1, 'CAM', 1200), (1, 'MAG', 340), (2, 'CAM', 980);
 
-create table astronomer_sites (
-  id uuid primary key default gen_random_uuid(),
-  astronomer_id uuid not null references astronomers(id) on delete cascade,
-  site_name text not null,
-  country text not null
-);
-
-insert into astronomers (email, full_name) values
-  ('ana.ramirez@example.com', 'Ana Ramirez'),
-  ('ben.cole@example.com', 'Ben Cole'),
-  ('chiara.rossi@example.com', 'Chiara Rossi'),
-  ('deepa.nair@example.com', 'Deepa Nair');
-
-insert into astronomer_sites (astronomer_id, site_name, country)
-select id, 'Mauna Kea', 'USA'
-from astronomers where email = 'ana.ramirez@example.com';
+-- ---- 3NF: no transitive dependency (non-key -> non-key) ----
+drop table if exists nf_bodies cascade;
+drop table if exists nf_stars cascade;
+drop table if exists body_import cascade;
+create table body_import (id serial primary key, body text not null, star text not null, star_class text not null);
+insert into body_import (body, star, star_class) values
+  ('Earth', 'Sun', 'G'),
+  ('Mars', 'Sun', 'G'),
+  ('Proxima b', 'Proxima Centauri', 'M'),
+  ('TRAPPIST-1e', 'TRAPPIST-1', 'M');
+create table nf_stars (id serial primary key, name text not null unique, star_class text not null);
+insert into nf_stars (name, star_class) select distinct star, star_class from body_import;
+create table nf_bodies (id serial primary key, body text not null, star_id integer not null references nf_stars(id));
+insert into nf_bodies (body, star_id)
+select bi.body, s.id from body_import bi join nf_stars s on s.name = bi.star;

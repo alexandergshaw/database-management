@@ -1,4 +1,4 @@
--- Week 9 — Filtering, sorting, functions, and aggregations.
+-- Week 7 — Filtering, sorting, functions, and aggregations.
 
 -- Problem 1 — create a view named catalog_stats with these columns (each a
 -- single aggregate sub-select): planet_count, moon_count, mission_count,

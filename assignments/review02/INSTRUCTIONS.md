@@ -1,14 +1,14 @@
-# Week 11 — Review 2
+# Week 8 — Review 2
 
-Consolidates weeks 8–10 (writing data, filtering/aggregation, joins).
+Consolidates weeks 5–7 (normalization, writing data, filtering/aggregation).
 
 ## Problems (in `assignments/review02/starter.sql`)
-1. **Joins + aggregation** — `review2_most_observed` (observations per planet).
-2. **Filtering + sorting** — `review2_close_planets` (planets within 10 AU).
-3. **Aggregation by group** — `review2_obs_by_status` (observations per status).
+1. **Normalization** — `review2_body_normalized`: the 3NF star tables joined.
+2. **CRUD + aggregation** — `review2_obs_by_status`: observations per status.
+3. **Filtering + sorting** — `review2_close_planets`: planets within 10 AU.
 
 ## Done when
-- The Week 11 planet is **Unlocked** (all three views exist).
+- The Week 8 planet is **Unlocked** (all three views exist).
 
 ---
 

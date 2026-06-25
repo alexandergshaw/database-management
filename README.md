@@ -40,31 +40,32 @@ homepage reads the database (pg) ──► new feature appears, planet unlocks
   students complete), and `solution.sql` (reference answer)
 - `/lib/db.ts` — reads the live DB (`SUPABASE_DB_URL`), or seeds a local
   in-process Postgres from the reference solutions for preview/tests
-- `/lib/weeks.ts` — the 16-week schedule + each week's live-DB unlock probe
+- `/lib/weeks.ts` — the course schedule + each week's live-DB unlock probe
 - `/lib/progress.ts`, `/lib/store-data.ts` — probe results + catalog data
 - `/app`, `/components` — the orbital course map (`/`), catalog dashboard
   (`/dashboard`), and per-week detail pages (`/week/[slug]`)
 
 ## Weekly schedule
-| Week | Topic | Creates | Homepage |
-|---|---|---|---|
-| 0 | Setup & deploy | `catalog_settings` | Catalog name |
-| 1 | Relational foundations | `planets` | Planet cards |
-| 2 | Data modeling | `moons` (1:M to planets) | Moon counts |
-| 3 | ERDs & business rules | `missions` + `mission_targets` (M:N) + CHECK | Mission chips |
-| 4 | Normalization | 1NF/2NF/3NF splits (gases, instruments, stars) | Normalization panel |
-| 5 | Keys & constraints | `astronomers` + `astronomer_sites` | (feeds stats) |
-| 6 | Review 1 | views over weeks 1-5 | — |
-| 7 | Test 1 | assessed views | — |
-| 8 | SELECT/INSERT/UPDATE/DELETE | `observations` | (feeds log) |
-| 9 | Filtering & aggregation | `catalog_stats` + `inner_planets` | Stats bar |
-| 10 | Joins | `observation_log` (+ LEFT JOIN view) | Observation log |
-| 11 | Review 2 | views over weeks 8-10 | — |
-| 12 | Test 2 | assessed views | — |
-| 13 | Transactions | `book_nights` function + sandbox tables | (booking demo) |
-| 14 | Security | RLS table + `public_catalog` view | Security panel |
-| 15 | Analytics & performance | `type_summary` + materialized view | Planets-by-type chart |
-| 16 | Review 3 / Test 3 / Final | capstone views | Full demo |
+Three blocks of three assignments, each followed by a Review then a Test (the
+same cadence as the data-structures template).
+
+| Week | Folder | Topic | Creates | Homepage |
+|---|---|---|---|---|
+| 0 | `week00` | Setup & deploy | `catalog_settings` | Catalog name |
+| 1 | `week01` | Relational foundations & keys | `planets` + `astronomers` | Planet cards |
+| 2 | `week02` | Data modeling & ERDs | `moons` (1:M) + `missions` (M:N) | Moons + mission chips |
+| 3 | `review01` | **Review 1** | views over weeks 1-2 | — |
+| 4 | `test01` | **Test 1** | assessed views | — |
+| 5 | `week05` | Normalization | 1NF/2NF/3NF splits | Normalization panel |
+| 6 | `week06` | SQL CRUD | `observations` | (feeds log) |
+| 7 | `week07` | Filtering & aggregation | `catalog_stats` + `inner_planets` | Stats bar |
+| 8 | `review02` | **Review 2** | views over weeks 5-7 | — |
+| 9 | `test02` | **Test 2** | assessed views | — |
+| 10 | `week10` | Joins | `observation_log` (+ LEFT JOIN view) | Observation log |
+| 11 | `week11` | Transactions & security | `book_nights` fn + RLS + `public_catalog` | Security panel |
+| 12 | `week12` | Analytics & performance | `type_summary` + materialized view | Planets-by-type chart |
+| 13 | `review03` | **Review 3** | views over weeks 10-12 | — |
+| 14 | `test03` | **Test 3** | assessed views | — |
 
 ## Student setup (Week 0)
 1. Create a Supabase project.

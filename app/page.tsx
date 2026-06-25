@@ -155,7 +155,7 @@ export default async function Home() {
         </Link>
 
         {modules.map((module, index) => {
-          const diameter = 12 + index * 3.0;
+          const diameter = 12 + index * 2.8;
           const duration = 14 + index * 5.5;
           const delay = -(duration * (index / count));
           const startAngle = index * (360 / count);

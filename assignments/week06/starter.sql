@@ -1,4 +1,4 @@
--- Week 8 — Observations: practice SELECT / INSERT / UPDATE / DELETE.
+-- Week 6 — Observations: practice SELECT / INSERT / UPDATE / DELETE.
 
 drop table if exists observations cascade;
 

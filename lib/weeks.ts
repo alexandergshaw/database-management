@@ -14,6 +14,8 @@ export interface Week {
   probe: (db: Db) => Promise<boolean>;
 }
 
+// Cadence (matches the data-structures template): three blocks of three
+// assignments, each block followed by a Review then a Test.
 export const weeks: Week[] = [
   {
     week: 0,
@@ -26,37 +28,57 @@ export const weeks: Week[] = [
   },
   {
     week: 1,
-    slug: "week-1-relational-foundations",
+    slug: "week-1-relational-keys",
     folder: "week01",
-    title: "Relational Foundations",
-    summary: "Create your first table, planets, and seed it. Planet cards appear.",
+    title: "Relational Foundations & Keys",
+    summary: "Create planets and astronomers with keys, constraints, and integrity.",
     type: "assignment",
-    probe: (db) => hasRows(db, "planets"),
+    probe: async (db) =>
+      (await hasRows(db, "planets")) &&
+      (await hasRows(db, "astronomers")) &&
+      (await objectExists(db, "public.astronomer_sites")),
   },
   {
     week: 2,
-    slug: "week-2-data-modeling",
+    slug: "week-2-modeling-erds",
     folder: "week02",
-    title: "Data Modeling",
-    summary: "Add moons related to planets (one-to-many). Cards show moon counts.",
+    title: "Data Modeling & ERDs",
+    summary: "Add moons (1:M) and missions (M:N junction) plus a CHECK rule.",
     type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.moons")) && (await hasRows(db, "moons")),
+      (await objectExists(db, "public.moons")) &&
+      (await hasRows(db, "moons")) &&
+      (await objectExists(db, "public.mission_targets")) &&
+      (await hasRows(db, "missions")),
   },
   {
     week: 3,
-    slug: "week-3-erds-business-rules",
-    folder: "week03",
-    title: "ERDs & Business Rules",
-    summary: "Model missions many-to-many with planets, plus a CHECK rule.",
-    type: "assignment",
+    slug: "week-3-review-1",
+    folder: "review01",
+    title: "Review 1",
+    summary: "Views consolidating weeks 1-2.",
+    type: "review",
     probe: async (db) =>
-      (await objectExists(db, "public.mission_targets")) && (await hasRows(db, "missions")),
+      (await objectExists(db, "public.review1_planet_moons")) &&
+      (await objectExists(db, "public.review1_planet_missions")) &&
+      (await objectExists(db, "public.review1_astronomer_directory")),
   },
   {
     week: 4,
-    slug: "week-4-normalization",
-    folder: "week04",
+    slug: "week-4-test-1",
+    folder: "test01",
+    title: "Test 1",
+    summary: "Assessed views across weeks 1-2.",
+    type: "exam",
+    probe: async (db) =>
+      (await objectExists(db, "public.test1_planets_per_type")) &&
+      (await objectExists(db, "public.test1_avg_radius")) &&
+      (await objectExists(db, "public.test1_missions_by_agency")),
+  },
+  {
+    week: 5,
+    slug: "week-5-normalization",
+    folder: "week05",
     title: "Normalization",
     summary: "Split denormalized import tables into 1NF, 2NF, and 3NF.",
     type: "assignment",
@@ -67,59 +89,48 @@ export const weeks: Week[] = [
       (await objectExists(db, "public.instruments")),
   },
   {
-    week: 5,
-    slug: "week-5-keys-constraints",
-    folder: "week05",
-    title: "Keys & Constraints",
-    summary: "Add astronomers + sites with keys, uniqueness, and integrity.",
-    type: "assignment",
-    probe: (db) => hasRows(db, "astronomers"),
-  },
-  {
     week: 6,
-    slug: "week-6-review-1",
-    folder: "review01",
-    title: "Review 1",
-    summary: "Views consolidating weeks 1-5.",
-    type: "review",
-    probe: async (db) =>
-      (await objectExists(db, "public.review1_planet_moons")) &&
-      (await objectExists(db, "public.review1_planet_missions")) &&
-      (await objectExists(db, "public.review1_body_normalized")) &&
-      (await objectExists(db, "public.review1_astronomer_directory")),
-  },
-  {
-    week: 7,
-    slug: "week-7-test-1",
-    folder: "test01",
-    title: "Test 1",
-    summary: "Assessed views across weeks 1-5.",
-    type: "exam",
-    probe: async (db) =>
-      (await objectExists(db, "public.test1_planets_per_type")) &&
-      (await objectExists(db, "public.test1_avg_radius")) &&
-      (await objectExists(db, "public.test1_missions_by_agency")) &&
-      (await objectExists(db, "public.test1_star_body_counts")),
-  },
-  {
-    week: 8,
-    slug: "week-8-sql-crud",
-    folder: "week08",
+    slug: "week-6-sql-crud",
+    folder: "week06",
     title: "SQL CRUD",
     summary: "Create observations and practice INSERT/UPDATE/DELETE/SELECT.",
     type: "assignment",
     probe: (db) => hasRows(db, "observations"),
   },
   {
-    week: 9,
-    slug: "week-9-filtering-aggregation",
-    folder: "week09",
+    week: 7,
+    slug: "week-7-filtering-aggregation",
+    folder: "week07",
     title: "Filtering & Aggregation",
     summary: "Build the catalog_stats + inner_planets views. A stats bar appears.",
     type: "assignment",
     probe: async (db) =>
       (await objectExists(db, "public.catalog_stats")) &&
       (await objectExists(db, "public.inner_planets")),
+  },
+  {
+    week: 8,
+    slug: "week-8-review-2",
+    folder: "review02",
+    title: "Review 2",
+    summary: "Views consolidating weeks 5-7.",
+    type: "review",
+    probe: async (db) =>
+      (await objectExists(db, "public.review2_body_normalized")) &&
+      (await objectExists(db, "public.review2_obs_by_status")) &&
+      (await objectExists(db, "public.review2_close_planets")),
+  },
+  {
+    week: 9,
+    slug: "week-9-test-2",
+    folder: "test02",
+    title: "Test 2",
+    summary: "Assessed views across weeks 5-7.",
+    type: "exam",
+    probe: async (db) =>
+      (await objectExists(db, "public.test2_star_body_counts")) &&
+      (await objectExists(db, "public.test2_never_observed")) &&
+      (await objectExists(db, "public.test2_cold_planets")),
   },
   {
     week: 10,
@@ -134,66 +145,48 @@ export const weeks: Week[] = [
   },
   {
     week: 11,
-    slug: "week-11-review-2",
-    folder: "review02",
-    title: "Review 2",
-    summary: "Views for weeks 8-10.",
-    type: "review",
+    slug: "week-11-transactions-security",
+    folder: "week11",
+    title: "Transactions & Security",
+    summary: "Write an atomic booking function, add RLS, and a public_catalog view.",
+    type: "assignment",
     probe: async (db) =>
-      (await objectExists(db, "public.review2_most_observed")) &&
-      (await objectExists(db, "public.review2_close_planets")) &&
-      (await objectExists(db, "public.review2_obs_by_status")),
+      (await functionExists(db, "book_nights(text,integer)")) &&
+      (await objectExists(db, "public.public_catalog")),
   },
   {
     week: 12,
-    slug: "week-12-test-2",
-    folder: "test02",
-    title: "Test 2",
-    summary: "Assessed querying, filtering, and joins.",
-    type: "exam",
-    probe: async (db) =>
-      (await objectExists(db, "public.test2_obs_by_astronomer")) &&
-      (await objectExists(db, "public.test2_never_observed")) &&
-      (await objectExists(db, "public.test2_obs_by_magnitude")),
-  },
-  {
-    week: 13,
-    slug: "week-13-transactions",
-    folder: "week13",
-    title: "Transactions",
-    summary: "Write an atomic telescope-booking function over your own tables.",
-    type: "assignment",
-    probe: (db) => functionExists(db, "book_nights(text,integer)"),
-  },
-  {
-    week: 14,
-    slug: "week-14-security",
-    folder: "week14",
-    title: "Security & Access Control",
-    summary: "Add an RLS-protected table and a safe public_catalog view.",
-    type: "assignment",
-    probe: (db) => objectExists(db, "public.public_catalog"),
-  },
-  {
-    week: 15,
-    slug: "week-15-analytics-performance",
-    folder: "week15",
+    slug: "week-12-analytics-performance",
+    folder: "week12",
     title: "Analytics & Performance",
     summary: "Create the type_summary analytics view. A chart appears.",
     type: "assignment",
     probe: (db) => objectExists(db, "public.type_summary"),
   },
   {
-    week: 16,
-    slug: "week-16-final",
-    folder: "final",
-    title: "Final Review & Presentation",
-    summary: "Capstone views: type summary, moon leaders, bookings, public listing.",
+    week: 13,
+    slug: "week-13-review-3",
+    folder: "review03",
+    title: "Review 3",
+    summary: "Views consolidating weeks 10-12.",
+    type: "review",
+    probe: async (db) =>
+      (await objectExists(db, "public.review3_busiest_observers")) &&
+      (await objectExists(db, "public.review3_booking_log")) &&
+      (await objectExists(db, "public.review3_public_listing")) &&
+      (await objectExists(db, "public.review3_type_summary")),
+  },
+  {
+    week: 14,
+    slug: "week-14-test-3",
+    folder: "test03",
+    title: "Test 3",
+    summary: "Assessed views across weeks 10-12.",
     type: "exam",
     probe: async (db) =>
-      (await objectExists(db, "public.final_type_summary")) &&
-      (await objectExists(db, "public.final_moon_leaders")) &&
-      (await objectExists(db, "public.final_booking_log")) &&
-      (await objectExists(db, "public.final_public_listing")),
+      (await objectExists(db, "public.test3_obs_by_astronomer")) &&
+      (await objectExists(db, "public.test3_bookings_by_telescope")) &&
+      (await objectExists(db, "public.test3_public_by_type")) &&
+      (await objectExists(db, "public.test3_max_radius_by_type")),
   },
 ];

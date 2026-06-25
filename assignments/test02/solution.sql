@@ -1,23 +1,23 @@
--- Test 2 — assessed views over the observation data (weeks 8-10).
+-- Test 2 — assessed views across weeks 5-7.
 
--- Joins + aggregation.
-create or replace view test2_obs_by_astronomer as
-select a.full_name as astronomer, count(o.id)::int as observations
-from astronomers a
-join observations o on o.astronomer_id = a.id
-group by a.full_name
-order by observations desc;
+-- Normalization (week 5): bodies per star from the 3NF tables.
+create or replace view test2_star_body_counts as
+select s.name as star, count(b.id)::int as bodies
+from nf_stars s
+left join nf_bodies b on b.star_id = s.id
+group by s.name
+order by s.name;
 
--- Anti-join / filtering.
+-- CRUD / anti-join (week 6): planets that have never been observed.
 create or replace view test2_never_observed as
 select p.name
 from planets p
 where not exists (select 1 from observations o where o.planet_id = p.id)
 order by p.name;
 
--- Joins + sorting: brightest observations first (lower magnitude = brighter).
-create or replace view test2_obs_by_magnitude as
-select p.name as planet, o.magnitude
-from observations o
-join planets p on p.id = o.planet_id
-order by o.magnitude;
+-- Filtering + sorting (week 7): the coldest planets.
+create or replace view test2_cold_planets as
+select name, mean_temp_c
+from planets
+where mean_temp_c < 0
+order by mean_temp_c;
