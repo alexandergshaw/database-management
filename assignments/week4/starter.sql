@@ -1,23 +1,38 @@
--- Week 4 — Normalization (1NF -> 3NF) on tables you create this week.
+-- Week 4 — Normalization. Fix three denormalized tables — one per normal form.
 
-drop table if exists nf_catalog cascade;
-drop table if exists nf_brands cascade;
-drop table if exists catalog_import cascade;
-
--- Problem 1 — create a denormalized import table and add a few rows where the
--- same brand_country repeats for every product of a brand:
---   catalog_import(id serial pk, product text, brand text, brand_country text)
--- TODO: create it, then insert 4-5 rows (reuse brands so country repeats).
-
-
--- Problem 2 — create nf_brands so each brand's country is stored ONCE:
---   nf_brands(id serial pk, name text unique not null, country text not null)
--- Then populate it from the DISTINCT brand + brand_country in catalog_import.
+-- ---- 1NF: atomic values (no comma-separated lists) ----
+drop table if exists product_tags cascade;
+drop table if exists tag_import cascade;
+create table tag_import (product text not null, tags text not null);
+insert into tag_import (product, tags) values
+  ('Trail Daypack 22L', 'hiking,daypack,outdoor'),
+  ('Merino Wool Socks', 'apparel,hiking');
+-- Problem 1 — create product_tags(product, tag) with one row per tag, and fill
+-- it from tag_import. Tip: unnest(string_to_array(tags, ',')).
 -- TODO:
 
 
--- Problem 3 — create nf_catalog that references a brand instead of repeating its
--- country: nf_catalog(id serial pk, product text not null,
---                     brand_id integer not null references nf_brands(id))
--- Then populate it by joining catalog_import to nf_brands on the brand name.
+-- ---- 2NF: no partial dependency on part of a composite key ----
+drop table if exists supply_lines cascade;
+drop table if exists supply_items cascade;
+-- Problem 2 — item names depend only on sku, not on (order_no, sku). Create
+-- supply_items(sku primary key, item_name) and supply_lines(order_no, sku
+-- references supply_items, qty, primary key (order_no, sku)); add a few rows.
+-- TODO:
+
+
+-- ---- 3NF: no transitive dependency (non-key -> non-key) ----
+drop table if exists nf_catalog cascade;
+drop table if exists nf_brands cascade;
+drop table if exists catalog_import cascade;
+create table catalog_import (id serial primary key, product text not null, brand text not null, brand_country text not null);
+insert into catalog_import (product, brand, brand_country) values
+  ('Trail Daypack 22L', 'Summit', 'USA'),
+  ('Trail Headlamp 300lm', 'Summit', 'USA'),
+  ('Insulated Water Bottle', 'Riverbend', 'Canada'),
+  ('Packable Rain Jacket', 'Riverbend', 'Canada'),
+  ('Merino Wool Socks', 'Trailhead', 'New Zealand');
+-- Problem 3 — brand_country depends on brand, not product. Create
+-- nf_brands(id, name unique, country) from the DISTINCT brand + country, and
+-- nf_catalog(id, product, brand_id references nf_brands) referencing it.
 -- TODO:

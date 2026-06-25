@@ -1,11 +1,13 @@
 # Week 10 — Joins & Multi-Table Queries
 
-An order stores IDs, not names. **Join** across tables to make it readable.
+An order stores IDs, not names. **Join** across tables to make it readable, and
+use a **LEFT JOIN** to keep rows that have no match.
 
-## Your SQL task
-Open and complete `assignments/week10/starter.sql`. It creates an `order_history` view with
-one row per order — customer name, item count, and total — by joining orders,
-customers, order_items, and products.
+## Problems (in `assignments/week10/starter.sql`)
+1. **Inner joins** — an `order_history` view joining orders, customers, and
+   order_items into one row per order (customer name, item count, total).
+2. **LEFT JOIN** — a `customer_order_counts` view that includes customers with
+   zero orders.
 
 ## Done when
 - An Order history table appears on the homepage.
@@ -14,4 +16,4 @@ customers, order_items, and products.
 ---
 
 **Retry anytime:** re-run the script (`create or replace view`). Remove with
-`drop view if exists order_history;`.
+`drop view if exists order_history, customer_order_counts;`.

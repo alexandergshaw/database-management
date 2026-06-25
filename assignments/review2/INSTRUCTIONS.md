@@ -1,15 +1,17 @@
 # Week 11 — Review 2
 
-Consolidates weeks 8–10 (writing data, aggregation, joins).
+Consolidates weeks 8–10 (writing data, filtering/aggregation, joins).
 
-## Your SQL task
-Open and complete `assignments/review2/starter.sql`. It creates a `review2_top_sellers` view
-ranking products by total units sold, highest first.
+## Problems (in `assignments/review2/starter.sql`)
+1. **Joins + aggregation** — `review2_top_sellers` (units sold per product).
+2. **Filtering + sorting** — `review2_affordable_products` (products under $50,
+   by price).
+3. **Aggregation by group** — `review2_revenue_by_status` (revenue per order
+   status).
 
 ## Done when
-- The Week 11 planet is **Unlocked**.
+- The Week 11 planet is **Unlocked** (all three views exist).
 
 ---
 
-**Retry anytime:** re-run the script (`create or replace view`). Remove with
-`drop view if exists review2_top_sellers;`.
+**Retry anytime:** re-run the script (`create or replace view`).

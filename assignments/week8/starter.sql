@@ -1,4 +1,4 @@
--- Week 8 — Orders: practice INSERT / UPDATE / DELETE on tables you own here.
+-- Week 8 — Orders: practice SELECT / INSERT / UPDATE / DELETE on your own tables.
 
 drop table if exists order_items cascade;
 drop table if exists orders cascade;
@@ -28,4 +28,9 @@ drop table if exists orders cascade;
 
 -- Problem 4 — UPDATE one order's status to 'fulfilled', then DELETE any order
 -- whose status is 'cancelled'.
+-- TODO:
+
+
+-- Problem 5 — SELECT every remaining order (id, status, created_at), oldest
+-- first, to read back your work.
 -- TODO:

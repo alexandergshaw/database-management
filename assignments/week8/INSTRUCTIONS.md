@@ -1,16 +1,17 @@
 # Week 8 — SQL Fundamentals: SELECT, INSERT, UPDATE, DELETE
 
-Record sales by creating order tables and exercising all four write operations
-on them. (You only touch your own new tables — products are left alone.)
+Record sales by creating order tables and exercising all four DML verbs on them.
+(You only touch your own new tables — products are left alone.)
 
-## Your SQL task
-Open and complete `assignments/week8/starter.sql`. It creates `orders` and `order_items`,
-then: **INSERT**s a couple of orders with line items, **UPDATE**s their status,
-and **DELETE**s a cancelled one. (Tip: a CTE with `returning` inserts an order
-and its items together.)
+## Problems (in `assignments/week8/starter.sql`)
+1. Create the `orders` table.
+2. Create the `order_items` table (composite key, `CHECK` on quantity/price).
+3. **INSERT** a couple of orders with line items.
+4. **UPDATE** an order's status, then **DELETE** a cancelled one.
+5. **SELECT** the remaining orders to read back your work.
 
 ## Done when
-- A recent-orders / order-history feature appears once Week 10's view is built.
+- An order-history feature appears once Week 10's view is built.
 - The Week 8 planet is **Unlocked**.
 
 ---

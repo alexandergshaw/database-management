@@ -1,6 +1,15 @@
--- Review 2 — best-selling products (weeks 8-10).
+-- Review 2 — consolidates weeks 8-10. Create three views.
 
--- Problem 1 — create a view named review2_top_sellers with columns
--- product and units_sold (total quantity sold). Join products to order_items,
--- group by product, and order by units_sold (highest first).
--- TODO: use `create or replace view review2_top_sellers as ...`
+-- Problem 1 (joins + aggregation) — review2_top_sellers: product, units_sold
+-- (total quantity), highest first. Join products -> order_items.
+-- TODO:
+
+
+-- Problem 2 (filtering + sorting) — review2_affordable_products: name, price for
+-- products under $50, ordered by price.
+-- TODO:
+
+
+-- Problem 3 (aggregation by group) — review2_revenue_by_status: status, revenue
+-- (sum of quantity * unit_price) grouped by order status.
+-- TODO:

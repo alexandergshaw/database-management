@@ -1,4 +1,4 @@
--- Week 8 — Orders: practice INSERT / UPDATE / DELETE on tables you own here.
+-- Week 8 — Orders: practice all four DML verbs on tables you own here.
 -- (We don't touch products; stock-on-hand is computed by a later view.)
 
 drop table if exists order_items cascade;
@@ -52,3 +52,6 @@ select o.id, p.id, 1, p.price from o, products p where p.name = 'Packable Rain J
 -- UPDATE the paid orders, then DELETE the cancelled one.
 update orders set status = 'fulfilled' where status = 'paid';
 delete from orders where status = 'cancelled';
+
+-- SELECT: read back the orders that remain.
+select id, status, created_at from orders order by created_at;

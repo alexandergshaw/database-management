@@ -64,7 +64,10 @@ export const weeks: Week[] = [
     summary: "Split a denormalized import table into 3NF tables you create.",
     type: "assignment",
     probe: async (db) =>
-      (await hasRows(db, "nf_brands")) && (await objectExists(db, "public.nf_catalog")),
+      (await hasRows(db, "nf_brands")) &&
+      (await objectExists(db, "public.nf_catalog")) &&
+      (await objectExists(db, "public.product_tags")) &&
+      (await objectExists(db, "public.supply_items")),
   },
   {
     week: 5,
@@ -82,7 +85,11 @@ export const weeks: Week[] = [
     title: "Review 1",
     summary: "Build a view joining products to their suppliers.",
     type: "review",
-    probe: (db) => objectExists(db, "public.review1_supplier_catalog"),
+    probe: async (db) =>
+      (await objectExists(db, "public.review1_supplier_catalog")) &&
+      (await objectExists(db, "public.review1_category_counts")) &&
+      (await objectExists(db, "public.review1_brand_normalized")) &&
+      (await objectExists(db, "public.review1_customer_directory")),
   },
   {
     week: 7,
@@ -93,7 +100,9 @@ export const weeks: Week[] = [
     type: "exam",
     probe: async (db) =>
       (await objectExists(db, "public.test1_products_per_category")) &&
-      (await objectExists(db, "public.test1_inventory_value")),
+      (await objectExists(db, "public.test1_inventory_value")) &&
+      (await objectExists(db, "public.test1_suppliers_by_country")) &&
+      (await objectExists(db, "public.test1_brand_product_counts")),
   },
   {
     week: 8,
@@ -111,7 +120,9 @@ export const weeks: Week[] = [
     title: "Filtering & Aggregation",
     summary: "Create the store_stats view. A stats bar appears.",
     type: "assignment",
-    probe: (db) => objectExists(db, "public.store_stats"),
+    probe: async (db) =>
+      (await objectExists(db, "public.store_stats")) &&
+      (await objectExists(db, "public.affordable_products")),
   },
   {
     week: 10,
@@ -120,7 +131,9 @@ export const weeks: Week[] = [
     title: "Joins",
     summary: "Create the order_history view joining orders, customers, and products.",
     type: "assignment",
-    probe: (db) => objectExists(db, "public.order_history"),
+    probe: async (db) =>
+      (await objectExists(db, "public.order_history")) &&
+      (await objectExists(db, "public.customer_order_counts")),
   },
   {
     week: 11,
@@ -129,7 +142,10 @@ export const weeks: Week[] = [
     title: "Review 2",
     summary: "Build a top-sellers view.",
     type: "review",
-    probe: (db) => objectExists(db, "public.review2_top_sellers"),
+    probe: async (db) =>
+      (await objectExists(db, "public.review2_top_sellers")) &&
+      (await objectExists(db, "public.review2_affordable_products")) &&
+      (await objectExists(db, "public.review2_revenue_by_status")),
   },
   {
     week: 12,
@@ -140,7 +156,8 @@ export const weeks: Week[] = [
     type: "exam",
     probe: async (db) =>
       (await objectExists(db, "public.test2_spend_by_customer")) &&
-      (await objectExists(db, "public.test2_never_ordered")),
+      (await objectExists(db, "public.test2_never_ordered")) &&
+      (await objectExists(db, "public.test2_orders_by_total")),
   },
   {
     week: 13,
@@ -178,6 +195,8 @@ export const weeks: Week[] = [
     type: "exam",
     probe: async (db) =>
       (await objectExists(db, "public.final_category_revenue")) &&
-      (await objectExists(db, "public.final_low_stock")),
+      (await objectExists(db, "public.final_low_stock")) &&
+      (await objectExists(db, "public.final_checkout_log")) &&
+      (await objectExists(db, "public.final_public_listing")),
   },
 ];
