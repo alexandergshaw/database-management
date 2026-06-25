@@ -1,23 +1,48 @@
 # Week 0 — Setup & Deploy
 
-Over the semester you build a **planetary catalog** by writing SQL directly in
-Supabase. Each week you run one script; when its objects exist, the matching
-planet on the course map lights up and a homepage feature appears.
+Welcome! This semester you'll build a **planetary catalog** one small SQL script
+at a time. You never need a command line — you paste SQL into the **Supabase SQL
+editor** and press **Run**. Each week, when your SQL creates the right things, a
+new part of the homepage lights up and that week's planet on the course map
+unlocks.
 
-## Set up
-1. Create a Supabase project.
-2. Import this repo into Vercel and set `SUPABASE_DB_URL` (Supabase → Project
-   Settings → Database → Connection string) so your homepage reads your database.
+## What you'll do this week
+Connect the tools, then run your very first table and row.
 
-## Your SQL task
-Open and complete `assignments/week00/starter.sql` in the Supabase SQL editor: a
-`catalog_settings` table plus one row with your observatory's name and tagline.
+### 1) Connect the tools
+1. Create a free **Supabase** project — this is your database.
+2. Import this repo into **Vercel** and add the `SUPABASE_DB_URL` value from
+   `.env.example` (find it in Supabase → Project Settings → Database → Connection
+   string). That's what lets the website read your database.
+
+### 2) Your SQL task
+Open `assignments/week00/starter.sql`, fill in the two TODOs, and run the whole
+file in the Supabase SQL editor.
+
+## The idea: a table and a row
+A **table** is like a spreadsheet: the **columns** are the fields and each **row**
+is one record. You add rows with an **INSERT**. Here's the shape using a
+*different* example (an app's settings) so you can see how it looks — yours will
+be about your catalog:
+
+```sql
+-- Example only — NOT the answer:
+create table app_settings (
+  id uuid primary key default gen_random_uuid(),   -- a unique id, made for you
+  app_name text not null,                          -- text that must be filled in
+  created_at timestamptz not null default now()    -- defaults to "right now"
+);
+
+insert into app_settings (app_name) values ('My Cool App');
+```
+
+Your job uses the same pattern for a `catalog_settings` table holding your
+observatory's name and tagline.
 
 ## Done when
-- The homepage header shows your catalog name.
+- The homepage header shows your catalog's name.
 - The Week 0 planet is **Unlocked**.
 
----
-
-**Retry anytime:** fix your SQL and run the script again — it drops its own
-objects first. Clear one by hand with `drop table if exists <name> cascade;`.
+## Made a mistake?
+No problem — fix your SQL and run the file again. It clears its own table first,
+so re-running is always safe.

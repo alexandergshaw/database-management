@@ -1,17 +1,27 @@
 # Week 13 — Review 3
 
-Consolidates weeks 10–12 (joins, transactions, security, analytics).
+Practice weeks 10–12 (joins, transactions, security, analytics) as four views.
 
-## Problems (in `assignments/review03/starter.sql`)
-1. **Joins** — `review3_busiest_observers`: observations per astronomer (from the
-   Week 10 `observation_log` view).
-2. **Transactions** — `review3_booking_log`: what `book_nights` recorded.
-3. **Security** — `review3_public_listing`: reads the `public_catalog` view.
-4. **Analytics** — `review3_type_summary`: planets and avg radius per type.
+## Reminders (plain English)
+- You can build a view **on top of** another view — e.g., read from the
+  `observation_log` view you made in Week 10.
+- JOIN + GROUP BY summarizes related rows; reading from `public_catalog` keeps
+  you on the safe, public columns.
+
+## Worked example (a different topic)
+```sql
+-- Example only — NOT the answer.
+-- summarize from an existing view:
+create or replace view top_customers as
+select customer, count(*) as orders
+from order_lines           -- a view made earlier
+group by customer
+order by orders desc;
+```
+
+## Your tasks (in `assignments/review03/starter.sql`)
+Four views: busiest observers (from the Week 10 log), the booking log, the safe
+public listing, and a per-type summary. The starter names each and lists columns.
 
 ## Done when
 - The Week 13 planet is **Unlocked** (all four views exist).
-
----
-
-**Retry anytime:** re-run the script (`create or replace view`).

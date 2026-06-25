@@ -1,28 +1,30 @@
 -- Week 6 — Observations: practice SELECT / INSERT / UPDATE / DELETE.
+-- Run the whole file when done (it clears its table first).
 
 drop table if exists observations cascade;
 
--- Problem 1 — create the observations table:
---   id uuid pk default gen_random_uuid(),
---   astronomer_id uuid not null references astronomers(id) on delete cascade,
---   planet_id uuid not null references planets(id),
---   magnitude numeric(5,2) not null,
---   status text not null default 'logged',
---   observed_at timestamptz not null default now()
+-- Problem 1 — Create a table named "observations" with:
+--    id             unique auto-generated id (primary key)
+--    astronomer_id  who observed  (FOREIGN KEY to astronomers.id, on delete cascade)
+--    planet_id      what they observed  (FOREIGN KEY to planets.id)
+--    magnitude      how bright it looked  (number, required; lower = brighter)
+--    status         the state of the record  (text, required, default 'logged')
+--    observed_at    when  (timestamp, default now)
 -- TODO:
 
 
--- Problem 2 — INSERT at least three observations linking an astronomer to a
--- planet. Tip: with a as (select id from astronomers where email = '...')
---              insert into observations select a.id, p.id, ... from a, planets p ...
+-- Problem 2 — INSERT at least three observations. Pick the astronomer and planet
+-- by looking up their ids (see the "handy trick" in INSTRUCTIONS.md). Leave the
+-- status as its default for most, but make ONE row 'cancelled' so you can delete
+-- it in the next step.
 -- TODO:
 
 
--- Problem 3 — UPDATE 'logged' observations to 'confirmed', then DELETE any whose
--- status is 'cancelled'.
+-- Problem 3 — UPDATE: set status to 'confirmed' for every row whose status is
+-- 'logged'. Then DELETE every row whose status is 'cancelled'.
 -- TODO:
 
 
 -- Problem 4 — SELECT the remaining observations (id, magnitude, status), oldest
--- first.
+-- first. (This just shows your work; it changes nothing.)
 -- TODO:

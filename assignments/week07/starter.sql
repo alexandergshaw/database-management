@@ -1,11 +1,17 @@
--- Week 7 — Filtering, sorting, functions, and aggregations.
+-- Week 7 — Filtering, sorting, functions, and aggregations. Create two views.
 
--- Problem 1 — create a view named catalog_stats with these columns (each a
--- single aggregate sub-select): planet_count, moon_count, mission_count,
--- observation_count, avg_radius_km (average planet radius, rounded).
+-- Problem 1 — Create a view named "catalog_stats" that returns ONE row with
+-- these columns (each one is a small "(select ...)" sub-query):
+--    planet_count       how many planets
+--    moon_count         how many moons
+--    mission_count      how many missions
+--    observation_count  how many observations
+--    avg_radius_km      the average planet radius, rounded to a whole number
+-- See the "shop_stats" worked example in INSTRUCTIONS.md.
 -- TODO:
 
 
--- Problem 2 — create a view named inner_planets listing name, type, distance_au
--- for planets within 2 AU (WHERE), ordered by distance_au (ORDER BY).
+-- Problem 2 — Create a view named "inner_planets" with columns name, type,
+-- distance_au, containing only planets closer than 2 AU (WHERE), sorted nearest
+-- first (ORDER BY distance_au).
 -- TODO:

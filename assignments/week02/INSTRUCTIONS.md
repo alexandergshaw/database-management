@@ -1,25 +1,44 @@
 # Week 2 — Data Modeling & ERDs
 
-Model what orbits and what explores: moons (a one-to-many relationship) and
-missions (a many-to-many relationship), with a business rule.
+Now you'll model **relationships** between tables — the heart of database design.
 
-## Concepts
-- **One-to-many** (a planet has many moons): a foreign key on the many side.
-- **Many-to-many** (missions visit many planets, planets are visited by many
-  missions): resolved with a junction table keyed on the pair of foreign keys.
-- A **business rule** enforced by a `CHECK` constraint.
+## The concepts (in plain English)
+- **One-to-many** — one row on the "one" side connects to many rows on the
+  "many" side. Example: one planet has many moons. You model it by putting a
+  **foreign key** on the *many* side (each moon stores which planet it belongs to).
+- **Many-to-many** — both sides can connect to many of the other. Example: a
+  mission can visit many planets, and a planet can be visited by many missions.
+  You can't do that with a single foreign key, so you create a third table — a
+  **junction table** — with one row per pairing.
+- **Business rule** — a `CHECK` constraint that encodes a real-world rule.
 
-## Problems (in `assignments/week02/starter.sql`)
-1. Create the `moons` table with a foreign key to `planets`.
-2. Insert moons, each tied to a planet.
-3. Create `missions` (with a `CHECK` on launch year) and the `mission_targets`
-   junction table.
-4. Insert missions and link them to the planets they visited.
+## Worked example (a different topic — yours is moons and missions)
+```sql
+-- Example only — NOT the answer.
+-- one-to-many: one author writes many books
+create table books (
+  id uuid primary key default gen_random_uuid(),
+  author_id uuid not null references authors(id) on delete cascade,
+  title text not null
+);
+
+-- many-to-many: students take many courses, courses have many students
+create table enrollments (
+  student_id uuid not null references students(id) on delete cascade,
+  course_id  uuid not null references courses(id) on delete cascade,
+  primary key (student_id, course_id)   -- the pair is the key
+);
+```
+
+## Your tasks (in `assignments/week02/starter.sql`)
+1. Create `moons` with a foreign key to `planets`, and insert several moons.
+2. Create `missions` (with a CHECK that launch year is sensible) and a
+   `mission_targets` junction table, then link missions to the planets they
+   visited (make at least one mission visit two or more planets).
 
 ## Done when
 - Cards show moon counts and mission chips; a Missions panel appears.
 - The Week 2 planet is **Unlocked**.
 
----
-
-**Retry anytime:** re-run the script — it drops its own objects first.
+## Made a mistake?
+Fix it and run the file again — it clears its own tables first.

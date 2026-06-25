@@ -1,15 +1,19 @@
 -- Review 2 — consolidates weeks 5-7. Create three views.
 
--- Problem 1 (normalization) — review2_body_normalized: body, star, star_class.
--- Join nf_bodies -> nf_stars.
+-- Problem 1 — Create a view named "review2_body_normalized" with columns
+--    body, star, star_class
+-- by JOINing your week-5 nf_bodies table to nf_stars (match star_id to the
+-- star's id). Order by body.
 -- TODO:
 
 
--- Problem 2 (CRUD + aggregation) — review2_obs_by_status: status, observations
--- (count) grouped by status.
+-- Problem 2 — Create a view named "review2_obs_by_status" with columns
+--    status, observations (the count of observations with that status)
+-- Hint: GROUP BY status and count.
 -- TODO:
 
 
--- Problem 3 (filtering + sorting) — review2_close_planets: name, distance_au for
--- planets within 10 AU, ordered by distance_au.
+-- Problem 3 — Create a view named "review2_close_planets" with columns
+--    name, distance_au
+-- containing only planets within 10 AU, nearest first.
 -- TODO:

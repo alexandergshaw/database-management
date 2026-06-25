@@ -1,15 +1,22 @@
 -- Review 1 — consolidates weeks 1-2. Create three views.
+-- A view looks like:  create or replace view NAME as SELECT ... ;
+-- See INSTRUCTIONS.md for a worked example.
 
--- Problem 1 (one-to-many) — review1_planet_moons: planet, moons (count).
--- LEFT JOIN planets -> moons so 0-moon planets still appear.
+-- Problem 1 — Create a view named "review1_planet_moons" with two columns:
+--    planet  — the planet's name
+--    moons   — how many moons it has (0 if none)
+-- Hint: LEFT JOIN planets to moons, then GROUP BY the planet and count.
 -- TODO:
 
 
--- Problem 2 (many-to-many) — review1_planet_missions: planet, missions (count).
--- LEFT JOIN planets -> mission_targets.
+-- Problem 2 — Create a view named "review1_planet_missions" with:
+--    planet   — the planet's name
+--    missions — how many missions visited it (0 if none)
+-- Hint: LEFT JOIN planets to the mission_targets junction table, then count.
 -- TODO:
 
 
--- Problem 3 (keys/integrity) — review1_astronomer_directory: full_name, email,
--- sites (count). LEFT JOIN astronomers -> astronomer_sites.
+-- Problem 3 — Create a view named "review1_astronomer_directory" with:
+--    full_name, email, and sites (how many sites each astronomer has, 0 if none)
+-- Hint: LEFT JOIN astronomers to astronomer_sites, then count.
 -- TODO:

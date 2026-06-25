@@ -1,20 +1,32 @@
-# Week 12 — Enterprise Applications, Analytics & Performance
+# Week 12 — Analytics & Performance
 
-Make analytical queries possible and fast.
+The last build week: summarize the catalog for a dashboard, and make that summary
+fast to read.
 
-## Concepts
-- An **analytics view** aggregates across the catalog.
-- A **materialized view** stores the result, and an **index** on it speeds reads
-  — both new objects you own.
+## The ideas (plain English)
+- An **analytics view** groups and aggregates data for reporting (e.g., counts
+  and averages per category).
+- A **materialized view** stores a query's *result* like a snapshot, so reading
+  it is instant (you refresh it when the data changes). An **index** on it makes
+  look-ups faster still. Both are new objects — you're not changing any existing
+  table.
 
-## Problems (in `assignments/week12/starter.sql`)
-1. Create a `type_summary` view (planets and average radius per type).
-2. Create a `mv_type_summary` materialized view and index it.
+## Worked example (a different topic)
+```sql
+-- Example only — NOT the answer.
+create or replace view sales_by_region as
+select region, count(*) as orders, round(avg(total), 2) as avg_order
+from orders group by region order by orders desc;
+
+create materialized view sales_by_region_snapshot as select * from sales_by_region;
+create index idx_sales_region on sales_by_region_snapshot (region);
+```
+
+## Your tasks (in `assignments/week12/starter.sql`)
+1. A `type_summary` view: per planet type, how many planets and their average
+   radius.
+2. A `mv_type_summary` materialized view of it, plus an index.
 
 ## Done when
 - A "Planets by type" chart appears on the homepage.
 - The Week 12 planet is **Unlocked**.
-
----
-
-**Retry anytime:** re-run the script (`create or replace` / drop-if-exists).

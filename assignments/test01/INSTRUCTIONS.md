@@ -1,15 +1,30 @@
 # Week 4 — Test 1
 
-Assessed views covering everything from Review 1 (weeks 1–2).
+The graded version of Review 1. Same skills (weeks 1–2), assessed as three views.
 
-## Problems (in `assignments/test01/starter.sql`)
-1. **Aggregation by group** — `test1_planets_per_type` (planets per type).
-2. **Functions** — `test1_avg_radius` (average planet radius).
-3. **Data modeling** — `test1_missions_by_agency` (missions per agency).
+## A quick refresher on aggregates
+- **count(\*)** counts rows; **avg(col)** averages a column; **round(x, n)**
+  rounds a number to `n` decimals.
+- **GROUP BY col** makes one result row per distinct value of `col`, so you can
+  count or average *within* each group.
+
+## Worked example (a different topic)
+```sql
+-- Example only — NOT the answer.
+-- "how many products are in each category":
+create or replace view products_per_category as
+select category, count(*) as products
+from products
+group by category
+order by category;
+```
+
+## Your tasks (in `assignments/test01/starter.sql`)
+Create three views (the starter names each and lists its columns): planets per
+type, the average planet radius, and missions per agency.
 
 ## Done when
 - The Week 4 planet is **Unlocked** (all three views exist).
 
----
-
-**Retry anytime:** re-run the script (`create or replace view`).
+## Made a mistake?
+Just run the file again — `create or replace view` overwrites cleanly.

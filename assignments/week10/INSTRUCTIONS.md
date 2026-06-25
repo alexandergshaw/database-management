@@ -1,18 +1,33 @@
 # Week 10 — Joins & Multi-Table Queries
 
-An observation stores IDs, not names. **Join** across tables to make it readable,
-and use a **LEFT JOIN** to keep rows that have no match.
+An observation only stores *ids* (which astronomer, which planet). To show names
+you must **join** the tables back together.
 
-## Problems (in `assignments/week10/starter.sql`)
-1. **Inner joins** — an `observation_log` view joining observations, astronomers,
-   and planets.
-2. **LEFT JOIN** — a `planet_observation_counts` view that includes planets with
-   zero observations.
+## The idea (plain English)
+- A **JOIN** matches rows across tables on a shared key. To list each observation
+  with the astronomer's and planet's names, join observations → astronomers and
+  observations → planets.
+- A **LEFT JOIN** keeps rows from the left table even with no match — perfect for
+  counting, so a planet that's never been observed still appears with 0.
+- When you join then summarize, use **GROUP BY** on the columns you're keeping.
+
+## Worked example (a different topic)
+```sql
+-- Example only — NOT the answer.
+-- one readable row per order, with the customer's name:
+create or replace view order_lines as
+select o.id, c.full_name as customer, o.total
+from orders o
+join customers c on c.id = o.customer_id
+order by o.created_at desc;
+```
+
+## Your tasks (in `assignments/week10/starter.sql`)
+1. An `observation_log` view: one row per observation with the astronomer name,
+   planet name, magnitude, status, and date.
+2. A `planet_observation_counts` view: every planet and how many times it's been
+   observed (0 included — use a LEFT JOIN).
 
 ## Done when
 - An observation log table appears on the homepage.
 - The Week 10 planet is **Unlocked**.
-
----
-
-**Retry anytime:** re-run the script (`create or replace view`).

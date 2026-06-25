@@ -1,25 +1,46 @@
 # Week 11 — Transactions & Security
 
-Two advanced topics in one week: make booking telescope time **atomic**, and
-**protect** sensitive data while publishing a safe public view.
+Two advanced topics in one week.
 
-## Concepts
-- A `plpgsql` function body runs as one **transaction**; `SELECT ... FOR UPDATE`
-  locks a row (concurrency); `RAISE EXCEPTION` rolls everything back.
-- **Row-Level Security** hides rows from the public `anon` role unless a policy
-  grants access; a **view** can publish only safe columns.
+## Part A — Transactions
+Booking telescope time has two steps that must happen **together**: record the
+booking, and subtract the nights. A **transaction** guarantees "all or nothing."
+You'll wrap the steps in a database **function** so they always run as one unit.
+- `select ... for update` **locks** the row you read, so two bookings can't both
+  spend the last night (this is **concurrency** control).
+- `raise exception '...'` aborts and undoes everything done so far.
 
-## Problems (in `assignments/week11/starter.sql`)
-1. Create `telescopes` (+ seed) and `telescope_bookings`.
-2. Write the atomic `book_nights(code, nights)` function and call it once.
-3. Create a private `proposal_secrets` table, enable RLS, and add a
-   `service_role`-only policy.
-4. Create the `public_catalog` view (safe planet columns) and grant it to `anon`.
+### Worked example (a different topic — yours books telescope nights)
+```sql
+-- Example only — NOT the answer. The shape of an "all-or-nothing" function:
+create or replace function withdraw(p_account text, p_amount numeric)
+returns void
+language plpgsql
+as $$
+declare
+  v_balance numeric;
+begin
+  select balance into v_balance from accounts where id = p_account for update;
+  if v_balance < p_amount then
+    raise exception 'insufficient funds';   -- undoes the whole function
+  end if;
+  update accounts set balance = balance - p_amount where id = p_account;
+end;
+$$;
+```
+
+## Part B — Security
+- **Row-Level Security (RLS)**: once you turn it on for a table, the public role
+  sees *no* rows unless a **policy** allows it — good for private data.
+- A **view** can publish only the safe columns of a table, and `grant select`
+  decides who may read it.
+
+## Your tasks (in `assignments/week11/starter.sql`)
+1. Create `telescopes` and `telescope_bookings`.
+2. Write the atomic `book_nights(code, nights)` function (and call it once).
+3. Create a private `proposal_secrets` table, enable RLS, add a policy.
+4. Publish a `public_catalog` view of safe planet columns and grant it to `anon`.
 
 ## Done when
 - A Security posture panel appears on the homepage.
-- The Week 11 planet is **Unlocked** (the function and view both exist).
-
----
-
-**Retry anytime:** re-run the script — it drops its own objects first.
+- The Week 11 planet is **Unlocked**.
