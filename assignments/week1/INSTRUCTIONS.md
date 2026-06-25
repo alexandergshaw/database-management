@@ -8,7 +8,7 @@ A storefront needs something to sell. Create your first table.
   **constraint** (`not null`, `check`) enforces a rule.
 
 ## Your SQL task
-Run `assignments/week1/solution.sql` in the Supabase SQL editor. It creates a
+Open and complete `assignments/week1/starter.sql` in the Supabase SQL editor. It creates a
 `products` table (id, name, description, price, stock_count, created_at) with
 `CHECK` constraints, and seeds five products.
 

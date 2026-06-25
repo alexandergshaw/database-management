@@ -11,7 +11,7 @@ planet on the course map lights up and a homepage feature appears.
 
 ## Your SQL task
 Open the **Supabase SQL editor**, paste the contents of
-`assignments/week0/solution.sql`, and run it. It creates a `store_settings`
+`assignments/week0/starter.sql`, and run it. It creates a `store_settings`
 table and inserts your store's name and tagline — change them to your own.
 
 ## Done when

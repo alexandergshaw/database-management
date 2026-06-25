@@ -8,7 +8,7 @@ Who makes your products? Add a second entity and relate it to products.
   changing the products table — so this week only ever creates *new* tables.
 
 ## Your SQL task
-Run `assignments/week2/solution.sql`. It creates `suppliers` and a
+Open and complete `assignments/week2/starter.sql`. It creates `suppliers` and a
 `product_suppliers` link table (product_id + supplier_id), then seeds suppliers
 and links each product to one.
 

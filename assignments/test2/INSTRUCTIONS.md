@@ -3,7 +3,7 @@
 Assessed views over the order data.
 
 ## Your SQL task
-Run `assignments/test2/solution.sql`, which creates two views:
+Open and complete `assignments/test2/starter.sql`, which creates two views:
 - `test2_spend_by_customer` — total spend per customer, highest first.
 - `test2_never_ordered` — products that have never been ordered.
 

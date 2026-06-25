@@ -18,9 +18,9 @@ export function ModulePanel({ module }: ModulePanelProps) {
         </p>
       ) : (
         <p className="mt-4 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-          Locked — run{" "}
-          <code className="font-mono">assignments/{module.folder}/solution.sql</code>{" "}
-          in your Supabase SQL editor to unlock.
+          Locked — complete{" "}
+          <code className="font-mono">assignments/{module.folder}/starter.sql</code>{" "}
+          and run it in your Supabase SQL editor to unlock.
         </p>
       )}
     </article>

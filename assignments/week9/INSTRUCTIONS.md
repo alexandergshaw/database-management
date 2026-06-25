@@ -3,7 +3,7 @@
 Turn rows into numbers with aggregate functions, packaged as a view.
 
 ## Your SQL task
-Run `assignments/week9/solution.sql`. It creates a `store_stats` view exposing
+Open and complete `assignments/week9/starter.sql`. It creates a `store_stats` view exposing
 `product_count`, `order_count`, `customer_count`, `revenue` (sum of
 `quantity * unit_price`), and `avg_price`.
 

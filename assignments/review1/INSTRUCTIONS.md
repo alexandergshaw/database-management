@@ -4,7 +4,7 @@ Consolidates weeks 1–5. A **view** is a saved query; you create one as a new
 object.
 
 ## Your SQL task
-Run `assignments/review1/solution.sql`. It creates a `review1_supplier_catalog`
+Open and complete `assignments/review1/starter.sql`. It creates a `review1_supplier_catalog`
 view listing each product with its supplier name and country (joining products,
 the link table, and suppliers).
 

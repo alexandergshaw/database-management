@@ -4,7 +4,7 @@ The capstone. Your fully assembled storefront — every homepage panel — is yo
 demo.
 
 ## Your SQL task
-Run `assignments/final/solution.sql`, which creates two capstone views:
+Open and complete `assignments/final/starter.sql`, which creates two capstone views:
 - `final_category_revenue` — revenue per category, highest first.
 - `final_low_stock` — products under 50 in stock and who supplies them.
 

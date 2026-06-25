@@ -8,7 +8,7 @@ Protect private data, and expose only what's safe.
 - A **view** can publish a safe subset of columns; `GRANT` controls who reads it.
 
 ## Your SQL task
-Run `assignments/week14/solution.sql`. It creates a private `customer_pii` table,
+Open and complete `assignments/week14/starter.sql`. It creates a private `customer_pii` table,
 enables RLS with a `service_role`-only read policy, and publishes a
 `public_catalog` view (safe product columns) granted to `anon`.
 

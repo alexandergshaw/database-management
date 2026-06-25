@@ -4,7 +4,7 @@ Record sales by creating order tables and exercising all four write operations
 on them. (You only touch your own new tables — products are left alone.)
 
 ## Your SQL task
-Run `assignments/week8/solution.sql`. It creates `orders` and `order_items`,
+Open and complete `assignments/week8/starter.sql`. It creates `orders` and `order_items`,
 then: **INSERT**s a couple of orders with line items, **UPDATE**s their status,
 and **DELETE**s a cancelled one. (Tip: a CTE with `returning` inserts an order
 and its items together.)

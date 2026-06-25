@@ -8,7 +8,7 @@ Make analytical queries possible and fast.
   — both new objects you own.
 
 ## Your SQL task
-Run `assignments/week15/solution.sql`. It creates a `category_revenue` view
+Open and complete `assignments/week15/starter.sql`. It creates a `category_revenue` view
 (revenue per category), a `mv_category_revenue` materialized view, and an index
 on it.
 

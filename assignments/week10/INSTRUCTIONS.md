@@ -3,7 +3,7 @@
 An order stores IDs, not names. **Join** across tables to make it readable.
 
 ## Your SQL task
-Run `assignments/week10/solution.sql`. It creates an `order_history` view with
+Open and complete `assignments/week10/starter.sql`. It creates an `order_history` view with
 one row per order — customer name, item count, and total — by joining orders,
 customers, order_items, and products.
 

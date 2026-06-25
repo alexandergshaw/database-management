@@ -3,7 +3,7 @@
 Consolidates weeks 8–10 (writing data, aggregation, joins).
 
 ## Your SQL task
-Run `assignments/review2/solution.sql`. It creates a `review2_top_sellers` view
+Open and complete `assignments/review2/starter.sql`. It creates a `review2_top_sellers` view
 ranking products by total units sold, highest first.
 
 ## Done when

@@ -18,7 +18,7 @@ homepage reads the database (pg) ──► new feature appears, planet unlocks
 ```
 
 - **Write SQL directly in Supabase** — no migrations, git, or CLI. Each week is
-  one `solution.sql` you paste and run.
+  a `starter.sql` with several small numbered TODO problems you complete and run.
 - **New objects only.** Every assignment creates *new* tables/views/functions and
   never alters an earlier week's tables (relationships use link tables; schema-
   evolution topics use that week's own sandbox tables). So if something's wrong,
@@ -35,7 +35,8 @@ homepage reads the database (pg) ──► new feature appears, planet unlocks
 - Vitest
 
 ## Repository layout
-- `/assignments/<week>` — `INSTRUCTIONS.md` + `solution.sql` (the SQL students run)
+- `/assignments/<week>` — `INSTRUCTIONS.md`, `starter.sql` (TODO problems
+  students complete), and `solution.sql` (reference answer)
 - `/lib/db.ts` — reads the live DB (`SUPABASE_DB_URL`), or seeds a local
   in-process Postgres from the reference solutions for preview/tests
 - `/lib/weeks.ts` — the 16-week schedule + each week's live-DB unlock probe
@@ -67,8 +68,9 @@ homepage reads the database (pg) ──► new feature appears, planet unlocks
 ## Student setup (Week 0)
 1. Create a Supabase project.
 2. Import the repo into Vercel and set `SUPABASE_DB_URL` (see `.env.example`).
-3. Each week: open the Supabase SQL editor, run that week's `solution.sql`, and
-   watch the homepage. Made a mistake? Fix the SQL and run it again.
+3. Each week: open that week's `starter.sql`, complete the numbered TODO
+   problems, and run the whole script in the Supabase SQL editor. Made a mistake?
+   Fix it and run again (the script drops its own objects first).
 
 ## Local development
 ```bash
@@ -79,7 +81,12 @@ npm run build
 ```
 
 ## Note for instructors
-The `solution.sql` files are **reference answers**, so the template renders fully
-and `npm run test` is green. To distribute to students, replace each script body
-with a TODO stub (the `INSTRUCTIONS.md` already describes the task); the live-DB
-probes in `lib/weeks.ts` define what "done" means.
+Each week ships two SQL files:
+- `starter.sql` — what students complete: several small numbered TODO problems.
+- `solution.sql` — the reference answer. It seeds the local preview and the
+  `npm run test` sanity check (which confirms every probe unlocks), so the
+  template stays green and demoable.
+
+The live-DB probes in `lib/weeks.ts` define what "done" means. To hand the repo
+to students, delete the `solution.sql` files (and they fill in the starters);
+keep them on an instructor branch as the answer key.

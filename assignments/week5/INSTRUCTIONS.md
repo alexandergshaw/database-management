@@ -10,7 +10,7 @@ trustworthy.
   between two new tables.
 
 ## Your SQL task
-Run `assignments/week5/solution.sql`. It creates `customers` (unique email) and
+Open and complete `assignments/week5/starter.sql`. It creates `customers` (unique email) and
 `customer_addresses` (FK to customers), and seeds a few rows.
 
 ## Done when

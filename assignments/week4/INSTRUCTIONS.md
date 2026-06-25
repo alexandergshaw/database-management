@@ -10,7 +10,7 @@ so you can drop and retry freely.
   foreign key.
 
 ## Your SQL task
-Run `assignments/week4/solution.sql`. It creates a denormalized `catalog_import`
+Open and complete `assignments/week4/starter.sql`. It creates a denormalized `catalog_import`
 (where `brand_country` repeats for every product of a brand), then splits it into
 `nf_brands` (country once per brand) and `nf_catalog` (referencing the brand).
 

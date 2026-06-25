@@ -9,7 +9,7 @@ A product can be in many categories, and a category holds many products — a
   blank).
 
 ## Your SQL task
-Run `assignments/week3/solution.sql`. It creates `categories` and a
+Open and complete `assignments/week3/starter.sql`. It creates `categories` and a
 `product_categories` junction table, adds a `CHECK` rule, and links each product
 to one or more categories.
 

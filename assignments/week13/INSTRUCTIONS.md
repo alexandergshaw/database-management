@@ -9,7 +9,7 @@ checkout sandbox you create this week.
   unit; `RAISE EXCEPTION` rolls everything back.
 
 ## Your SQL task
-Run `assignments/week13/solution.sql`. It creates `tx_inventory`, `tx_orders`,
+Open and complete `assignments/week13/starter.sql`. It creates `tx_inventory`, `tx_orders`,
 `tx_order_items`, and a `place_order(sku, qty)` function that locks stock, guards
 against overselling, writes the order + line item, and decrements stock —
 atomically.
