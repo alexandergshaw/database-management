@@ -1,25 +1,22 @@
 # Week 16 — Final Review, Test 3 & Presentation
 
-The capstone. Your fully assembled storefront — every panel on the homepage — is
-your demo. Two assessed queries draw on the complete schema.
+The capstone. Your fully assembled storefront — every homepage panel — is your
+demo.
 
 ## Your SQL task
-1. **`assignments/final/q1_category_revenue.sql`** — revenue per category,
-   highest first. Columns: `category`, `revenue`.
-2. **`assignments/final/q2_low_stock.sql`** — products with fewer than 50 units
-   in stock and who supplies them, lowest stock first. Columns: `product`,
-   `stock_count`, `supplier`.
+Run `assignments/final/solution.sql`, which creates two capstone views:
+- `final_category_revenue` — revenue per category, highest first.
+- `final_low_stock` — products under 50 in stock and who supplies them.
 
-## How it's graded
-`assignments/final/test.ts` runs each query against the database (built through
-Week 15) and checks the answers.
+## Done when
+- The Week 16 planet is **Unlocked** (both views exist).
 
 ## Presentation checklist
-- Walk through the homepage and name the migration behind each section.
-- Show one migration's SQL and the test that proves it.
-- Explain one design decision (a normalization fix, a constraint, the
-  transaction) and why it matters.
+- Walk through the homepage and name the SQL behind each section.
+- Show one script and explain a design decision (a junction table, a normalization
+  split, the transaction function).
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script (`create or replace view`). Remove with
+`drop view if exists final_category_revenue, final_low_stock;`.

@@ -1,24 +1,22 @@
 # Week 15 — Enterprise Applications, Analytics & Performance
 
-The last build week: make analytical queries possible *and* fast.
+Make analytical queries possible and fast.
 
-## Concepts in play
-- **Indexes** speed up the joins your reports run most (on foreign keys).
-- An **analytics view** aggregates across the whole schema for a dashboard.
+## Concepts
+- An **analytics view** aggregates across the whole schema.
+- A **materialized view** stores the result, and an **index** on it speeds reads
+  — both new objects you own.
 
 ## Your SQL task
-Edit **`supabase/migrations/0015_week15_analytics.sql`**:
-1. Create indexes on `order_items(product_id)` and `orders(customer_id)`.
-2. Create a `category_revenue` view: for each category, the total revenue
-   (`sum(quantity * unit_price)` of order items for products in that category),
-   highest first. Include categories with zero revenue.
+Run `assignments/week15/solution.sql`. It creates a `category_revenue` view
+(revenue per category), a `mv_category_revenue` materialized view, and an index
+on it.
 
 ## Done when
-- `assignments/week15/test.ts` passes (both indexes exist, the view returns
-  revenue per category sorted descending).
-- A **Revenue by category** bar chart appears on the homepage — your storefront
-  is now complete.
+- A Revenue by category chart appears on the homepage.
+- The Week 15 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script (`create or replace` / drop-if-exists).
+Remove with `drop materialized view if exists mv_category_revenue; drop view if exists category_revenue;`.

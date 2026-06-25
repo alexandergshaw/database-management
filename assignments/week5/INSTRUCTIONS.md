@@ -1,26 +1,23 @@
-# Week 5 — Table Design, Keys, Constraints, Referential Integrity
+# Week 5 — Keys, Constraints, Referential Integrity
 
-Time to add the people who buy things. Customers are the anchor that next week's
-orders will reference, so getting the keys and constraints right matters.
+Add the people who buy things, with the keys and constraints that keep data
+trustworthy.
 
-## Concepts in play
-- **Primary key** — uniquely identifies each customer.
-- **UNIQUE** — no two customers share an email address.
-- **NOT NULL** — required fields are always present.
-- These guarantees are what later **referential integrity** depends on.
+## Concepts
+- **Primary key** identifies each customer; **UNIQUE** stops duplicate emails;
+  **NOT NULL** requires fields.
+- A **foreign key** from addresses to customers enforces referential integrity
+  between two new tables.
 
 ## Your SQL task
-Edit **`supabase/migrations/0005_week5_customers.sql`**:
-1. Create a `customers` table with `id` (primary key), `email` (UNIQUE, NOT
-   NULL), `full_name` (NOT NULL), and `created_at`.
-2. Insert a few customers.
+Run `assignments/week5/solution.sql`. It creates `customers` (unique email) and
+`customer_addresses` (FK to customers), and seeds a few rows.
 
 ## Done when
-- `assignments/week5/test.ts` passes (customers exist, a duplicate email is
-  rejected, a null name is rejected).
-- The homepage stats include a **customer count** (once Week 9's stats view is
-  live) and Review 1 unlocks.
+- The Week 5 planet is **Unlocked** (the customer count feeds the stats bar once
+  Week 9 is done).
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script — it drops its own objects first. Clear one
+object by hand with `drop table if exists <name> cascade;`.

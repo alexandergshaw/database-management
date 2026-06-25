@@ -1,25 +1,25 @@
-# Week 4 — Normalization (1NF, 2NF, 3NF)
+# Week 4 — Normalization (1NF → 3NF)
 
-In Week 2 you stored `supplier_country` on every product. But a product's
-country depends on its *supplier*, not on the product — the same value is
-repeated for every product a supplier makes. That redundancy is a **third
-normal form (3NF) violation**: a non-key column depending on another non-key
-column (a transitive dependency).
+You'll normalize a messy import table into clean tables — all created this week,
+so you can drop and retry freely.
+
+## Concepts
+- A **transitive dependency** (a non-key column depending on another non-key
+  column) violates 3NF and duplicates data.
+- Fix it by splitting the repeated data into its own table referenced by a
+  foreign key.
 
 ## Your SQL task
-Edit **`supabase/migrations/0004_week4_normalization.sql`**:
-1. Add a `country` column to `suppliers`.
-2. Backfill it from the existing `products.supplier_country` data (no data lost).
-3. Drop the redundant `supplier_country` column from `products`.
-
-Country now lives in exactly one place. Each product still reaches its country
-through its supplier.
+Run `assignments/week4/solution.sql`. It creates a denormalized `catalog_import`
+(where `brand_country` repeats for every product of a brand), then splits it into
+`nf_brands` (country once per brand) and `nf_catalog` (referencing the brand).
 
 ## Done when
-- `assignments/week4/test.ts` passes (the column is gone from products, every
-  supplier with products has a country, no data was lost).
-- The **Suppliers** panel on the homepage shows each supplier's country.
+- The Normalization panel on the homepage shows the import normalized into
+  brands.
+- The Week 4 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script — it drops its own objects first. Clear one
+object by hand with `drop table if exists <name> cascade;`.

@@ -1,18 +1,16 @@
 # Week 12 — Test 2
 
-Assessed querying over the order data from Weeks 8–10. Two questions, each in its
-own file.
+Assessed views over the order data.
 
 ## Your SQL task
-1. **`assignments/test2/q1_revenue_by_customer.sql`** — total spend per customer
-   who has ordered, highest first. Columns: `customer`, `spend`.
-2. **`assignments/test2/q2_never_ordered.sql`** — products that have never been
-   ordered, alphabetically. Column: `name`.
+Run `assignments/test2/solution.sql`, which creates two views:
+- `test2_spend_by_customer` — total spend per customer, highest first.
+- `test2_never_ordered` — products that have never been ordered.
 
-## How it's graded
-`assignments/test2/test.ts` runs each query against the database (built through
-Week 10) and checks the answers.
+## Done when
+- The Week 12 planet is **Unlocked** (both views exist).
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script (`create or replace view`). Remove with
+`drop view if exists test2_spend_by_customer, test2_never_ordered;`.

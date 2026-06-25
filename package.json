@@ -4,15 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/collect-test-status.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:status": "node scripts/collect-test-status.mjs",
-    "test:watch": "vitest",
-    "db:reset": "node scripts/db-reset.mjs",
-    "reset:week": "node scripts/reset-week.mjs"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.3",

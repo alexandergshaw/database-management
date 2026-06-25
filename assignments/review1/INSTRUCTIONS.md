@@ -1,21 +1,17 @@
 # Week 6 — Review 1
 
-Consolidates Weeks 1–5 (schema design, relationships, normalization). These are
-**query** exercises — you read the schema you built, you don't change it.
+Consolidates weeks 1–5. A **view** is a saved query; you create one as a new
+object.
 
 ## Your SQL task
-Edit **`assignments/review1/query.sql`**: list each product with its supplier
-name and the supplier's country, ordered by product name. Name the columns
-`product`, `supplier`, `country`.
+Run `assignments/review1/solution.sql`. It creates a `review1_supplier_catalog`
+view listing each product with its supplier name and country (joining products,
+the link table, and suppliers).
 
-## How it's graded
-`assignments/review1/test.ts` runs your query against the database (built
-through Week 5) and checks the result.
-
-## More practice (not graded)
-- Which suppliers ship from outside the USA?
-- How many products are in each category?
+## Done when
+- The Week 6 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script (it uses `create or replace view`). Remove
+it by hand with `drop view if exists review1_supplier_catalog;`.

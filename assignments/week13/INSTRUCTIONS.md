@@ -1,29 +1,23 @@
-# Week 13 — Advanced Design: Transactions & Concurrency
+# Week 13 — Transactions & Concurrency
 
-Placing an order is really three steps: create the order, add the line item, and
-decrement stock. If any step fails, none should stick. That's a **transaction** —
-all or nothing.
+Make "place an order" atomic — all steps happen, or none do — on a self-contained
+checkout sandbox you create this week.
 
-## Concepts in play
-- A `plpgsql` function whose body runs as a single transaction.
-- `SELECT ... FOR UPDATE` locks the product row so two concurrent checkouts
-  can't both spend the last unit (concurrency control).
-- `RAISE EXCEPTION` aborts and rolls back the whole operation.
+## Concepts
+- A `plpgsql` function body runs as one transaction.
+- `SELECT ... FOR UPDATE` locks the row so two checkouts can't oversell the last
+  unit; `RAISE EXCEPTION` rolls everything back.
 
 ## Your SQL task
-Edit **`supabase/migrations/0013_week13_checkout_function.sql`** and create a
-`place_order(p_customer_id uuid, p_product_id uuid, p_quantity integer)`
-function that:
-1. Locks the product row and reads its stock + price.
-2. Raises an exception if stock is insufficient (no overselling).
-3. Inserts the order and its line item, decrements stock, and returns the new
-   order id.
+Run `assignments/week13/solution.sql`. It creates `tx_inventory`, `tx_orders`,
+`tx_order_items`, and a `place_order(sku, qty)` function that locks stock, guards
+against overselling, writes the order + line item, and decrements stock —
+atomically.
 
 ## Done when
-- `assignments/week13/test.ts` passes (the function exists, decrements stock
-  atomically, and refuses to oversell — leaving no partial writes).
-- The homepage marks **atomic checkout** as enabled.
+- The Week 13 planet is **Unlocked** (the `place_order` function exists).
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script — it drops its own objects first. Clear by
+hand with `drop table if exists tx_order_items, tx_orders, tx_inventory cascade;`.

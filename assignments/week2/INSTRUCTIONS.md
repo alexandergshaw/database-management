@@ -1,27 +1,22 @@
 # Week 2 — Data Modeling: Entities, Attributes, Relationships
 
-Your store sells products, but who makes them? This week you add a second
-entity — suppliers — and connect products to it with a **one-to-many**
-relationship (one supplier, many products).
+Who makes your products? Add a second entity and relate it to products.
 
-## Concepts in play
-- A **foreign key** stores a reference to a row in another table.
-- `references suppliers(id)` enforces that the reference is always valid.
-- A **one-to-many** relationship: many products point at one supplier.
+## Concepts
+- A new **entity** (suppliers) gets its own table.
+- We relate products and suppliers with a **link (junction) table** instead of
+  changing the products table — so this week only ever creates *new* tables.
 
 ## Your SQL task
-Edit **`supabase/migrations/0002_week2_suppliers.sql`**:
-1. Create a `suppliers` table (`id`, unique `name`, `created_at`).
-2. Add a `supplier_id` foreign key column to `products`.
-3. Add a `supplier_country` text column to `products` *(a deliberate shortcut we
-   fix in Week 4)*.
-4. Insert a few suppliers and assign each product a supplier + country.
+Run `assignments/week2/solution.sql`. It creates `suppliers` and a
+`product_suppliers` link table (product_id + supplier_id), then seeds suppliers
+and links each product to one.
 
 ## Done when
-- `assignments/week2/test.ts` passes (suppliers exist, the FK exists, every
-  product has a supplier).
-- Each product card on the homepage shows **by {supplier}**.
+- Each product card shows its supplier.
+- The Week 2 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script — it drops its own objects first. Clear one
+object by hand with `drop table if exists <name> cascade;`.

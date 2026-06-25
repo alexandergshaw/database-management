@@ -5,12 +5,13 @@ const nextConfig: NextConfig = {
   // of the server bundle so its asset paths resolve correctly. Only used for the
   // local migration-preview fallback — production reads from Supabase.
   serverExternalPackages: ["@electric-sql/pglite", "pg"],
-  // The homepage reads these at runtime (fs): test results drive unlocking, and
-  // the migration files back the local-preview fallback. Make sure they're
-  // bundled into the serverless functions on deploy.
+  // The local-preview fallback reads the reference solution.sql at runtime, and
+  // the week detail page reads INSTRUCTIONS.md. Bundle them into the serverless
+  // functions so they resolve on deploy.
   outputFileTracingIncludes: {
-    "/": ["./.test-results.json", "./supabase/migrations/**"],
-    "/week/[module]": ["./.test-results.json", "./assignments/**/INSTRUCTIONS.md"],
+    "/": ["./assignments/**/solution.sql"],
+    "/dashboard": ["./assignments/**/solution.sql"],
+    "/week/[module]": ["./assignments/**/solution.sql", "./assignments/**/INSTRUCTIONS.md"],
   },
 };
 

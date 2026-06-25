@@ -1,26 +1,22 @@
-# Week 14 — Database Security, Access Control, Data Protection
+# Week 14 — Security, Access Control, Data Protection
 
-Not all data should be public. Customer records must be protected; the product
-catalog can be shared — but only safe columns. This week you lock things down.
+Protect private data, and expose only what's safe.
 
-## Concepts in play
-- **Row-Level Security (RLS)**: with RLS enabled and no policy granting the
-  public `anon` role access, rows are hidden from the public API.
-- **Policies** grant specific roles specific access.
-- A **view** can expose a safe subset of columns; `GRANT` controls who reads it.
+## Concepts
+- **Row-Level Security**: with RLS on and no policy for the public `anon` role,
+  rows are hidden from the public API.
+- A **view** can publish a safe subset of columns; `GRANT` controls who reads it.
 
 ## Your SQL task
-Edit **`supabase/migrations/0014_week14_security.sql`**:
-1. `enable row level security` on `customers`.
-2. Add a `select` policy for the trusted `service_role`.
-3. Create a `public_catalog` view exposing only `id, name, description, price`
-   (no stock, no internal data) and `grant select` on it to `anon`.
+Run `assignments/week14/solution.sql`. It creates a private `customer_pii` table,
+enables RLS with a `service_role`-only read policy, and publishes a
+`public_catalog` view (safe product columns) granted to `anon`.
 
 ## Done when
-- `assignments/week14/test.ts` passes (RLS on, a policy exists, public_catalog
-  exposes only safe columns).
-- A **Security posture** panel appears on the homepage.
+- A Security posture panel appears on the homepage.
+- The Week 14 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script — it drops its own objects first. Clear by
+hand with `drop table if exists customer_pii cascade; drop view if exists public_catalog;`.

@@ -1,23 +1,17 @@
 # Week 10 — Joins & Multi-Table Queries
 
-An order row stores IDs, not names. To show "Ben Cole spent $103" you must
-**join** orders to customers and to their line items, then aggregate.
-
-## Concepts in play
-- `join` to combine rows across tables on a key.
-- `group by` with aggregates to roll line items up into an order total.
+An order stores IDs, not names. **Join** across tables to make it readable.
 
 ## Your SQL task
-Edit **`supabase/migrations/0010_week10_order_history.sql`** and create an
-`order_history` view with one row per order: `id`, `status`, `created_at`,
-`customer` (full name), `customer_email`, `item_count` (sum of quantities), and
-`total` (sum of `quantity * unit_price`). Order newest first.
+Run `assignments/week10/solution.sql`. It creates an `order_history` view with
+one row per order — customer name, item count, and total — by joining orders,
+customers, order_items, and products.
 
 ## Done when
-- `assignments/week10/test.ts` passes (the view joins to customer names and
-  totals each order correctly).
-- An **Order history** table appears on the homepage, and Review 2 unlocks.
+- An Order history table appears on the homepage.
+- The Week 10 planet is **Unlocked**.
 
 ---
 
-**If it fails:** Do not merge a broken PR. Close it and start a fresh branch from `main` (production only updates on merge). Rebuild a dirtied database with `npm run db:reset`, or start this week over with `npm run reset:week -- <folder>`. See "Recovering from a failed assignment" in the README.
+**Retry anytime:** re-run the script (`create or replace view`). Remove with
+`drop view if exists order_history;`.
