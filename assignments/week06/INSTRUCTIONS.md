@@ -35,7 +35,7 @@ select id, 5 from books where title = 'Dune';
 4. **SELECT** the rows that remain.
 
 ## Watch & learn
-- **Video:** [INSERT / UPDATE / DELETE / SELECT (YouTube)](https://www.youtube.com/results?search_query=sql+insert+update+delete+select+tutorial)
+- **Video:** [SQL basics: SELECT, INSERT, UPDATE & DELETE](https://www.youtube.com/watch?v=mcXSvjumhbo)
 - **Tutorial:** [W3Schools — INSERT](https://www.w3schools.com/sql/sql_insert.asp) · [UPDATE](https://www.w3schools.com/sql/sql_update.asp) · [DELETE](https://www.w3schools.com/sql/sql_delete.asp) · [SELECT](https://www.w3schools.com/sql/sql_select.asp)
 
 ## Done when

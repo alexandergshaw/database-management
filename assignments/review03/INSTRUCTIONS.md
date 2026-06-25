@@ -24,7 +24,7 @@ Four views: busiest observers (from the Week 10 log), the booking log, the safe
 public listing, and a per-type summary. The starter names each and lists columns.
 
 ## Watch & learn
-- **Video:** [Building views on views (YouTube)](https://www.youtube.com/results?search_query=sql+create+view+from+view+tutorial)
+- **Video:** [SQL views — CREATE VIEW & DROP VIEW](https://www.youtube.com/watch?v=fsJDbjHv8uY)
 - **Tutorial:** [W3Schools — views](https://www.w3schools.com/sql/sql_view.asp) · [JOIN](https://www.w3schools.com/sql/sql_join.asp)
 
 ## Done when

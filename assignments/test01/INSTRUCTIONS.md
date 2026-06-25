@@ -24,7 +24,7 @@ Create three views (the starter names each and lists its columns): planets per
 type, the average planet radius, and missions per agency.
 
 ## Watch & learn
-- **Video:** [Aggregate functions & GROUP BY (YouTube)](https://www.youtube.com/results?search_query=sql+aggregate+functions+group+by+tutorial)
+- **Video:** [SQL aggregate functions: COUNT, SUM, AVG, MAX, MIN](https://www.youtube.com/watch?v=wIljdjni_dc)
 - **Tutorial:** [W3Schools — COUNT/AVG/SUM](https://www.w3schools.com/sql/sql_count_avg_sum.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
 
 ## Done when

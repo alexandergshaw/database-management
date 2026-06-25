@@ -25,7 +25,7 @@ Three views: the normalized bodies joined to their stars, observations grouped b
 status, and the planets within 10 AU. The starter names each and lists columns.
 
 ## Watch & learn
-- **Video:** [JOINs + GROUP BY (YouTube)](https://www.youtube.com/results?search_query=sql+join+group+by+tutorial)
+- **Video:** [SQL joins for beginners: inner, left, right, full](https://www.youtube.com/watch?v=2HVMiPPuPIM)
 - **Tutorial:** [W3Schools — JOIN](https://www.w3schools.com/sql/sql_join.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
 
 ## Done when

@@ -20,7 +20,7 @@ Three views: how many bodies each star has (normalization), planets never
 observed (the `NOT EXISTS` trick), and the coldest planets (filtering + sorting).
 
 ## Watch & learn
-- **Video:** [Subqueries & NOT EXISTS (YouTube)](https://www.youtube.com/results?search_query=sql+not+exists+subquery+tutorial)
+- **Video:** [SQL subqueries visually explained](https://www.youtube.com/watch?v=tvBp81WVrCA)
 - **Tutorial:** [W3Schools — EXISTS](https://www.w3schools.com/sql/sql_exists.asp) · [WHERE](https://www.w3schools.com/sql/sql_where.asp)
 
 ## Done when

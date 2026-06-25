@@ -29,7 +29,7 @@ order by o.created_at desc;
    observed (0 included — use a LEFT JOIN).
 
 ## Watch & learn
-- **Video:** [SQL JOINs explained (YouTube)](https://www.youtube.com/results?search_query=sql+joins+explained+inner+left+join)
+- **Video:** [SQL joins for beginners: inner, left, right, full](https://www.youtube.com/watch?v=2HVMiPPuPIM)
 - **Tutorial:** [W3Schools — JOIN](https://www.w3schools.com/sql/sql_join.asp) · [LEFT JOIN](https://www.w3schools.com/sql/sql_join_left.asp)
 
 ## Done when

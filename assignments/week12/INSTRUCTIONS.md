@@ -28,7 +28,7 @@ create index idx_sales_region on sales_by_region_snapshot (region);
 2. A `mv_type_summary` materialized view of it, plus an index.
 
 ## Watch & learn
-- **Video:** [Materialized views & indexes (YouTube)](https://www.youtube.com/results?search_query=postgresql+materialized+view+index+tutorial)
+- **Video:** [PostgreSQL materialized views explained](https://www.youtube.com/watch?v=yHppzfjqm1s)
 - **Tutorial:** [PostgreSQL — materialized views](https://www.postgresql.org/docs/current/rules-materializedviews.html) · [W3Schools — indexes](https://www.w3schools.com/sql/sql_create_index.asp)
 
 ## Done when

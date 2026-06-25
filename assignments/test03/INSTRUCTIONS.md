@@ -23,7 +23,7 @@ Four views: observations per astronomer (joins), nights booked per telescope
 largest planet per type (analytics).
 
 ## Watch & learn
-- **Video:** [LEFT JOIN + SUM + COALESCE (YouTube)](https://www.youtube.com/results?search_query=sql+left+join+sum+coalesce+tutorial)
+- **Video:** [SQL joins for beginners: inner, left, right, full](https://www.youtube.com/watch?v=2HVMiPPuPIM)
 - **Tutorial:** [W3Schools — LEFT JOIN](https://www.w3schools.com/sql/sql_join_left.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
 
 ## Done when

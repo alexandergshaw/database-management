@@ -41,7 +41,7 @@ same idea to connect astronomers to their sites.
 The starter lists every column and what it should hold — you write the SQL.
 
 ## Watch & learn
-- **Video:** [Keys & constraints tutorials (YouTube)](https://www.youtube.com/results?search_query=sql+primary+key+foreign+key+constraints+tutorial)
+- **Video:** [SQL constraints: primary key, foreign key & more](https://www.youtube.com/watch?v=BtmHISzqYjQ)
 - **Tutorial:** [W3Schools — CREATE TABLE](https://www.w3schools.com/sql/sql_create_table.asp) · [Constraints](https://www.w3schools.com/sql/sql_constraints.asp) · [Foreign keys](https://www.w3schools.com/sql/sql_foreignkey.asp) · [PostgreSQL docs — constraints](https://www.postgresql.org/docs/current/ddl-constraints.html)
 
 ## Done when

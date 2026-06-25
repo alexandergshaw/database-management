@@ -40,7 +40,9 @@ Your job uses the same pattern for a `catalog_settings` table holding your
 observatory's name and tagline.
 
 ## Watch & learn
-- **Video:** [SQL Tutorial – Full Course for Beginners (freeCodeCamp, ~4h)](https://www.youtube.com/watch?v=HXV3zeQKqGY) — bookmark this; it covers most of the semester.
+- **Connect Supabase (video):** [Getting started with Supabase](https://www.youtube.com/watch?v=i_bPeTZVlg0) · [Find your Supabase connection string](https://www.youtube.com/watch?v=LzOdTIZOnaM)
+- **Deploy to Vercel (video):** [Deploy a Next.js app to Vercel from GitHub](https://www.youtube.com/watch?v=MoQ6g3pmXtA)
+- **Learn SQL (video):** [SQL Tutorial – Full Course for Beginners (freeCodeCamp)](https://www.youtube.com/watch?v=HXV3zeQKqGY) — bookmark this; it covers most of the semester.
 - **Tutorial:** [Supabase — using the SQL editor](https://supabase.com/docs/guides/database/overview) · [W3Schools — SQL intro](https://www.w3schools.com/sql/)
 
 ## Done when

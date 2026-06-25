@@ -42,7 +42,7 @@ $$;
 4. Publish a `public_catalog` view of safe planet columns and grant it to `anon`.
 
 ## Watch & learn
-- **Video:** [PL/pgSQL functions (YouTube)](https://www.youtube.com/results?search_query=postgresql+plpgsql+function+tutorial) · [Supabase Row-Level Security (YouTube)](https://www.youtube.com/results?search_query=supabase+row+level+security+tutorial)
+- **Video:** [Writing functions in PostgreSQL (step by step)](https://www.youtube.com/watch?v=GNTap3iVg3c) · [Row-Level Security with Supabase (step by step)](https://www.youtube.com/watch?v=Ow_Uzedfohk)
 - **Tutorial:** [PostgreSQL — PL/pgSQL](https://www.postgresql.org/docs/current/plpgsql.html) · [PostgreSQL — transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html) · [Supabase — Row-Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
 
 ## Done when

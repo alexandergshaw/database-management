@@ -37,7 +37,7 @@ create table enrollments (
    visited (make at least one mission visit two or more planets).
 
 ## Watch & learn
-- **Video:** [Many-to-many & junction tables (YouTube)](https://www.youtube.com/results?search_query=database+many+to+many+junction+table+tutorial)
+- **Video:** [Create a many-to-many relationship (junction table)](https://www.youtube.com/watch?v=0pPzSUGGHO4)
 - **Tutorial:** [Lucidchart — ER diagrams & relationships](https://www.lucidchart.com/pages/er-diagrams) · [W3Schools — foreign keys](https://www.w3schools.com/sql/sql_foreignkey.asp)
 
 ## Done when

@@ -30,7 +30,7 @@ select
 2. An `inner_planets` view: the planets closer than 2 AU, sorted by distance.
 
 ## Watch & learn
-- **Video:** [Filtering, sorting & aggregates (YouTube)](https://www.youtube.com/results?search_query=sql+where+order+by+aggregate+functions+tutorial)
+- **Video:** [SQL aggregate functions: COUNT, SUM, AVG, MAX, MIN](https://www.youtube.com/watch?v=wIljdjni_dc)
 - **Tutorial:** [W3Schools — WHERE](https://www.w3schools.com/sql/sql_where.asp) · [ORDER BY](https://www.w3schools.com/sql/sql_orderby.asp) · [COUNT/AVG/SUM](https://www.w3schools.com/sql/sql_count_avg_sum.asp)
 
 ## Done when

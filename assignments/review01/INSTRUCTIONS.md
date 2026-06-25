@@ -31,7 +31,7 @@ Create three views — the starter names each one and lists the columns it shoul
 return. They cover one-to-many (moons), many-to-many (missions), and keys (sites).
 
 ## Watch & learn
-- **Video:** [SQL views, JOINs & GROUP BY (YouTube)](https://www.youtube.com/results?search_query=sql+views+join+group+by+tutorial)
+- **Video:** [SQL views — CREATE VIEW & DROP VIEW](https://www.youtube.com/watch?v=fsJDbjHv8uY)
 - **Tutorial:** [W3Schools — views](https://www.w3schools.com/sql/sql_view.asp) · [JOIN](https://www.w3schools.com/sql/sql_join.asp) · [GROUP BY](https://www.w3schools.com/sql/sql_groupby.asp)
 
 ## Done when
