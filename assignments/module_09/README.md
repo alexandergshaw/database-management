@@ -1,83 +1,113 @@
 # Module 9 — Complex SQL Queries
 
-## Introduction
+## Going Beyond One Table
 
-Once you can write basic `SELECT` statements, the next step is combining data from multiple tables, summarizing groups of rows, and using one query's results inside another.
+So far you've mostly worked with one table at a time. But the whole point of a relational database is that information is spread across *multiple* connected tables. Bringing those tables back together to answer real questions is where SQL gets exciting.
 
-### Joins
+This module covers:
+- **Joins** — the main way to combine two (or more) tables
+- **Aggregate functions with GROUP BY** — summarizing groups of rows
+- **HAVING** — filtering those groups
+- **Subqueries** — using one query's answer inside another query
 
-A **join** combines rows from two tables based on a related column.
+---
+
+## Joins — Reuniting Related Data
+
+Think of a join like a VLOOKUP in Excel, but more powerful. You have an ID number in one table, and you want to pull in matching details from another table.
+
+### `INNER JOIN` — Only Show Rows That Match in Both Tables
+
+This is the most common type of join. It returns rows where there is a match in *both* tables. If a customer has no orders, they don't appear. If an order references a customer that doesn't exist, it doesn't appear.
 
 ```sql
--- INNER JOIN — only rows with matches in both tables
-SELECT o.order_id, c.name, o.order_date
-FROM orders o
-INNER JOIN customers c ON o.customer_id = c.customer_id;
-
--- LEFT JOIN — all rows from the left table, matched rows from the right (NULLs where no match)
-SELECT c.name, o.order_id
-FROM customers c
-LEFT JOIN orders o ON c.customer_id = o.customer_id;
-
--- RIGHT JOIN — all rows from the right table (not all databases support this; use a reversed LEFT JOIN)
--- FULL OUTER JOIN — all rows from both tables
+SELECT orders.order_id, customers.name, orders.order_date
+FROM orders
+INNER JOIN customers ON orders.customer_id = customers.customer_id;
 ```
+
+Read this as: "Give me the order ID, customer name, and order date — from `orders` combined with `customers` — where the `customer_id` matches between them."
+
+### `LEFT JOIN` — Always Show the Left Table, Even Without a Match
+
+A left join returns every row from the *left* table (the one in the `FROM`), and fills in data from the right table where it can. If there's no match, it fills with `NULL`.
+
+```sql
+-- Show ALL customers, and how many orders each has.
+-- Customers with zero orders will still appear (with NULL for order data).
+SELECT customers.name, orders.order_id
+FROM customers
+LEFT JOIN orders ON customers.customer_id = orders.customer_id;
+```
+
+Use a left join when you want to include records even if they don't have related data in the other table. "Give me all customers, and attach their orders if they have any."
 
 ### Multi-Table Joins
 
-You can chain joins to combine three or more tables:
+You can chain as many joins as you need:
 
 ```sql
-SELECT o.order_id, c.name AS customer, p.name AS product, oi.quantity
-FROM orders o
-JOIN customers c  ON o.customer_id   = c.customer_id
-JOIN order_items oi ON o.order_id    = oi.order_id
-JOIN products p   ON oi.product_id   = p.product_id;
+SELECT orders.order_id, customers.name, products.name, order_items.quantity
+FROM orders
+JOIN customers   ON orders.customer_id     = customers.customer_id
+JOIN order_items ON orders.order_id        = order_items.order_id
+JOIN products    ON order_items.product_id = products.product_id;
 ```
 
-### Aggregate Functions and GROUP BY
+This is like connecting three spreadsheets together all at once.
+
+---
+
+## `GROUP BY` — Summarizing Groups of Rows
+
+`GROUP BY` takes all the rows with the same value in a column and collapses them into a single summary row.
+
+Imagine you have a thousand sales records and you want to know: "How much did each customer spend in total?" You'd group by customer and sum up their purchases.
 
 ```sql
--- Total revenue per customer
-SELECT c.name, SUM(oi.quantity * p.price) AS total_spent
-FROM customers c
-JOIN orders o     ON c.customer_id   = o.customer_id
-JOIN order_items oi ON o.order_id    = oi.order_id
-JOIN products p   ON oi.product_id   = p.product_id
-GROUP BY c.customer_id, c.name;
+SELECT customers.name, SUM(order_items.quantity * products.price) AS total_spent
+FROM customers
+JOIN orders      ON customers.customer_id  = orders.customer_id
+JOIN order_items ON orders.order_id        = order_items.order_id
+JOIN products    ON order_items.product_id = products.product_id
+GROUP BY customers.customer_id, customers.name;
 ```
 
-### HAVING
+---
 
-`HAVING` filters *groups* (after `GROUP BY`), while `WHERE` filters *rows* (before grouping).
+## `HAVING` — Filtering After You've Grouped
+
+`WHERE` filters rows *before* grouping. `HAVING` filters groups *after* grouping.
+
+Think of it this way: `WHERE` is the bouncer who checks IDs at the door before anyone gets in. `HAVING` is the manager who reviews the groups *after* they've sat down and says "this table doesn't meet our minimum."
 
 ```sql
--- Customers who have spent more than $500 in total
-SELECT c.name, SUM(oi.quantity * p.price) AS total_spent
-FROM customers c
-JOIN orders o       ON c.customer_id   = o.customer_id
-JOIN order_items oi ON o.order_id      = oi.order_id
-JOIN products p     ON oi.product_id   = p.product_id
-GROUP BY c.customer_id, c.name
-HAVING SUM(oi.quantity * p.price) > 500;
+-- Only show customers who spent more than $500 total
+SELECT customers.name, SUM(order_items.quantity * products.price) AS total_spent
+FROM customers
+JOIN orders      ON customers.customer_id  = orders.customer_id
+JOIN order_items ON orders.order_id        = order_items.order_id
+JOIN products    ON order_items.product_id = products.product_id
+GROUP BY customers.customer_id, customers.name
+HAVING SUM(order_items.quantity * products.price) > 500;
 ```
 
-### Subqueries
+---
 
-A **subquery** is a query nested inside another query.
+## Subqueries — Using One Query's Answer Inside Another
+
+A **subquery** is a `SELECT` nested inside another `SELECT`. You can think of it as saying "first figure out *this*, and then use that answer in the main question."
 
 ```sql
--- Products priced above the average product price
+-- Find all products priced above average
+-- Step 1 (inner query): What IS the average price?
+-- Step 2 (outer query): Show me products above that average.
 SELECT name, price
 FROM products
 WHERE price > (SELECT AVG(price) FROM products);
-
--- Customers who have placed at least one order (using EXISTS)
-SELECT name FROM customers c
-WHERE EXISTS (
-    SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
-);
 ```
+
+The database runs the inner query first, gets back a single number (the average price), and then uses that number in the outer query's `WHERE` clause.
 
 ---
 
@@ -85,19 +115,21 @@ WHERE EXISTS (
 
 **File to create:** `module_09_complex_queries.sql`
 
-Build a small e-commerce database:
+Build this e-commerce database (write all `CREATE TABLE` and teardown statements yourself):
 
 - **customers** — `customer_id` PK, `name`, `city`
 - **products** — `product_id` PK, `name`, `category`, `price` REAL
 - **orders** — `order_id` PK, `customer_id` FK, `order_date` TEXT
 - **order_items** — `order_item_id` PK, `order_id` FK, `product_id` FK, `quantity` INTEGER
 
-Insert enough data (at least 5 customers, 8 products, 10 orders, 20 order_items) to make every query return meaningful results.
+Insert enough data to get meaningful results: at least 5 customers, 8 products across multiple categories, 10 orders, and 20 order_items.
 
-1. (INNER JOIN) List every order with the customer's name and order date.
-2. (LEFT JOIN) List all customers and the number of orders each has placed — include customers with zero orders (show 0, not NULL, using `COALESCE`).
-3. (Multi-table JOIN) List each order item with: order ID, customer name, product name, quantity, and the line total (`quantity * price`).
-4. (GROUP BY) Show each product category and the total quantity sold across all orders.
-5. (HAVING) List customers whose total spending across all orders exceeds $200.
-6. (Subquery — scalar) List all products whose price is above the average price of all products.
-7. (Subquery — EXISTS) List customers who have placed at least one order for a product in the 'Electronics' category.
+**Tasks** (label each with `-- Task N`):
+
+1. **(INNER JOIN)** List every order with the customer's name and the order date.
+2. **(LEFT JOIN)** List all customers and how many orders each has placed. Customers with zero orders should show `0`, not NULL. (Hint: use `COALESCE(COUNT(orders.order_id), 0)`)
+3. **(Multi-table JOIN)** Show each order item with the order ID, customer name, product name, quantity, and the line total (quantity × price).
+4. **(GROUP BY)** Show each product category and the total quantity sold across all orders.
+5. **(HAVING)** List only the customers whose total spending (across all orders) is more than $200.
+6. **(Subquery)** List all products whose price is above the average price of all products. Show the product name, price, and the average (as a column called `avg_price`).
+7. **(EXISTS subquery)** List the names of customers who have placed at least one order containing a product in the 'Electronics' category.

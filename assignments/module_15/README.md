@@ -1,86 +1,128 @@
 # Module 15 — Database Performance Tuning
 
-## Introduction
+## Why Does My Query Take 30 Seconds?
 
-A query that runs in milliseconds on a test database with a few hundred rows may take minutes on a production database with millions of rows. Performance tuning is the practice of understanding *why* a query is slow and systematically making it faster.
+You've built a solid database, your queries are correct, and everything works great — until the data grows. A query that returned results instantly with 100 rows now takes 30 seconds with 2 million rows. Nothing in the code changed. What happened?
 
-### Query Execution Plans
+The short answer: the database is doing way more work than necessary. Performance tuning is the art of understanding *why* and then reducing that work.
 
-Before tuning, you need to see *how* the database actually executes a query. Use `EXPLAIN` (or `EXPLAIN ANALYZE` in PostgreSQL) to get the execution plan:
+---
+
+## Step 1: See What the Database Is Actually Doing — `EXPLAIN`
+
+Before you can fix a slow query, you need to understand how the database is executing it. The `EXPLAIN` command (or `EXPLAIN QUERY PLAN` in SQLite) shows you the database's *plan* — the step-by-step strategy it will use to answer your query.
 
 ```sql
--- SQLite
-EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
+-- SQLite version
+EXPLAIN QUERY PLAN
+SELECT * FROM orders WHERE customer_id = 42;
 
--- PostgreSQL
-EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
+-- PostgreSQL version (shows actual timing too)
+EXPLAIN ANALYZE
+SELECT * FROM orders WHERE customer_id = 42;
 ```
 
-Key things to look for in a plan:
-- **Seq Scan** — full table scan; the database reads every row. Bad on large tables.
-- **Index Scan** — the database uses an index. Much faster for selective queries.
-- **Nested Loop / Hash Join** — how tables are joined. Nested loops can be expensive.
+**What to look for in the output:**
 
-### Inefficient Query Patterns
-
-| Pattern | Problem | Fix |
+| What you see | What it means | Good or bad? |
 |---|---|---|
-| `SELECT *` | Returns unused columns, wastes I/O | List only the columns you need |
-| Function on indexed column in `WHERE` | Prevents index use | Rewrite to avoid the function |
-| `OR` across different columns | May defeat index | Use `UNION` or separate indexes |
-| Implicit type conversion | May skip index | Ensure types match |
-| `LIKE '%prefix'` (leading wildcard) | Cannot use a B-tree index | Redesign or use full-text search |
+| `SCAN TABLE orders` | The database reads every single row | 😬 Bad on large tables |
+| `SEARCH TABLE orders USING INDEX` | The database uses an index to jump directly | ✅ Good |
+| `USING COVERING INDEX` | The index has all the data needed; no table read | ✅ Even better |
+
+---
+
+## Common Performance Killers
+
+### 1. `SELECT *` — Fetching Columns You Don't Need
+
+Every column you fetch has to be read from disk and sent over the network. If you only need `customer_id` and `order_date`, don't ask for everything.
 
 ```sql
--- Bad: index on email cannot be used
-WHERE LOWER(email) = 'alice@x.com'
+-- Slow: fetches 20 columns, most unused
+SELECT * FROM orders WHERE status = 'pending';
 
--- Better: store email in lowercase, then index it
-WHERE email = 'alice@x.com'
+-- Fast: fetches only what's needed
+SELECT order_id, customer_date FROM orders WHERE status = 'pending';
 ```
 
-### Index Strategies
+### 2. A Function on an Indexed Column — The Index Gets Bypassed
 
-- **Covering index** — an index that includes all columns needed by the query (the database never touches the base table).
+You've added an index on `email`, hoping lookups will be fast. Then you write:
 
 ```sql
--- Covers SELECT name, price FROM products WHERE category = 'Electronics'
-CREATE INDEX idx_products_category_covering ON products(category, name, price);
+-- Slow: UPPER() prevents the index from being used
+WHERE UPPER(email) = 'ALICE@EXAMPLE.COM'
 ```
 
-- **Partial index** — an index that only covers rows matching a condition, making it smaller and faster.
+The database can't use the index because it's indexed on the raw value, not the uppercase version. It has to call `UPPER()` on every row. Fix: store emails in lowercase in the first place, then query in lowercase.
 
 ```sql
--- Only index active orders (assuming most orders are eventually closed)
-CREATE INDEX idx_orders_active ON orders(customer_id) WHERE status = 'active';
+-- Fast: the index on email works normally
+WHERE email = 'alice@example.com'
 ```
 
-### Query Rewrites
+### 3. The Correlated Subquery in a Loop
 
-Sometimes restructuring a query dramatically changes performance:
+A correlated subquery re-runs for every single row of the outer query. With 100,000 customers, that's 100,000 separate sub-queries.
 
 ```sql
--- Slow: correlated subquery runs once per row
+-- Slow: inner query runs once per customer
 SELECT name FROM customers
-WHERE (SELECT COUNT(*) FROM orders WHERE orders.customer_id = customers.customer_id) > 5;
+WHERE (SELECT COUNT(*) FROM orders WHERE orders.customer_id = customers.customer_id) > 3;
 
--- Fast: aggregate and join instead
+-- Fast: aggregate once, join once
 SELECT c.name
 FROM customers c
-JOIN (SELECT customer_id, COUNT(*) AS cnt FROM orders GROUP BY customer_id) o
-  ON c.customer_id = o.customer_id
-WHERE o.cnt > 5;
+JOIN (
+    SELECT customer_id, COUNT(*) AS order_count
+    FROM orders
+    GROUP BY customer_id
+) o ON c.customer_id = o.customer_id
+WHERE o.order_count > 3;
 ```
 
-### Database Maintenance
+---
 
-Databases accumulate dead rows and stale statistics over time. Regular maintenance keeps performance consistent:
+## Index Strategies
+
+You already know what an index is (from Module 10). Now let's look at two more advanced flavors.
+
+### Covering Index — Everything the Query Needs Is in the Index
+
+A regular index tells the database *where* to find matching rows, but the database still has to go read those rows from the main table. A **covering index** includes all the columns the query needs — so the database never has to look at the main table at all.
 
 ```sql
--- PostgreSQL: reclaim space and update statistics
+-- This query only touches category, name, and price
+SELECT name, price FROM products WHERE category = 'Electronics';
+
+-- A covering index includes all three columns — the table is never touched
+CREATE INDEX idx_products_cat_name_price ON products(category, name, price);
+```
+
+### Partial Index — Only Index the Rows You Care About
+
+Why maintain an index on a column for every row, when 90% of the time you only query a small subset? A **partial index** only covers rows that match a condition.
+
+```sql
+-- Most orders are eventually 'completed'. Active orders are rare but queried often.
+-- Only index the active ones.
+CREATE INDEX idx_active_orders ON orders(customer_id) WHERE status = 'active';
+```
+
+This index is smaller, faster to update, and faster to search than a full index.
+
+---
+
+## Database Maintenance
+
+Over time, as rows are inserted, updated, and deleted, a database accumulates "dead" rows and its statistics about the data become stale. Stale statistics cause the query planner to make bad choices. Regular maintenance fixes this.
+
+```sql
+-- PostgreSQL: reclaim space from dead rows and update statistics
 VACUUM ANALYZE orders;
 
--- Rebuild an index
+-- Rebuild an index that has become fragmented
 REINDEX TABLE orders;
 ```
 
@@ -90,26 +132,29 @@ REINDEX TABLE orders;
 
 **File to create:** `module_15_performance.sql`
 
-Create a schema with enough rows to make performance differences observable:
+Build a schema with enough rows to see performance differences:
 
 - **customers** — `customer_id` PK, `name`, `email`, `city`
 - **orders** — `order_id` PK, `customer_id` FK, `status` TEXT, `order_date` DATE, `total` REAL
 - **order_items** — `order_item_id` PK, `order_id` FK, `product_id` INTEGER, `quantity` INTEGER, `unit_price` REAL
 
-Insert at least 100 customers, 500 orders, and 1,500 order_items using a loop, script, or repeated inserts.
+Insert at least 100 customers, 500 orders, and 1,500 order_items. You can use repeated INSERT statements, copy-paste with different values, or a loop in PostgreSQL.
 
-1. **(Baseline)** Write a query that finds all 'completed' orders for customers in 'New York'. Run `EXPLAIN QUERY PLAN` (or `EXPLAIN ANALYZE`) before any tuning and paste the plan as a SQL comment.
+**Tasks:**
 
-2. **(Index)** Create an index on `orders.status` and another on `customers.city`. Re-run `EXPLAIN QUERY PLAN` and paste the new plan as a comment. Describe the improvement.
+1. **(Baseline)** Write a query that finds all orders with `status = 'completed'` for customers in the city `'New York'`. Run `EXPLAIN QUERY PLAN` before adding any indexes and paste the output as a SQL comment.
 
-3. **(Covering index)** Create a covering index on `orders(status, customer_id, total)` and explain in a comment what a covering index is and why it helps this query.
+2. **(Add indexes)** Create an index on `orders.status` and another on `customers.city`. Run `EXPLAIN QUERY PLAN` again and paste the new plan. In a comment, describe what changed.
 
-4. **(Partial index)** Create a partial index on `orders(customer_id)` where `status = 'active'`. Explain when this index will be used and when it will not.
+3. **(Covering index)** Create a covering index on `orders(status, customer_id, total)`. In a comment, explain what a covering index is and why it can speed up the query from task 1.
 
-5. **(Rewrite)** The following correlated subquery finds customers with more than 3 orders. Rewrite it as a `JOIN` with a grouped subquery and explain why the rewrite is likely faster:
+4. **(Partial index)** Create a partial index on `orders(customer_id)` where `status = 'active'`. In a comment, explain: when will the database use this index, and when won't it?
+
+5. **(Rewrite a slow query)** Here's a correlated subquery that finds customers with more than 3 orders:
    ```sql
    SELECT name FROM customers
    WHERE (SELECT COUNT(*) FROM orders WHERE orders.customer_id = customers.customer_id) > 3;
    ```
+   Rewrite it using a `JOIN` with a grouped subquery. Explain in a comment why your rewrite is likely faster.
 
-6. **(Inefficient pattern)** Write an example of a query that uses a function on an indexed column (e.g., `WHERE UPPER(city) = 'NEW YORK'`), explain why it is slow, and provide the corrected version.
+6. **(Inefficient pattern)** Write an example query that uses `UPPER(city)` in the `WHERE` clause. Explain in a comment why this prevents the index on `city` from being used, and show the corrected version.

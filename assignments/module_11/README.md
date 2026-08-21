@@ -1,79 +1,108 @@
 # Module 11 — Database Security
 
-## Introduction
+## Your Database Knows Everything — Protect It
 
-A database often holds the most sensitive data in an organization — personal information, financial records, health data. Proper security controls ensure that each user can access only what they are authorized to access, and nothing more.
+Think about what's stored in a typical company's database: employee salaries, customer credit card numbers, health records, private messages. If the wrong person gets access, the consequences can be catastrophic — legal liability, financial ruin, destroyed trust.
 
-### Users and Roles
+Database security isn't just a nice-to-have. It's a legal requirement in many industries (healthcare, finance, education). This module covers how databases control *who* can do *what* to the data.
 
-Most production databases separate *authentication* (who you are) from *authorization* (what you can do).
+---
 
-- A **user** is an individual account that can connect to the database.
-- A **role** is a named collection of privileges that can be granted to users, making privilege management easier.
+## The Core Idea: Not Everyone Gets the Same Keys
+
+Imagine a hospital. A receptionist can view a patient's appointment date but should never see their diagnosis. A doctor can read and update their own patients' records but shouldn't edit billing. The CFO can access financial reports but has no business reading patient charts.
+
+Databases enforce this separation with **users**, **roles**, and **privileges**.
+
+> **Note:** SQLite (the database you've likely been using) is a lightweight, file-based database that doesn't have users or roles — it's meant for single-user apps. The concepts in this module apply to production databases like **PostgreSQL**, **MySQL**, and **SQL Server**. Write your SQL as shown, and add a comment if your environment is SQLite.
+
+---
+
+## Users and Roles
+
+A **user** is an account that can connect to the database. Think of it like a login.
+
+A **role** is a group of permissions that you can assign to one or more users. Instead of giving every employee their permissions one by one, you create a role (like "HR Manager") with the right permissions, and then add employees to that role.
 
 ```sql
--- PostgreSQL / standard SQL
-CREATE USER analyst WITH PASSWORD 'secure_password';
-CREATE ROLE readonly;
+-- Create a user (PostgreSQL)
+CREATE USER analyst WITH PASSWORD 'a_strong_password_here';
+
+-- Create a role
+CREATE ROLE readonly_role;
 ```
 
-> SQLite does not have users or roles — these concepts apply to client/server databases like PostgreSQL, MySQL, and SQL Server.
+---
 
-### GRANT and REVOKE
+## `GRANT` and `REVOKE` — Handing Out and Taking Back Keys
 
-`GRANT` gives a privilege to a user or role. `REVOKE` takes it away.
+`GRANT` gives a user or role permission to do something. `REVOKE` takes that permission away.
 
 ```sql
--- Grant SELECT on a specific table
+-- Let the analyst read the products table — nothing else
 GRANT SELECT ON products TO analyst;
 
--- Grant multiple privileges
+-- Let the app_user read, insert, and update orders (but NOT delete)
 GRANT SELECT, INSERT, UPDATE ON orders TO app_user;
 
--- Grant a role to a user
-GRANT readonly TO analyst;
+-- Give analyst the readonly_role (they inherit all of that role's permissions)
+GRANT readonly_role TO analyst;
 
--- Revoke a privilege
-REVOKE DELETE ON products FROM analyst;
+-- Oops — we don't want app_user deleting things. Take that away.
+REVOKE DELETE ON orders FROM app_user;
 ```
 
-Common privileges: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `REFERENCES`, `ALL PRIVILEGES`.
+The most common privileges are: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, and `ALL PRIVILEGES`.
 
-### Principle of Least Privilege
+---
 
-Users and applications should be granted **only the permissions they need** to perform their function — no more. This limits the damage caused by mistakes, compromised accounts, or malicious insiders.
+## The Principle of Least Privilege — Give Only What's Needed
 
-| Role Example | Appropriate Privileges |
-|---|---|
-| Report reader | `SELECT` on specific views |
-| Application backend | `SELECT`, `INSERT`, `UPDATE` on specific tables |
-| DBA | `ALL PRIVILEGES` |
+This is the golden rule of security: **grant only the minimum permissions necessary to do the job.**
 
-### Security Views
+If your customer-facing app only needs to read the product catalog, give it `SELECT` on the `products` table — nothing else. If the app gets hacked, the attacker can only read products. They can't delete your data, modify prices, or steal customer records.
 
-A view can act as a security boundary: grant users access to the view instead of the base table, and the view filters out sensitive columns or rows.
+| Person / App | What they should be able to do | Appropriate privileges |
+|---|---|---|
+| Public website | Browse products | `SELECT` on `products` |
+| Customer app | See own orders, create new orders | `SELECT`, `INSERT` on `orders` (their own rows only) |
+| Employee | Update their own profile | `UPDATE` on specific columns |
+| Admin | Everything | `ALL PRIVILEGES` |
+
+---
+
+## Security Views — Show Only What's Safe to Show
+
+A view (from Module 10) can double as a security tool. Instead of granting access to a sensitive table directly, you create a view that hides the sensitive columns and grant access to the view instead.
 
 ```sql
--- Hide the salary column from most users
+-- The real employees table has a salary column — very sensitive
+-- Create a view that leaves salary out entirely
 CREATE VIEW employee_directory AS
 SELECT emp_id, name, department, email
-FROM employees;  -- salary column is NOT included
+FROM employees;
+-- salary is not in here — nobody who only has access to this view can see it
 
+-- Grant access to the SAFE view, not the raw table
 GRANT SELECT ON employee_directory TO general_staff;
 ```
 
-### Row-Level Security (RLS)
+---
 
-Row-level security restricts which *rows* a user can see, not just which columns. This is natively supported in PostgreSQL:
+## Row-Level Security — Controlling Which *Rows* Someone Can See
+
+What if you want each employee to see *their own* record but not anyone else's? That's **row-level security (RLS)** — a feature in PostgreSQL that adds an automatic filter to every query based on who's logged in.
 
 ```sql
--- Enable RLS on the table
+-- Turn on RLS for the table
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
--- Policy: users can only see their own orders
-CREATE POLICY user_own_orders ON orders
+-- Policy: users can only see orders that belong to them
+CREATE POLICY own_orders_only ON orders
     USING (customer_id = current_setting('app.current_user_id')::INTEGER);
 ```
+
+Now even if an employee writes `SELECT * FROM orders`, they'll only get back their own rows. The database silently adds the filter.
 
 ---
 
@@ -81,20 +110,21 @@ CREATE POLICY user_own_orders ON orders
 
 **File to create:** `module_11_security.sql`
 
-> Note: If you are using SQLite, write the SQL statements as you would for PostgreSQL and add a comment noting that SQLite does not support users/roles/RLS. The goal is to demonstrate understanding of the concepts.
+> If you're using SQLite, write the SQL as shown and add a comment on each PostgreSQL-specific statement explaining that SQLite would use a different approach (like application-level filtering).
 
-Use a schema with these tables:
+**Schema to create:**
 - **employees** — `emp_id` PK, `name`, `department`, `salary` REAL, `email` UNIQUE
 - **projects** — `project_id` PK, `title`, `budget` REAL, `department`
-- **assignments** — `emp_id` FK, `project_id` FK
+- **assignments** — `emp_id` FK, `project_id` FK (who is working on what)
 
 Insert at least 6 employees across 3 departments and 4 projects.
 
+**Tasks:**
+
 1. Create three roles: `hr_manager`, `project_manager`, and `employee_viewer`.
-2. Grant `hr_manager` full access (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) to `employees`.
-3. Grant `project_manager` full access to `projects` and `assignments`, and `SELECT` on `employees`.
-4. Grant `employee_viewer` only `SELECT` on a view (see task 5).
-5. Create a security view called `employee_public_info` that exposes only `emp_id`, `name`, and `department` from `employees` (hiding `salary` and `email`). Grant `SELECT` on this view to `employee_viewer`.
-6. Create a user `carol` and grant her the `employee_viewer` role.
-7. Write a `REVOKE` statement that removes `DELETE` from `hr_manager` on the `employees` table.
-8. In a comment, explain in 3–5 sentences how row-level security could be used to ensure that employees can only see their own row in the `employees` table.
+2. Grant `hr_manager` full access (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) on the `employees` table.
+3. Grant `project_manager` full access on `projects` and `assignments`, and `SELECT` only on `employees`.
+4. Create a security view called `employee_public_info` that exposes only `emp_id`, `name`, and `department` — no `salary`, no `email`. Grant `SELECT` on this view to `employee_viewer`.
+5. Create a user `carol` and grant her the `employee_viewer` role.
+6. Write a `REVOKE` statement that removes `DELETE` from `hr_manager` on the `employees` table.
+7. In a comment of at least 5 sentences, explain: How would you use row-level security to make sure each employee can only see their own row when they query `employees`? What's the SQL? Why is this better than just trusting the application to filter correctly?

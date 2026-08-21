@@ -1,64 +1,90 @@
 # Module 2 — Relational Schema Design
 
-## Introduction
+## The Problem With One Giant Spreadsheet
 
-A **schema** is the blueprint of a database — it defines what tables exist, what columns each table has, and how tables relate to one another. Designing a good schema before writing any SQL saves enormous time later.
+Imagine your school tried to track everything in a single Google Sheet — every student, every course, every grade, all in one massive table. It might start like this:
 
-### The Relational Model
+| student_name | student_email | course_name | instructor | grade |
+|---|---|---|---|---|
+| Alice | alice@uni.edu | Databases | Dr. Smith | A |
+| Alice | alice@uni.edu | Networking | Dr. Jones | B |
+| Bob | bob@uni.edu | Databases | Dr. Smith | B+ |
 
-In the **relational model**, data is organized into tables (called *relations*). Each table represents one real-world entity — for example, `customers`, `products`, or `orders`. Tables are linked together through shared values rather than by physically storing the data in one place.
+At first glance this looks fine. But what happens when Alice changes her email address? You have to find and update *every single row* that mentions Alice. Miss one and now you have two different emails for the same person — the data is broken.
 
-### Primary Keys
+What if you want to add a new course before any students have signed up for it? You can't — there's no student to put in the row yet!
 
-A **primary key** is a column (or combination of columns) whose values uniquely identify every row in a table. No two rows can share the same primary key value, and a primary key can never be NULL.
+This is the core problem that **relational database design** solves. Instead of one giant table, you split the data into **multiple focused tables**, each covering one topic, and then **link them together**. This is called the **relational model**.
+
+---
+
+## The Big Ideas
+
+### One Table, One Topic
+
+Think of each table like a dedicated notebook. You have one notebook for students, one for courses, one for grades. Each notebook only contains information about its own subject — no mixing.
+
+- A `students` table knows *everything about students* (name, email, ID number).
+- A `courses` table knows *everything about courses* (course name, instructor, room number).
+- A separate table records *which students are in which courses*.
+
+### Primary Keys — Every Row Gets a Unique ID
+
+Imagine you have two students both named "Alex Smith." How does the database tell them apart? By giving every row a unique identification number called a **primary key**. Think of it like a student ID number — no two students share the same one, and it never changes.
 
 ```sql
-CREATE TABLE customers (
-    customer_id INTEGER PRIMARY KEY,
-    name        TEXT,
-    email       TEXT
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY,   -- this is the unique ID
+    name       TEXT,
+    email      TEXT
 );
 ```
 
-`customer_id` is the primary key of `customers`. Every customer gets a unique ID.
+`PRIMARY KEY` tells the database: "This column must be unique for every row, and it can never be empty."
 
-### Foreign Keys
+### Foreign Keys — How Tables Talk to Each Other
 
-A **foreign key** is a column in one table that points to the primary key of another table, creating a link between the two.
+A **foreign key** is a column in one table that stores the primary key of a row in another table. It's like writing a student's ID number on a course enrollment slip instead of writing out their full name — the ID is a pointer back to the full record.
 
 ```sql
-CREATE TABLE orders (
-    order_id    INTEGER PRIMARY KEY,
-    customer_id INTEGER,           -- foreign key → customers.customer_id
-    order_date  TEXT
+CREATE TABLE enrollments (
+    enrollment_id INTEGER PRIMARY KEY,
+    student_id    INTEGER,    -- this is a foreign key pointing to students.student_id
+    course_id     INTEGER,    -- this is a foreign key pointing to courses.course_id
+    grade         TEXT
 );
 ```
 
-Here, `orders.customer_id` refers to `customers.customer_id`. This means every order is associated with exactly one customer.
+Now `enrollments` doesn't need to store Alice's email or name — it just stores her `student_id`. If Alice changes her email, you update it in *one place* (the `students` table) and everything that references her ID automatically reflects the change.
 
-### Referential Integrity
+### Referential Integrity — No Dangling Pointers
 
-**Referential integrity** is the guarantee that a foreign key value always points to a row that actually exists. You cannot add an order for a customer who does not exist, and (without special handling) you cannot delete a customer who still has orders.
+**Referential integrity** is the database's promise that a foreign key always points to something real. If `enrollments.student_id = 42`, there must be a student with `student_id = 42` in the `students` table. The database will refuse to let you create a broken link. Think of it as a rule that says "you can't enroll a student who doesn't exist."
 
-### Translating Real-World Scenarios into Schemas
+---
 
-Follow these steps when designing a schema from scratch:
+## How to Design a Schema From Scratch
 
-1. **Identify entities** — the "things" in the scenario (people, products, events, places).
-2. **List attributes** — the properties each entity has (name, date, price).
-3. **Choose a primary key** for each entity.
-4. **Identify relationships** — which entities are connected, and how (one-to-many, many-to-many).
+When someone hands you a real-world scenario, use this process to turn it into a schema:
+
+1. **Find the nouns** — they become tables. People, places, things, events.
+2. **List the facts about each noun** — they become columns.
+3. **Give each table a primary key** — usually an ID number.
+4. **Find the relationships** — which nouns are connected? How? (One-to-many? Many-to-many?)
 5. **Add foreign keys** to express those relationships.
 
-**Example scenario:** A library lends books to members.
+**Example:** A library lends books to members.
 
-| Entity | Attributes | Primary Key |
-|--------|-----------|-------------|
-| `members` | member_id, name, email | member_id |
-| `books` | book_id, title, author | book_id |
-| `loans` | loan_id, member_id, book_id, due_date | loan_id |
+- **Nouns (tables):** `members`, `books`, `loans`
+- **Relationships:** one member can have many loans; one book can appear in many loans → a `loans` table links them.
 
-`loans` has two foreign keys: one to `members` and one to `books`.
+| Table | Columns | Primary Key |
+|-------|---------|-------------|
+| members | member_id, name, email | member_id |
+| books | book_id, title, author | book_id |
+| loans | loan_id, member_id, book_id, due_date | loan_id |
+
+`loans` has two foreign keys: `member_id` (points to `members`) and `book_id` (points to `books`). It's the glue that connects the other two tables.
 
 ---
 
@@ -66,16 +92,29 @@ Follow these steps when designing a schema from scratch:
 
 **File to create:** `module_02_schema.sql`
 
-A small school needs a database to track its **courses**, **students**, and **enrollments** (which students are taking which courses).
+A small school needs to track its **courses**, **students**, and **enrollments** (who is taking which course).
 
-1. **Identify entities and attributes.** Before writing any SQL, write comments at the top of your file listing the entities, their attributes, and the primary key you chose for each.
+Work through the design steps before writing any SQL:
 
-2. **Design the relationships.** In comments, describe how the entities are related (e.g., "one course can have many students").
+1. **Plan your tables in comments** at the top of your file. List:
+   - Each table's name and columns
+   - Which column is the primary key
+   - How the tables relate to each other (write it in plain English, like "one student can have many enrollments")
 
-3. **Write `CREATE TABLE` statements** for each entity. Each table must have a clearly named primary key column.
+2. **Write `CREATE TABLE` statements** for `students`, `courses`, and `enrollments`. Each must have a clearly named primary key column.
 
-4. **Add a foreign key column** to the `enrollments` table that references `students`, and another that references `courses`.
+3. **Add foreign key columns** to `enrollments`: one that points to `students`, and one that points to `courses`.
 
-5. **Insert sample data** — at least 3 students, 3 courses, and 5 enrollments — to demonstrate that your schema works.
+4. **Insert sample data:**
+   - At least 3 students
+   - At least 3 courses
+   - At least 5 enrollments (mix students and courses — have some students in multiple courses)
 
-6. **Write a query** that lists every enrollment alongside the student's name and the course name (you will need to join all three tables).
+5. **Write a query** that lists every enrollment showing the student's name, the course name, and the grade. You'll need to connect all three tables to do this — we'll cover exactly how in later modules, but try using this pattern:
+
+```sql
+SELECT students.name, courses.name, enrollments.grade
+FROM enrollments
+JOIN students ON enrollments.student_id = students.student_id
+JOIN courses  ON enrollments.course_id  = courses.course_id;
+```

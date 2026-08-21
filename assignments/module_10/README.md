@@ -1,86 +1,117 @@
 # Module 10 — Views and Indexes
 
-## Introduction
+## Two Solutions to Two Common Problems
 
-As databases grow, two challenges emerge: queries become complex and repetitive, and query performance degrades on large tables. **Views** and **indexes** are the primary tools SQL provides to address both problems.
+As your database grows, two annoying things start to happen:
 
-### Advanced Subqueries
+1. **You write the same complex query over and over.** Every week you paste the same 20-line query to generate the sales report, tweaking it each time and occasionally introducing bugs.
 
-Before tackling views, it helps to understand two advanced subquery patterns:
+2. **Your queries get slower.** What used to return instantly now takes 10 seconds because there are now 2 million rows in the orders table.
 
-**Correlated subquery** — the inner query references a column from the outer query and re-runs for each outer row:
+This module introduces the tools that fix both problems: **views** and **indexes**.
 
-```sql
--- For each product, show how many times it has been ordered
-SELECT p.name,
-       (SELECT COUNT(*) FROM order_items oi WHERE oi.product_id = p.product_id) AS order_count
-FROM products p;
-```
+---
 
-**Subquery in FROM (derived table):**
+## Views — A Saved Query That Looks Like a Table
 
-```sql
-SELECT dept, avg_salary
-FROM (
-    SELECT department AS dept, AVG(salary) AS avg_salary
-    FROM employees
-    GROUP BY department
-) AS dept_averages
-WHERE avg_salary > 60000;
-```
+A **view** is a query that you give a name to and save in the database. After that, you can query the view just like it's a real table — but under the hood, the database runs the original query each time.
 
-### Database Views
-
-A **view** is a saved SQL query that behaves like a virtual table. You query it just like a real table, but the underlying query runs on demand.
+Think of it like a saved search in your email app. Instead of typing "from:boss subject:urgent" every morning, you save it as a folder called "Urgent from Boss" — and from then on, you just click that folder.
 
 ```sql
--- Create a view
+-- Save this complex query as a view
 CREATE VIEW high_value_orders AS
-SELECT o.order_id, c.name AS customer, SUM(oi.quantity * p.price) AS total
-FROM orders o
-JOIN customers  c  ON o.customer_id   = c.customer_id
-JOIN order_items oi ON o.order_id     = oi.order_id
-JOIN products   p  ON oi.product_id   = p.product_id
-GROUP BY o.order_id, c.name
-HAVING SUM(oi.quantity * p.price) > 100;
+SELECT
+    orders.order_id,
+    customers.name  AS customer,
+    SUM(order_items.quantity * products.price) AS total
+FROM orders
+JOIN customers   ON orders.customer_id     = customers.customer_id
+JOIN order_items ON orders.order_id        = order_items.order_id
+JOIN products    ON order_items.product_id = products.product_id
+GROUP BY orders.order_id, customers.name
+HAVING SUM(order_items.quantity * products.price) > 100;
 
--- Use the view like a table
+-- Now use it like a regular table — much simpler!
 SELECT * FROM high_value_orders ORDER BY total DESC;
 
--- Drop a view
+-- Remove the view when you no longer need it
 DROP VIEW IF EXISTS high_value_orders;
 ```
 
-**Benefits of views:**
-- Simplify complex, repeated queries.
-- Provide a security layer (grant access to a view, not the underlying tables).
-- Present data in a form tailored to an application without duplicating it.
+**Other benefits of views:**
+- **Security:** You can give someone access to a view without giving them access to the underlying tables. They see only what the view shows them.
+- **Consistency:** The query logic lives in one place. If the business rule changes, you update the view once and all the reports automatically reflect the change.
 
-### Single-Column Indexes
+---
+
+## Advanced Subquery Patterns
+
+Before diving into indexes, here are two more powerful subquery techniques.
+
+### Correlated Subquery — A Subquery That Looks at the Outer Row
+
+A **correlated subquery** references a column from the outer query. It re-runs for *every row* of the outer query, "looking up" something for each row individually:
 
 ```sql
--- Speed up lookups by customer_id
+-- For each product, count how many times it's been ordered
+SELECT
+    products.name,
+    (SELECT COUNT(*) FROM order_items WHERE order_items.product_id = products.product_id) AS times_ordered
+FROM products;
+```
+
+Think of it like filling out a column in a spreadsheet by doing a COUNTIF for each row.
+
+### Subquery in FROM — A Temporary Table
+
+You can put a subquery in the `FROM` clause and treat its result like a table:
+
+```sql
+-- Find the category with the highest average price
+SELECT category, avg_price
+FROM (
+    SELECT category, AVG(price) AS avg_price
+    FROM products
+    GROUP BY category
+) AS category_averages
+WHERE avg_price > 50;
+```
+
+The inner query runs first and creates a temporary result set. The outer query then queries that.
+
+---
+
+## Indexes — A Shortcut Into the Data
+
+Imagine the database is a library with a million books arranged in the order they were acquired — no alphabetical order, no subject catalog, nothing. Every time you search for "a book about Python," a librarian has to read every single book title. That's a **full table scan** and it's painfully slow.
+
+An **index** is like the card catalog at the library — a separate, sorted structure that the librarian can consult to jump directly to the right shelf.
+
+```sql
+-- Create an index on the customer_id column of orders
+-- Now "find all orders for customer 42" is fast
 CREATE INDEX idx_orders_customer ON orders(customer_id);
 ```
 
-### Composite Indexes
+### Composite Index — Covering Multiple Columns
 
-A composite index covers multiple columns. Most effective when queries filter on the *leading* columns of the index.
+If your queries frequently filter on *two columns together*, a composite index covers both:
 
 ```sql
+-- Useful for queries like: WHERE order_id = ? AND product_id = ?
 CREATE INDEX idx_order_items_order_product ON order_items(order_id, product_id);
 ```
 
-### Introductory Query Optimization
-
-- **Choose selective columns for indexes** — index columns used in `WHERE`, `JOIN ON`, and `ORDER BY`.
-- **Avoid functions on indexed columns** — `WHERE UPPER(name) = 'ALICE'` cannot use an index on `name`.
-- **Use `EXPLAIN QUERY PLAN`** (SQLite) or `EXPLAIN` / `EXPLAIN ANALYZE` (PostgreSQL) to see how the database executes a query.
+### Checking If Your Query Uses an Index
 
 ```sql
+-- See how SQLite plans to execute your query
 EXPLAIN QUERY PLAN
 SELECT * FROM orders WHERE customer_id = 5;
 ```
+
+Look for `USING INDEX` in the output — that means your index is being used. If you see `SCAN`, it's doing a full table scan and may need an index.
 
 ---
 
@@ -88,12 +119,20 @@ SELECT * FROM orders WHERE customer_id = 5;
 
 **File to create:** `module_10_views_indexes.sql`
 
-Reuse or recreate the e-commerce schema from Module 9 (customers, products, orders, order_items). Insert enough data to make queries meaningful.
+Reuse (or recreate) the e-commerce schema from Module 9 (customers, products, orders, order_items). Include teardown and creation at the top of your file and insert enough data to make the queries interesting.
 
-1. **(View)** Create a view called `customer_order_summary` that shows, for each customer: `customer_id`, `name`, total number of orders, and total amount spent.
-2. **(View usage)** Query `customer_order_summary` to find customers who have spent more than $100.
-3. **(Correlated subquery)** Write a query (without using the view) that lists each product's name and the total quantity ever ordered, using a correlated subquery.
-4. **(Derived table)** Write a query using a subquery in the `FROM` clause to find the product category with the highest average price.
-5. **(Index)** Create an appropriate index to speed up lookups on `orders.customer_id`. Explain in a comment why this index helps.
-6. **(Composite index)** Create a composite index on `order_items(order_id, product_id)`. Explain in a comment when this index is most beneficial.
-7. **(EXPLAIN)** Run `EXPLAIN QUERY PLAN` (or your database's equivalent) on the query from task 2 and paste the output as a SQL comment. Then create an index that would improve the plan and run `EXPLAIN QUERY PLAN` again to show the improvement.
+**Tasks:**
+
+1. **(Create a view)** Create a view called `customer_order_summary` that shows for each customer: `customer_id`, `name`, total number of orders placed, and total amount spent.
+
+2. **(Use the view)** Write a query against `customer_order_summary` that lists only customers who have spent more than $100. Notice how clean this query is compared to the raw version.
+
+3. **(Correlated subquery)** Without using the view, write a query that lists each product's name alongside the total quantity ever ordered — using a correlated subquery.
+
+4. **(Subquery in FROM)** Find the product category with the highest average price using a subquery in the `FROM` clause.
+
+5. **(Create an index)** Create an index on `orders.customer_id`. Write a comment explaining why this column is a good candidate.
+
+6. **(Composite index)** Create a composite index on `order_items(order_id, product_id)`. Write a comment explaining what kinds of queries this helps.
+
+7. **(EXPLAIN)** Run `EXPLAIN QUERY PLAN` on the query from Task 2 (rewritten without the view, joining the raw tables). Paste the output as a comment. Then add an index that would improve it, run `EXPLAIN QUERY PLAN` again, and paste the improved plan as a comment.
