@@ -159,3 +159,64 @@ Here's what to do:
    - How many books are still in the table
    - The average price of all remaining books
    - The year of the oldest book (earliest `year_published`)
+
+---
+
+## How to Test Your Work (Read This — It's Easier Than It Sounds!)
+
+Writing SQL is only half the job. The other half is **running it** to make sure it actually works. Don't worry — you do *not* need to install anything complicated. We'll use a free website where you can paste your SQL and watch it run. Follow along step by step.
+
+### Step 1 — Open a Free Online SQL Playground
+
+A "playground" is just a website that pretends to be a real database so you can practice safely. Nothing you do here can break anything.
+
+1. Open your web browser (Chrome, Safari, Edge — any of them work).
+2. Go to **[https://sqliteonline.com](https://sqliteonline.com)**.
+3. On the left side, make sure **SQLite** is selected (it usually is by default). SQLite is a small, beginner-friendly version of SQL, and it understands everything we covered above.
+
+That's it — you now have a working database sitting in your browser. No downloads, no accounts, no credit card.
+
+> **Alternative:** If that site is down, [https://www.db-fiddle.com](https://www.db-fiddle.com) works too. Pick "SQLite" from the database dropdown in the top-left.
+
+### Step 2 — Paste In Your SQL
+
+1. Copy **all** of the SQL from your `module_01_queries.sql` file.
+2. Click inside the big text box in the middle of the page (this is called the "editor").
+3. Paste your SQL there (Ctrl+V on Windows, Cmd+V on a Mac).
+
+### Step 3 — Run It and Read the Results
+
+1. Find the **Run** button (usually a blue button near the top, sometimes it looks like a ▶ "play" arrow).
+2. Click it.
+3. Look at the bottom of the screen — that's where the results appear as a little table, just like a spreadsheet.
+
+### Step 4 — Check Each Piece, One at a Time
+
+The best way to catch mistakes is to run your queries **one at a time** instead of all at once. Here's a friendly trick: highlight just one statement with your mouse before clicking Run, and most playgrounds will run only the part you highlighted.
+
+Go down your checklist and confirm each one:
+
+- ✅ **`CREATE TABLE`** — Run it first. If it works, you'll see a "success" message and no red error text. (If you run it twice, you may see "table already exists" — that's normal, it just means the table is already built.)
+- ✅ **`INSERT` statements** — After running these, run `SELECT * FROM books;` to see your five books show up as rows. Count them — are all five there?
+- ✅ **The "everything" query** (`SELECT * FROM books;`) — You should see every column and every row.
+- ✅ **The "after year 2000" query** — Double-check: are only books published *after* 2000 showing? Are only the `title` and `author` columns showing (not the others)?
+- ✅ **`UPDATE`** — After running it, run `SELECT * FROM books;` again and find the book you changed. Did its price actually update?
+- ✅ **`DELETE`** — Run `SELECT * FROM books;` one more time. Is the book you deleted gone, and are the others still there?
+- ✅ **The three summary queries** (`COUNT`, `AVG`, `MIN`) — Each should return a single number. Ask yourself: does the count match how many books you have left? Does the average price look about right? Is the oldest year the smallest year in your list?
+
+### Step 5 — When Something Goes Wrong (It Will, and That's Okay!)
+
+Errors are completely normal — even professionals hit them constantly. When you see red error text, don't panic. Here are the most common beginner mistakes and how to fix them:
+
+| The error mentions... | What it usually means | How to fix it |
+|-----------------------|----------------------|---------------|
+| `no such table: books` | You tried to `SELECT`/`INSERT` before creating the table | Run your `CREATE TABLE` statement first |
+| `syntax error near ...` | A typo — often a missing comma, quote, or the semicolon `;` at the end | Look right *before* the spot it names and check for missing punctuation |
+| `no such column` | You misspelled a column name | Compare it letter-for-letter with your `CREATE TABLE` |
+| Nothing shows up / empty result | Your `WHERE` filter matched no rows | Loosen the condition or double-check your data |
+
+**The golden rule of testing:** every SQL statement should end with a semicolon (`;`), and text values always go in single quotes (`'like this'`). Most beginner errors are one of those two things.
+
+### Step 6 — You're Done!
+
+If every item in the checklist above behaves the way you expect, congratulations — your assignment works. Save your final `module_01_queries.sql` file and submit it. 🎉
