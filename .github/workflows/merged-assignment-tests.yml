@@ -1,0 +1,120 @@
+name: Assignment tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  select-tests:
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.select.outputs.modules }}
+      revision: ${{ steps.select.outputs.revision }}
+    steps:
+      - name: Select tests for changed files
+        id: select
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pullRequest = context.payload.pull_request;
+            core.setOutput('modules', '[]');
+            const revision = context.payload.action === 'closed' && pullRequest.merged
+              ? pullRequest.merge_commit_sha
+              : context.sha;
+
+            if (!revision) {
+              core.setFailed('The merged pull request does not provide a merge commit SHA.');
+              return;
+            }
+
+            core.setOutput('revision', revision);
+
+            if (context.payload.action === 'closed' && !pullRequest.merged) {
+              core.setOutput('modules', '[]');
+              core.info('Skipping assignment tests because the pull request was closed without merging.');
+              return;
+            }
+
+            const query = `query($owner: String!, $name: String!, $number: Int!) {
+              repository(owner: $owner, name: $name) {
+                pullRequest(number: $number) {
+                  changedFiles
+                }
+              }
+            }`;
+
+            const response = await github.graphql(query, {
+              owner: context.repo.owner,
+              name: context.repo.repo,
+              number: pullRequest.number
+            });
+            const changedFiles = response.repository.pullRequest.changedFiles;
+
+            if (changedFiles > 3000) {
+              core.setFailed(`This pull request changes ${changedFiles} files, exceeding the 3,000-file selection limit. Run all assignment tests manually.`);
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullRequest.number,
+              per_page: 100
+            });
+
+            if (files.length !== changedFiles) {
+              core.setFailed(`GitHub reported ${changedFiles} changed files but returned ${files.length} files. Run all assignment tests manually.`);
+              return;
+            }
+
+            const changedPaths = new Set();
+            for (const file of files) {
+              changedPaths.add(file.filename);
+              if (file.previous_filename) changedPaths.add(file.previous_filename);
+            }
+
+            const modules = new Set();
+            let runAll = false;
+
+            for (const path of changedPaths) {
+              const assignment = path.match(/^assignments\/(module_[0-9]+)\//);
+              const moduleTest = path.match(/^tests\/test_(module_[0-9]+)\.py$/);
+
+              if (assignment) modules.add(assignment[1]);
+              if (moduleTest) modules.add(moduleTest[1]);
+              if ((path.startsWith('tests/') && !moduleTest) ||
+                  path === '.github/workflows/merged-assignment-tests.yml' ||
+                  path === '.github/workflows/assignment-tests.yml') {
+                runAll = true;
+              }
+            }
+
+            const selectedModules = runAll ? ['all'] : [...modules].sort();
+            core.setOutput('modules', JSON.stringify(selectedModules));
+            if (selectedModules.length === 0) {
+              core.info('No test-relevant files changed; assignment tests will be skipped.');
+            } else {
+              core.info(`Selected assignment test units: ${selectedModules.join(', ')}`);
+            }
+
+  run-tests:
+    needs: select-tests
+    if: needs.select-tests.outputs.modules != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.select-tests.outputs.modules) }}
+    uses: ./.github/workflows/assignment-tests.yml
+    with:
+      module: ${{ matrix.module }}
+      revision: ${{ needs.select-tests.outputs.revision }}

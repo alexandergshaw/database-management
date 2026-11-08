@@ -1,0 +1,50 @@
+name: Assignment test runner
+
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: Test unit to run (module_NN or all)
+        required: true
+        type: string
+      revision:
+        description: Git revision to check out
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Check for g++
+        run: command -v g++
+
+      - name: Run assignment tests
+        env:
+          TEST_MODULE: ${{ inputs.module }}
+        run: |
+          if [[ "$TEST_MODULE" == "all" ]]; then
+            pattern='test_module_*.py'
+          elif [[ "$TEST_MODULE" =~ ^module_[0-9]+$ ]]; then
+            pattern="test_${TEST_MODULE}.py"
+          else
+            echo "Invalid test unit: $TEST_MODULE (expected module_NN or all)" >&2
+            exit 1
+          fi
+          python -m unittest discover -s tests -p "$pattern" -v
