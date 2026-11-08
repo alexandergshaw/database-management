@@ -110,11 +110,4 @@ Work through the design steps before writing any SQL:
    - At least 3 courses
    - At least 5 enrollments (mix students and courses — have some students in multiple courses)
 
-5. **Write a query** that lists every enrollment showing the student's name, the course name, and the grade. You'll need to connect all three tables to do this — we'll cover exactly how in later modules, but try using this pattern:
-
-```sql
-SELECT students.name, courses.name, enrollments.grade
-FROM enrollments
-JOIN students ON enrollments.student_id = students.student_id
-JOIN courses  ON enrollments.course_id  = courses.course_id;
-```
+5. **Write a query** that lists every enrollment showing the student's name, the course name, and the grade. You'll need to connect all three tables with `JOIN` clauses.
