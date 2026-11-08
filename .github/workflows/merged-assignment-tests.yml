@@ -45,58 +45,42 @@ jobs:
               return;
             }
 
-            const query = `query($owner: String!, $name: String!, $number: Int!, $cursor: String) {
+            const query = `query($owner: String!, $name: String!, $number: Int!) {
               repository(owner: $owner, name: $name) {
                 pullRequest(number: $number) {
                   changedFiles
-                  files(first: 100, after: $cursor) {
-                    nodes {
-                      path
-                      previousFilename
-                    }
-                    pageInfo {
-                      hasNextPage
-                      endCursor
-                    }
-                  }
                 }
               }
             }`;
 
-            const changedPaths = new Set();
-            let listedFiles = 0;
-            let cursor = null;
-            let changedFiles;
-            let hasNextPage = true;
+            const response = await github.graphql(query, {
+              owner: context.repo.owner,
+              name: context.repo.repo,
+              number: pullRequest.number
+            });
+            const changedFiles = response.repository.pullRequest.changedFiles;
 
-            while (hasNextPage) {
-              const response = await github.graphql(query, {
-                owner: context.repo.owner,
-                name: context.repo.repo,
-                number: pullRequest.number,
-                cursor
-              });
-              const pull = response.repository.pullRequest;
-              changedFiles = pull.changedFiles;
-
-              if (changedFiles > 3000) {
-                core.setFailed(`This pull request changes ${changedFiles} files, exceeding the 3,000-file selection limit. Run all assignment tests manually.`);
-                return;
-              }
-
-              for (const file of pull.files.nodes) {
-                listedFiles += 1;
-                changedPaths.add(file.path);
-                if (file.previousFilename) changedPaths.add(file.previousFilename);
-              }
-
-              hasNextPage = pull.files.pageInfo.hasNextPage;
-              cursor = pull.files.pageInfo.endCursor;
+            if (changedFiles > 3000) {
+              core.setFailed(`This pull request changes ${changedFiles} files, exceeding the 3,000-file selection limit. Run all assignment tests manually.`);
+              return;
             }
 
-            if (listedFiles !== changedFiles) {
-              core.setFailed(`GitHub reported ${changedFiles} changed files but returned ${listedFiles} files. Run all assignment tests manually.`);
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullRequest.number,
+              per_page: 100
+            });
+
+            if (files.length !== changedFiles) {
+              core.setFailed(`GitHub reported ${changedFiles} changed files but returned ${files.length} files. Run all assignment tests manually.`);
               return;
+            }
+
+            const changedPaths = new Set();
+            for (const file of files) {
+              changedPaths.add(file.filename);
+              if (file.previous_filename) changedPaths.add(file.previous_filename);
             }
 
             const modules = new Set();
